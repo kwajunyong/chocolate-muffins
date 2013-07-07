@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\AST.h" />
     <ClInclude Include="..\source\ASTNode.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\ProcTable.h" />
     <ClInclude Include="..\source\VarTable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\AST.cpp" />
     <ClCompile Include="..\source\ASTNode.cpp" />
     <ClCompile Include="..\source\ProcTable.cpp" />
     <ClCompile Include="..\source\VarTable.cpp" />
