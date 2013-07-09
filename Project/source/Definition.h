@@ -14,5 +14,5 @@ enum ASTType {
 	MINUS,
 	TIMES,
 	DIVIDE,
-	ERROR
+	NONE
 };

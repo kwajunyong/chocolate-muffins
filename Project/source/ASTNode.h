@@ -28,7 +28,8 @@ public:
 	void setChild(ASTNode* child);
 
 	std::string print();
-	
+	bool equals(ASTNode* node);
+
 private:
 	std::string _name;
 	ASTType _type;

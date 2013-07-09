@@ -118,3 +118,8 @@ std::string ASTNode::getTypeName(ASTType type)
 			return "error";
 	}
 }
+
+bool ASTNode::equals(ASTNode* node)
+{
+	return _name == node->getName() && _type == node->getType();
+}
