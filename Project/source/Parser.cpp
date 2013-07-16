@@ -60,7 +60,7 @@ ASTNode* Parser::program()
 
 	ASTNode* procNode = procedure();
 
-	AST::joinChild(progNode, procNode);
+	_ast->joinChild(progNode, procNode);
 
 	ASTNode* prevProcNode;
 
@@ -68,7 +68,7 @@ ASTNode* Parser::program()
 		prevProcNode = procNode;
 		procNode = procedure();
 
-		AST::joinNext(prevProcNode, procNode);
+		_ast->joinNext(prevProcNode, procNode);
 	}
 
 	return progNode;
@@ -88,7 +88,7 @@ ASTNode* Parser::procedure()
 	
 	matchKeyword("}");
 
-	AST::joinChild(procNode, stmtListNode);
+	_ast->joinChild(procNode, stmtListNode);
 
 	return procNode;
 }
@@ -99,7 +99,7 @@ ASTNode* Parser::statementList()
 
 	ASTNode* stmtNode = statement();
 
-	AST::joinChild(stmtListNode, stmtNode);
+	_ast->joinChild(stmtListNode, stmtNode);
 
 	ASTNode* prevStmtNode;
 
@@ -107,7 +107,7 @@ ASTNode* Parser::statementList()
 		prevStmtNode = stmtNode;
 		stmtNode = statement();
 
-		AST::joinNext(prevStmtNode, stmtNode);
+		_ast->joinNext(prevStmtNode, stmtNode);
 	}
 
 	return stmtListNode;
@@ -149,8 +149,8 @@ ASTNode* Parser::assignStmt()
 
 	matchKeyword(";");
 
-	AST::joinChild(assignNode, varNode);
-	AST::joinNext(varNode, expNode);
+	_ast->joinChild(assignNode, varNode);
+	_ast->joinNext(varNode, expNode);
 
 	return assignNode;
 }
@@ -170,8 +170,8 @@ ASTNode* Parser::whileStmt()
 	
 	matchKeyword("}");
 
-	AST::joinChild(whileNode, varNode);
-	AST::joinNext(varNode, stmtListNode);
+	_ast->joinChild(whileNode, varNode);
+	_ast->joinNext(varNode, stmtListNode);
 
 	return whileNode;
 }
@@ -197,9 +197,9 @@ ASTNode* Parser::ifStmt()
 
 	matchKeyword("}");
 
-	AST::joinChild(ifNode, varNode);
-	AST::joinNext(varNode, ifStmtListNode);
-	AST::joinNext(ifStmtListNode, elseStmtListNode);
+	_ast->joinChild(ifNode, varNode);
+	_ast->joinNext(varNode, ifStmtListNode);
+	_ast->joinNext(ifStmtListNode, elseStmtListNode);
 
 	return ifNode;
 }
@@ -289,8 +289,7 @@ int Parser::getOprPriority(std::string operate)
 	}
 }
 
-ASTNode* Parser::shuntingYardAlgorithm()
-{
+ASTNode* Parser::shuntingYardAlgorithm() {
 	std::stack<std::string> operators;
 	std::stack<ASTNode*> results;
 
@@ -321,8 +320,8 @@ ASTNode* Parser::shuntingYardAlgorithm()
 				leftNode = results.top();
 				results.pop();
 
-				AST::joinChild(operatorNode, leftNode);
-				AST::joinNext(leftNode, rightNode);
+				_ast->joinChild(operatorNode, leftNode);
+				_ast->joinNext(leftNode, rightNode);
 
 				results.push(operatorNode);
 				
@@ -352,8 +351,8 @@ ASTNode* Parser::shuntingYardAlgorithm()
 				leftNode = results.top();
 				results.pop();
 
-				AST::joinChild(operatorNode, leftNode);
-				AST::joinNext(leftNode, rightNode);
+				_ast->joinChild(operatorNode, leftNode);
+				_ast->joinNext(leftNode, rightNode);
 
 				results.push(operatorNode);
 
@@ -405,8 +404,8 @@ ASTNode* Parser::shuntingYardAlgorithm()
 		leftNode = results.top();
 		results.pop();
 
-		AST::joinChild(operatorNode, leftNode);
-		AST::joinNext(leftNode, rightNode);
+		_ast->joinChild(operatorNode, leftNode);
+		_ast->joinNext(leftNode, rightNode);
 
 		results.push(operatorNode);
 
