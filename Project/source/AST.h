@@ -13,6 +13,7 @@ public:
 	void setRootNode(ASTNode* root);
 
 	ASTNode* getStatementNode(int stmtNum);
+	ASTType getStatementType(int stmtNum);
 	std::vector<ASTNode*> getStatementNodes(ASTType type);
 	std::vector<int> getStatementNumbers(ASTType type);
 

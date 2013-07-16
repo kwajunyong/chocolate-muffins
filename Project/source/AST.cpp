@@ -124,6 +124,11 @@ ASTNode* AST::getStatementNode(int stmtNum)
 	return list.front();
 }
 
+ASTType AST::getStatementType(int stmtNum)
+{
+	return getStatementNode(stmtNum)->getType();
+}
+
 std::vector<ASTNode*> AST::getStatementNodes(ASTType type)
 {
 	std::vector<ASTNode*> list;
