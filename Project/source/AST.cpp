@@ -18,20 +18,6 @@ void AST::setRootNode(ASTNode* root)
 	_root = root;
 }
 
-void AST::joinChild(ASTNode* parent, ASTNode* child)
-{
-	parent->setChild(child);
-	child->setParent(parent);
-}
-
-void AST::joinNext(ASTNode* previous, ASTNode* next)
-{
-	previous->setNext(next);
-	next->setPrevious(previous);
-
-	next->setParent(previous->getParent());
-}
-
 std::vector<std::string> AST::traverse(ASTNode* node)
 {
 	std::vector<std::string> list;
@@ -188,4 +174,9 @@ void AST::search(ASTNode* node, std::vector<int> &list, ASTType type)
 		
 		node = node->getNext();
 	}
+}
+
+ASTNode* AST::buildExpressionNode(std::string expression)
+{
+	return _expParser.parse(expression);
 }
