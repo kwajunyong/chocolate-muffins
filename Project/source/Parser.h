@@ -17,6 +17,7 @@ public:
 	~Parser(void);
 
 	PKB* parse(std::string fileName);
+
 private:
 	std::ifstream _file;
 	

@@ -123,3 +123,17 @@ bool ASTNode::equals(ASTNode* node)
 {
 	return _name == node->getName() && _type == node->getType();
 }
+
+void ASTNode::joinChild(ASTNode* child)
+{
+	setChild(child);
+	child->setParent(this);
+}
+
+void ASTNode::joinNext(ASTNode* next)
+{
+	setNext(next);
+	next->setPrevious(this);
+
+	next->setParent(getParent());
+}

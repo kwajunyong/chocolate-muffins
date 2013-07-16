@@ -30,6 +30,9 @@ public:
 	std::string print();
 	bool equals(ASTNode* node);
 
+	void joinChild(ASTNode* child);
+	void joinNext(ASTNode* next);
+
 private:
 	std::string _name;
 	ASTType _type;
