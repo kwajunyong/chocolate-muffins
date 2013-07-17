@@ -121,12 +121,14 @@ ASTNode* AST::getStatementNode(int stmtNum)
 
 	search(_root, list, stmtNum, NONE);
 
-	return list.front();
+	return (list.empty()) ? NULL : list.front();
 }
 
 ASTType AST::getStatementType(int stmtNum)
 {
-	return getStatementNode(stmtNum)->getType();
+	ASTNode* node = getStatementNode(stmtNum);
+
+	return (node != NULL) ? node->getType() : NONE;
 }
 
 std::vector<ASTNode*> AST::getStatementNodes(ASTType type)
