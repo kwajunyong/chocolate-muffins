@@ -36,6 +36,46 @@ void PKB::setProcTable(ProcTable* procTable)
 	_procTable = procTable;
 }
 
+Follows* PKB::getFollows()
+{
+	return _follows;
+}
+
+void PKB::setFollows(Follows* follows)
+{
+	_follows = follows;
+}
+
+Parent* PKB::getParent()
+{
+	return _parent;
+}
+
+void PKB::setParent(Parent* parent)
+{
+	_parent = parent;
+}
+
+Modifies* PKB::getModifies()
+{
+	return _modifies;
+}
+
+void PKB::setModifies(Modifies* modifies)
+{
+	_modifies = modifies;
+}
+
+Uses* PKB::getUses()
+{
+	return _uses;
+}
+
+void PKB::setUses(Uses* uses)
+{
+	_uses = uses;
+}
+
 int PKB::getStmtNum()
 {
 	return _stmtNum;
