@@ -66,7 +66,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\TestAST.cpp" />
+    <ClCompile Include="source\TestASTNode.cpp" />
+    <ClCompile Include="source\TestFollows.cpp" />
+    <ClCompile Include="source\TestModifies.cpp" />
+    <ClCompile Include="source\TestParent.cpp" />
+    <ClCompile Include="source\TestProcTable.cpp" />
+    <ClCompile Include="source\TestUses.cpp" />
+    <ClCompile Include="source\TestVarTable.cpp" />
     <ClCompile Include="source\UnitTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\TestAST.h" />
+    <ClInclude Include="source\TestASTNode.h" />
+    <ClInclude Include="source\TestFollows.h" />
+    <ClInclude Include="source\TestModifies.h" />
+    <ClInclude Include="source\TestParent.h" />
+    <ClInclude Include="source\TestProcTable.h" />
+    <ClInclude Include="source\TestUses.h" />
+    <ClInclude Include="source\TestVarTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
