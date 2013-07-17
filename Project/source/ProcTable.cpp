@@ -28,7 +28,7 @@ int ProcTable::getIndex(std::string procedure)
 
 std::string ProcTable::getName(int index)
 {
-	if (index < 0 || index > _procTable.size()) {
+	if (index < 0 || index >= _procTable.size()) {
 		throw std::out_of_range("Procedure index out of bound");
 	}
 

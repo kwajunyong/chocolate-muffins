@@ -28,7 +28,7 @@ int VarTable::getIndex(std::string variable)
 
 std::string VarTable::getName(int index)
 {
-	if (index < 0 || index > _varTable.size()) {
+	if (index < 0 || index >= _varTable.size()) {
 		throw std::out_of_range("Variable index out of bound");
 	}
 
