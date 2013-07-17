@@ -16,6 +16,7 @@
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\ExpressionParser.h" />
     <ClInclude Include="..\source\Follows.h" />
+    <ClInclude Include="..\source\Parent.h" />
     <ClInclude Include="..\source\ParseException.h" />
     <ClInclude Include="..\source\Parser.h" />
     <ClInclude Include="..\source\PKB.h" />
@@ -27,6 +28,7 @@
     <ClCompile Include="..\source\ASTNode.cpp" />
     <ClCompile Include="..\source\ExpressionParser.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
+    <ClCompile Include="..\source\Parent.cpp" />
     <ClCompile Include="..\source\ParseException.cpp" />
     <ClCompile Include="..\source\Parser.cpp" />
     <ClCompile Include="..\source\PKB.cpp" />
