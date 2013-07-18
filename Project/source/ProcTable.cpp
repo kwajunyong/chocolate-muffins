@@ -35,6 +35,11 @@ std::string ProcTable::getName(int index)
 	return _procTable[index];
 }
 
+std::vector<std::string> ProcTable::getAllNames()
+{
+	return _procTable;
+}
+
 int ProcTable::getSize()
 {
 	return _procTable.size();

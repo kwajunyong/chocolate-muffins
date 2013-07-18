@@ -14,7 +14,9 @@ public:
 	int getIndex(std::string variable);
 	std::string getName(int index);
 
+	std::vector<std::string> getAllNames();
 	int getSize();
+
 private:
 	std::vector<std::string> _varTable;
 };

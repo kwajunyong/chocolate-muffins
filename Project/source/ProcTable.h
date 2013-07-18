@@ -14,6 +14,7 @@ public:
 	int getIndex(std::string procedure);
 	std::string getName(int index);
 
+	std::vector<std::string> getAllNames();
 	int getSize();
 
 private:

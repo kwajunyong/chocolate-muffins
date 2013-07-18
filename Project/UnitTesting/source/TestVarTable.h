@@ -11,6 +11,7 @@ class TestVarTable : public CPPUNIT_NS::TestFixture
 	CPPUNIT_TEST(testAddVariable);
 	CPPUNIT_TEST(testGetIndex);
 	CPPUNIT_TEST(testGetName);
+	CPPUNIT_TEST(testGetAllNames);
 	CPPUNIT_TEST(testGetSize);
 
 	CPPUNIT_TEST_SUITE_END();
@@ -22,6 +23,7 @@ public:
 	void testAddVariable();
 	void testGetIndex();
 	void testGetName();
+	void testGetAllNames();
 	void testGetSize();
 
 private:

@@ -11,6 +11,7 @@ class TestProcTable : public CPPUNIT_NS::TestFixture
 	CPPUNIT_TEST(testAddProcedure);
 	CPPUNIT_TEST(testGetIndex);
 	CPPUNIT_TEST(testGetName);
+	CPPUNIT_TEST(testGetAllNames);
 	CPPUNIT_TEST(testGetSize);
 
 	CPPUNIT_TEST_SUITE_END();
@@ -22,6 +23,7 @@ public:
 	void testAddProcedure();
 	void testGetIndex();
 	void testGetName();
+	void testGetAllNames();
 	void testGetSize();
 
 private:

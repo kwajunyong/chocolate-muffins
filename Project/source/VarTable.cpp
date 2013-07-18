@@ -35,6 +35,11 @@ std::string VarTable::getName(int index)
 	return _varTable[index];
 }
 
+std::vector<std::string> VarTable::getAllNames()
+{
+	return _varTable;
+}
+
 int VarTable::getSize()
 {
 	return _varTable.size();

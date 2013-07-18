@@ -41,6 +41,17 @@ void TestProcTable::testGetName()
 	CPPUNIT_ASSERT_THROW(procTable.getName(4), std::out_of_range);
 }
 
+void TestProcTable::testGetAllNames()
+{
+	generateProcedures();
+
+	std::vector<std::string> expected;
+
+	std::string temp[] = {"Alpha", "Bravo", "Charlie", "Delta"};
+	expected.assign(temp, temp + 4);
+	CPPUNIT_ASSERT(expected == procTable.getAllNames());
+}
+
 void TestProcTable::testGetSize()
 {
 	generateProcedures();

@@ -39,6 +39,17 @@ void TestVarTable::testGetName()
 	CPPUNIT_ASSERT_THROW(varTable.getName(6), std::out_of_range);
 }
 
+void TestVarTable::testGetAllNames()
+{
+	generateVariables();
+
+	std::vector<std::string> expected;
+
+	std::string temp[] = {"i", "j", "k", "x", "y", "z"};
+	expected.assign(temp, temp + 6);
+	CPPUNIT_ASSERT(expected == varTable.getAllNames());
+}
+
 void TestVarTable::testGetSize()
 {
 	generateVariables();
