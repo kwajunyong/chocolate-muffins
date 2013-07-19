@@ -147,7 +147,7 @@ std::vector<std::string> Modifies::getModifiesProc(std::string variable)
 	}
 
 	for (int i = 0; i < _procModifies.size(); i++) {
-		if (_varModifies[i][varIndex]) {
+		if (_procModifies[i][varIndex]) {
 			results.push_back(_procTable->getName(i));
 		}
 	}

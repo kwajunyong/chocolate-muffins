@@ -147,7 +147,7 @@ std::vector<std::string> Uses::getUsesProc(std::string variable)
 	}
 
 	for (int i = 0; i < _procUses.size(); i++) {
-		if (_varUses[i][varIndex]) {
+		if (_procUses[i][varIndex]) {
 			results.push_back(_procTable->getName(i));
 		}
 	}
