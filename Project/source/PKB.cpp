@@ -76,12 +76,12 @@ void PKB::setUses(Uses* uses)
 	_uses = uses;
 }
 
-int PKB::getStmtNum()
+int PKB::getNumOfStmt()
 {
-	return _stmtNum;
+	return _numOfStmt;
 }
 
-void PKB::setStmtNum(int stmtNum)
+void PKB::setNumOfStmt(int numOfStmt)
 {
-	_stmtNum = stmtNum;
+	_numOfStmt = numOfStmt;
 }

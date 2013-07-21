@@ -35,8 +35,8 @@ public:
 	Uses* getUses();
 	void setUses(Uses* uses);
 
-	int getStmtNum();
-	void setStmtNum(int stmtNum);
+	int getNumOfStmt();
+	void setNumOfStmt(int numOfStmt);
 private:
 	AST* _ast;
 	VarTable* _varTable;
@@ -46,6 +46,6 @@ private:
 	Modifies* _modifies;
 	Uses* _uses;
 
-	int _stmtNum;
+	int _numOfStmt;
 };
 
