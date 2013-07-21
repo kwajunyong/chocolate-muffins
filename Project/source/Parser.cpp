@@ -8,8 +8,8 @@ Parser::~Parser(void)
 
 PKB* Parser::parse(std::string fileName)
 {
-	_file.open(fileName);	
-	
+	openFile(fileName);
+
 	PKB* pkb = new PKB();
 
 	_stmtNum = 0;
@@ -19,14 +19,29 @@ PKB* Parser::parse(std::string fileName)
 
 	getToken();
 
-	_ast->setRootNode(program());
+	ASTNode* rootNode = program();
+	
+	_ast->setRootNode(rootNode);
 
-	pkb->setStmtNum(_stmtNum);
+	pkb->setNumOfStmt(_stmtNum);
 	pkb->setAST(_ast);
 	pkb->setVarTable(_varTable);
 	pkb->setProcTable(_procTable);
 
+	if (!isKeyword("")) {
+		throw ParseException(_stmtNum, _token, "Unnecessary token");
+	}
+
 	return pkb;
+}
+
+void Parser::openFile(std::string fileName)
+{
+	_file.open(fileName);
+
+	if (_file.fail()) {
+		throw ParseException(fileName, "Unable to find/open file");
+	}
 }
 
 void Parser::getToken()
