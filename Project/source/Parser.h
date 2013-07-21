@@ -20,7 +20,6 @@ public:
 
 private:
 	std::ifstream _file;
-	void openFile(std::string fileName);
 	
 	std::string _token;
 	void getToken();
