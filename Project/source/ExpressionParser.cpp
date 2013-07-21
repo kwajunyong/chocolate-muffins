@@ -8,6 +8,7 @@ ExpressionParser::~ExpressionParser(void)
 
 ASTNode* ExpressionParser::parse(std::string expression)
 {
+	_expression.clear();
 	_expression.str(expression);
 
 	getToken();
