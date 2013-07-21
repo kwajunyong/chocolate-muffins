@@ -126,11 +126,6 @@ void TestAST::testMatchSubTree()
 	node = buildSubTreeWithDiffStruct();
 	CPPUNIT_ASSERT_EQUAL(false, ast->matchSubTree(ast->getRootNode(), node));
 }
-	
-void TestAST::testBuildExpressionNode()
-{
-
-}
 
 ASTNode* TestAST::buildTree()
 {

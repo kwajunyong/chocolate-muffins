@@ -21,8 +21,6 @@ class TestAST: public CPPUNIT_NS::TestFixture
 	CPPUNIT_TEST(testMatchTree);
 	CPPUNIT_TEST(testMatchSubTree);
 	
-	CPPUNIT_TEST(testBuildExpressionNode);
-	
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -39,8 +37,6 @@ public:
 	
 	void testMatchTree();
 	void testMatchSubTree();
-	
-	void testBuildExpressionNode();
 
 private:
 	AST* ast;
@@ -50,4 +46,10 @@ private:
 	ASTNode* buildSubTree();
 	ASTNode* buildSubTreeWithDiffValue();
 	ASTNode* buildSubTreeWithDiffStruct();
+
+	std::vector<std::string> assign1();
+	std::vector<std::string> assign2();
+	std::vector<std::string> assign3();
+	std::vector<std::string> assign4();
+	std::vector<std::string> assign5();
 };
