@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestParent").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestModifies").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestUses").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestParser").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestDesignExtractor").makeTest());
 	
 	CppUnit::TestFactoryRegistry::getRegistry().addTestToSuite(unitSuite);
 	

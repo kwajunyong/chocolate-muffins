@@ -1,0 +1,42 @@
+procedure First {
+	while a {
+		while b {
+			if c {
+				d = e;
+			} else {
+				call Fourth;
+				call Fifth;
+			}
+		}
+	}	
+}
+
+procedure Second {
+	call First;
+}
+
+procedure Third {
+	if f {
+		g = h; 
+	} else {
+		g = h; 
+	}
+
+	call First;
+}
+
+procedure Fourth {
+	while i {
+		j = k; 
+	}
+
+	j = k;
+}
+
+procedure Fifth {
+	l = m;
+	l = m + n;
+	l = m + n - 1;
+	l = m + n * 1;
+	l = (m + n) * 1;
+}
