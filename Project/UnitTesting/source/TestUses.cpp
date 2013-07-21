@@ -26,7 +26,7 @@ void TestUses::testAddUsesProc()
 {
 	CPPUNIT_ASSERT_EQUAL(true, uses->addUsesProc("Alpha", "a"));
 
-	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Ninja", "a"));
+	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Delta", "a"));
 
 	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Alpha", "e"));
 }
@@ -50,7 +50,7 @@ void TestUses::testIsUsesProc()
 	CPPUNIT_ASSERT_EQUAL(true, uses->isUsesProc("Alpha", "a"));
 	CPPUNIT_ASSERT_EQUAL(false, uses->isUsesProc("Alpha", "d"));
 
-	CPPUNIT_ASSERT_EQUAL(false, uses->isUsesProc("Ninja", "a"));
+	CPPUNIT_ASSERT_EQUAL(false, uses->isUsesProc("Delta", "a"));
 	CPPUNIT_ASSERT_EQUAL(false, uses->isUsesProc("Alpha", "e"));
 }
 
@@ -61,13 +61,16 @@ void TestUses::testGetUsedVar()
 	std::vector<std::string> expected;
 
 	std::string temp[] = {"a", "b", "c"};
-	expected.assign(temp, temp + 3);
+
+	expected.assign(temp, temp + 2);
 	CPPUNIT_ASSERT(expected == uses->getUsedVar("Alpha"));
+
+	expected.assign(temp, temp + 3);
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(1));
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == uses->getUsedVar("Delta"));
-	CPPUNIT_ASSERT(expected == uses->getUsedVar("Ninja"));
+	CPPUNIT_ASSERT(expected == uses->getUsedVar("Delta"));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(4));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(0));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(5));
@@ -94,8 +97,8 @@ void TestUses::testGetUsesProc()
 
 	std::vector<std::string> expected;
 
-	std::string temp[] = {"Alpha", "Bravo", "Charlie"};
-	expected.assign(temp, temp + 3);
+	std::string temp[] = {"Alpha", "Bravo"};
+	expected.assign(temp, temp + 2);
 	CPPUNIT_ASSERT(expected == uses->getUsesProc("a"));
 
 	expected.clear();
@@ -122,7 +125,6 @@ ProcTable* TestUses::buildProcTable()
 	procTable->addProcedure("Alpha");
 	procTable->addProcedure("Bravo");
 	procTable->addProcedure("Charlie");
-	procTable->addProcedure("Delta");
 
 	return procTable;
 }
@@ -145,10 +147,6 @@ void TestUses::generateUses()
 
 	uses->addUsesProc("Alpha", "a");
 	uses->addUsesProc("Alpha", "b");
-	uses->addUsesProc("Alpha", "c");
 
 	uses->addUsesProc("Bravo", "a");
-	uses->addUsesProc("Bravo", "b");
-
-	uses->addUsesProc("Charlie", "a");
 }

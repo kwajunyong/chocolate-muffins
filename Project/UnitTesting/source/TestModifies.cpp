@@ -26,7 +26,7 @@ void TestModifies::testAddModifiesProc()
 {
 	CPPUNIT_ASSERT_EQUAL(true, modifies->addModifiesProc("Alpha", "a"));
 
-	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Ninja", "a"));
+	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Delta", "a"));
 
 	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Alpha", "e"));
 }
@@ -50,7 +50,7 @@ void TestModifies::testIsModifiesProc()
 	CPPUNIT_ASSERT_EQUAL(true, modifies->isModifiesProc("Alpha", "a"));
 	CPPUNIT_ASSERT_EQUAL(false, modifies->isModifiesProc("Alpha", "d"));
 
-	CPPUNIT_ASSERT_EQUAL(false, modifies->isModifiesProc("Ninja", "a"));
+	CPPUNIT_ASSERT_EQUAL(false, modifies->isModifiesProc("Delta", "a"));
 	CPPUNIT_ASSERT_EQUAL(false, modifies->isModifiesProc("Alpha", "e"));
 }
 
@@ -61,13 +61,16 @@ void TestModifies::testGetModifiedVar()
 	std::vector<std::string> expected;
 
 	std::string temp[] = {"a", "b", "c"};
-	expected.assign(temp, temp + 3);
+
+	expected.assign(temp, temp + 2);
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Alpha"));
+	
+	expected.assign(temp, temp + 3);
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar(1));
 
 	expected.clear();
+	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Charlie"));
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Delta"));
-	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Ninja"));
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar(4));
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar(0));
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar(5));
@@ -94,8 +97,8 @@ void TestModifies::testGetModifiesProc()
 
 	std::vector<std::string> expected;
 
-	std::string temp[] = {"Alpha", "Bravo", "Charlie"};
-	expected.assign(temp, temp + 3);
+	std::string temp[] = {"Alpha", "Bravo"};
+	expected.assign(temp, temp + 2);
 	CPPUNIT_ASSERT(expected == modifies->getModifiesProc("a"));
 
 	expected.clear();
@@ -122,7 +125,6 @@ ProcTable* TestModifies::buildProcTable()
 	procTable->addProcedure("Alpha");
 	procTable->addProcedure("Bravo");
 	procTable->addProcedure("Charlie");
-	procTable->addProcedure("Delta");
 
 	return procTable;
 }
@@ -145,10 +147,6 @@ void TestModifies::generateModifies()
 
 	modifies->addModifiesProc("Alpha", "a");
 	modifies->addModifiesProc("Alpha", "b");
-	modifies->addModifiesProc("Alpha", "c");
 
 	modifies->addModifiesProc("Bravo", "a");
-	modifies->addModifiesProc("Bravo", "b");
-
-	modifies->addModifiesProc("Charlie", "a");
 }
