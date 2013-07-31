@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Affects.h" />
-    <ClInclude Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Calls.h" />
+    <ClInclude Include="..\source\Affects.h" />
     <ClInclude Include="..\source\AST.h" />
     <ClInclude Include="..\source\ASTNode.h" />
+    <ClInclude Include="..\source\Calls.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\ExpressionParser.h" />
@@ -29,10 +29,10 @@
     <ClInclude Include="..\source\VarTable.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Affects.cpp" />
-    <ClCompile Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Calls.cpp" />
+    <ClCompile Include="..\source\Affects.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
     <ClCompile Include="..\source\ASTNode.cpp" />
+    <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionParser.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />

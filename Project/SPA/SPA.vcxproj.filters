@@ -57,10 +57,10 @@
     <ClInclude Include="..\source\DesignExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Affects.h">
+    <ClInclude Include="..\source\Affects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Calls.h">
+    <ClInclude Include="..\source\Calls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,10 +104,10 @@
     <ClCompile Include="..\source\DesignExtractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Affects.cpp">
+    <ClCompile Include="..\source\Affects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Visual Studio 2010\Projects\Tester\Tester\Calls.cpp">
+    <ClCompile Include="..\source\Calls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
