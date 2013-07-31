@@ -7,6 +7,7 @@
 #include "Parent.h"
 #include "Modifies.h"
 #include "Uses.h"
+#include "Calls.h"
 
 class PKB
 {
@@ -35,17 +36,24 @@ public:
 	Uses* getUses();
 	void setUses(Uses* uses);
 
+	Calls* getCalls();
+	void setCalls(Calls* calls);
+
 	int getNumOfStmt();
 	void setNumOfStmt(int numOfStmt);
 private:
 	AST* _ast;
+	
 	VarTable* _varTable;
 	ProcTable* _procTable;
+	
 	Follows* _follows;
 	Parent* _parent;
+	
 	Modifies* _modifies;
 	Uses* _uses;
+	
+	Calls* _calls;
 
 	int _numOfStmt;
 };
-

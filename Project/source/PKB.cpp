@@ -76,6 +76,16 @@ void PKB::setUses(Uses* uses)
 	_uses = uses;
 }
 
+Calls* PKB::getCalls()
+{
+	return _calls;
+}
+
+void PKB::setCalls(Calls* calls)
+{
+	_calls = calls;
+}
+
 int PKB::getNumOfStmt()
 {
 	return _numOfStmt;
