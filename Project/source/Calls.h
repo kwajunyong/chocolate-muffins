@@ -27,4 +27,4 @@ private:
 	bool compute(string procedure1, string procedure2);
 
 	string computeTransitive(string procedure, bool check);
-}
+};

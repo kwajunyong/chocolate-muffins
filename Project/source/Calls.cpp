@@ -1,7 +1,5 @@
 #include "Calls.h"
 
-;using namespace std;
-
 Calls::Calls(void) {}
 
 Calls::~Calls(void) {}
