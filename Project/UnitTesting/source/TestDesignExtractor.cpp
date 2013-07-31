@@ -19,6 +19,7 @@ void TestDesignExtractor::setUp()
 	parent = pkb->getParent();
 	modifies = pkb->getModifies();
 	uses = pkb->getUses();
+	calls = pkb->getCalls();
 	numOfStmt = pkb->getNumOfStmt();
 }
 
@@ -66,6 +67,17 @@ void TestDesignExtractor::testUses()
 	for (int i = 0; i < variables.size(); i++) {
 		CPPUNIT_ASSERT(expected.getUsesStmt(variables[i]) == uses->getUsesStmt(variables[i]));
 		CPPUNIT_ASSERT(expected.getUsesProc(variables[i]) == uses->getUsesProc(variables[i]));
+	}
+}
+
+void TestDesignExtractor::testCalls()
+{
+	Calls expected = expectedCalls();
+
+	std::vector<std::string> procedures = procTable->getAllNames();
+
+	for (int i = 0; i < procedures.size(); i++) {
+		CPPUNIT_ASSERT(expected.getCalls(procedures[i], false) == calls->getCalls(procedures[i], false));
 	}
 }
 
@@ -125,7 +137,7 @@ Modifies TestDesignExtractor::expectedModifies()
 	expected.addModifiesProc("Fourth", "j");
 	expected.addModifiesProc("Fifth", "l");
 
-	/*
+	// Calls
 	expected.addModifiesProc("First", "j");
 	expected.addModifiesProc("First", "l");
 	expected.addModifiesProc("Second", "d");
@@ -149,7 +161,6 @@ Modifies TestDesignExtractor::expectedModifies()
 	expected.addModifiesStmt(11, "d");
 	expected.addModifiesStmt(11, "j");
 	expected.addModifiesStmt(11, "l");
-	*/
 
 	return expected;
 }
@@ -197,7 +208,7 @@ Uses TestDesignExtractor::expectedUses()
 	expected.addUsesProc("Fifth", "m");
 	expected.addUsesProc("Fifth", "n");
 	
-	/*
+	// Calls
 	expected.addUsesProc("First", "i");
 	expected.addUsesProc("First", "k");
 	expected.addUsesProc("First", "m");
@@ -251,7 +262,18 @@ Uses TestDesignExtractor::expectedUses()
 	expected.addUsesStmt(11, "k");
 	expected.addUsesStmt(11, "m");
 	expected.addUsesStmt(11, "n");
-	*/
+
+	return expected;
+}
+
+Calls TestDesignExtractor::expectedCalls()
+{
+	Calls expected;
+
+	expected.addCalls("First", "Fourth");
+	expected.addCalls("First", "Fifth");
+	expected.addCalls("Second", "First");
+	expected.addCalls("Third", "First");
 
 	return expected;
 }

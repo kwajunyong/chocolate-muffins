@@ -15,6 +15,7 @@ class TestDesignExtractor : public CPPUNIT_NS::TestFixture
 	CPPUNIT_TEST(testParent);
 	CPPUNIT_TEST(testModifies);
 	CPPUNIT_TEST(testUses);
+	CPPUNIT_TEST(testCalls);
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -29,6 +30,7 @@ public:
 	void testParent();
 	void testModifies();
 	void testUses();
+	void testCalls();
 	void testStmtNum();
 
 private:
@@ -41,10 +43,12 @@ private:
 	Parent* parent;
 	Modifies* modifies;
 	Uses* uses;
+	Calls* calls;
 	int numOfStmt;
 
 	Follows expectedFollows();
 	Parent expectedParent();
 	Modifies expectedModifies();
 	Uses expectedUses();
+	Calls expectedCalls();
 };
