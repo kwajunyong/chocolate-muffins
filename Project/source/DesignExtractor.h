@@ -17,6 +17,8 @@ public:
 private:
 	PKB* _pkb;
 	
+	AST* _ast;
+
 	VarTable* _varTable;
 	ProcTable* _procTable;
 
@@ -36,6 +38,8 @@ private:
 
 	void updateStatements(ASTNode* node, std::vector<int> &statements);
 	void updateProcedure(ASTNode* node, std::string &procedure);
+
+	void extractStatementNodes(ASTNode* node);
 
 	void extractFollows(ASTNode* node);
 	void extractParent(ASTNode* node);

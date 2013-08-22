@@ -16,6 +16,21 @@ void PKB::setAST(AST* ast)
 	_ast = ast;
 }
 
+ASTTraverser* PKB::getASTTraverser()
+{
+	return _traverser;
+}
+
+ASTMatcher* PKB::getASTMatcher()
+{
+	return _matcher;
+}
+
+ASTExpressionBuilder* PKB::getASTExpressionBuilder()
+{
+	return _exprBuilder;
+}
+
 VarTable* PKB::getVarTable()
 {
 	return _varTable;

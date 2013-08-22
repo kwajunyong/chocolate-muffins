@@ -7,12 +7,13 @@ void TestDesignExtractor::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("..\\source\\Test.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
 	}
 
+	ast = pkb->getAST();
 	varTable = pkb->getVarTable();
 	procTable = pkb->getProcTable();
 	follows = pkb->getFollows();
@@ -27,6 +28,51 @@ void TestDesignExtractor::tearDown()
 {}
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestDesignExtractor);
+
+void TestDesignExtractor::testStmtNodes()
+{
+	std::vector<std::string> expected = expectedStmt();
+
+	std::vector<std::string> actual;
+	std::vector<ASTNode*> stmtNodes = ast->getStatementNodes(ALL);
+
+	for (int i = 0; i < stmtNodes.size(); i++) {
+		actual.push_back(stmtNodes[i]->print());
+	}
+
+	CPPUNIT_ASSERT(expected == actual);
+
+	std::vector<int> expectedStmt;
+	std::vector<int> actualStmt;
+
+	int tempAssign[] = {4, 9, 10, 13, 14, 15, 16, 17, 18, 19};
+	expectedStmt.assign(tempAssign, tempAssign + 10);
+
+	actualStmt = ast->getStatementNumbers(ASSIGN);
+
+	CPPUNIT_ASSERT(expectedStmt == actualStmt);
+
+	int tempWhile[] = {1, 2, 12};
+	expectedStmt.assign(tempWhile, tempWhile + 3);
+
+	actualStmt = ast->getStatementNumbers(WHILE);
+
+	CPPUNIT_ASSERT(expectedStmt == actualStmt);
+
+	int tempIf[] = {3, 8};
+	expectedStmt.assign(tempIf, tempIf + 2);
+
+	actualStmt = ast->getStatementNumbers(IF);
+
+	CPPUNIT_ASSERT(expectedStmt == actualStmt);
+
+	int tempCall[] = {5, 6, 7, 11};
+	expectedStmt.assign(tempCall, tempCall + 4);
+
+	actualStmt = ast->getStatementNumbers(CALL);
+
+	CPPUNIT_ASSERT(expectedStmt == actualStmt);
+}
 
 void TestDesignExtractor::testFollows()
 {
@@ -79,6 +125,33 @@ void TestDesignExtractor::testCalls()
 	for (int i = 0; i < procedures.size(); i++) {
 		CPPUNIT_ASSERT(expected.getCalls(procedures[i], false) == calls->getCalls(procedures[i], false));
 	}
+}
+
+std::vector<std::string> TestDesignExtractor::expectedStmt()
+{
+	std::vector<std::string> expected;
+
+	expected.push_back(":while:1");
+	expected.push_back(":while:2");
+	expected.push_back(":if:3");
+	expected.push_back(":assign:4");
+	expected.push_back("Fourth:call:5");
+	expected.push_back("Fifth:call:6");
+	expected.push_back("First:call:7");
+	expected.push_back(":if:8");
+	expected.push_back(":assign:9");
+	expected.push_back(":assign:10");
+	expected.push_back("First:call:11");
+	expected.push_back(":while:12");
+	expected.push_back(":assign:13");
+	expected.push_back(":assign:14");
+	expected.push_back(":assign:15");
+	expected.push_back(":assign:16");
+	expected.push_back(":assign:17");
+	expected.push_back(":assign:18");
+	expected.push_back(":assign:19");
+
+	return expected;
 }
 
 Follows TestDesignExtractor::expectedFollows()

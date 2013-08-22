@@ -18,110 +18,36 @@ void AST::setRootNode(ASTNode* root)
 	_root = root;
 }
 
-std::vector<std::string> AST::traverse(ASTNode* node)
+bool AST::addStatementNodeToList(ASTNode* node)
 {
-	std::vector<std::string> list;
-
-	traverse(node, list, 0);
-
-	return list;
-}
-
-void AST::traverse(ASTNode* node, std::vector<std::string> &list, int level)
-{
-	while (node != NULL) {
-		list.push_back(indent(level) + node->print());
-		
-		if (node->getChild() != NULL) {
-			traverse(node->getChild(), list, level + 1);
-		}
-		
-		node = node->getNext();
-	}
-}
-
-std::string AST::indent(int level)
-{
-	std::string indent;
-
-	for (int i = 0; i < level; i++) {
-		indent.append("  ");
+	switch (node->getType()) {
+		case ASSIGN:
+			_assignStmt.push_back(node->getStatementNumber());
+			break;
+		case WHILE:
+			_whileStmt.push_back(node->getStatementNumber());
+			break;
+		case IF:
+			_ifStmt.push_back(node->getStatementNumber());
+			break;
+		case CALL:
+			_callStmt.push_back(node->getStatementNumber());
+			break;
+		default:
+			return false;
 	}
 
-	return indent;
-}
-
-bool AST::matchTree(ASTNode* tree, ASTNode* compare)
-{
-	if (tree == NULL && compare == NULL) {
-		return true;
-	}
-
-	if (tree == NULL || compare == NULL) {
-		return false;
-	}
-
-	if (tree->equals(compare)) {
-		ASTNode* nodeChild = tree->getChild();
-		ASTNode* compareChild = compare->getChild();
-
-		while (true) {
-			if (nodeChild != NULL && compareChild != NULL) {
-				if (matchTree(nodeChild, compareChild)) {
-					nodeChild = nodeChild->getNext();
-					compareChild = compareChild->getNext();
-
-					continue;
-				} else {
-					return false;
-				}
-			}
-
-			if (nodeChild == NULL && compareChild == NULL) {
-				return true;
-			}
-
-			if (nodeChild == NULL || compareChild == NULL) {
-				return false;
-			}
-		}
-	}
-}
-
-bool AST::matchSubTree(ASTNode* tree, ASTNode* subtree)
-{
-	if (subtree == NULL) {
-		return true;
-	}
-
-	if (tree == NULL) {
-		return false;
-	}
-
-	if (matchTree(tree, subtree)) {
-			return true;
-	}
-
-	ASTNode* child = tree->getChild();
-
-	while (child != NULL) {
-		if (matchSubTree(child, subtree)) {
-			return true;
-		} else {
-			child = child->getNext();
-		}
-	}
-
-	return false;
+	_stmtNodes.push_back(node);
+	return true;
 }
 
 ASTNode* AST::getStatementNode(int stmtNum)
 {
-	std::vector<ASTNode*> list;
+	if (stmtNum < 1 || stmtNum > _stmtNodes.size()) {
+		return NULL;
+	}
 
-	search(_root, list, stmtNum, NONE);
-
-	return (list.empty()) ? NULL : list.front();
+	return _stmtNodes[stmtNum - 1];
 }
 
 ASTType AST::getStatementType(int stmtNum)
@@ -131,22 +57,44 @@ ASTType AST::getStatementType(int stmtNum)
 	return (node != NULL) ? node->getType() : NONE;
 }
 
-std::vector<ASTNode*> AST::getStatementNodes(ASTType type)
-{
-	std::vector<ASTNode*> list;
+std::vector<int> AST::getStatementNumbers(ASTType type)
+{	
+	std::vector<int> stmtNumList;
 
-	search(_root, list, 0, type);
-
-	return list;
+	switch (type) {
+		case ASSIGN:
+			return _assignStmt;
+		case WHILE:
+			return _whileStmt;
+		case IF:
+			return _ifStmt;
+		case CALL:
+			return _callStmt;
+		case ALL:
+			for (int i = 1; i <= _stmtNodes.size(); i++) {
+				stmtNumList.push_back(i);
+			}
+			
+			return stmtNumList;
+		default:
+			return stmtNumList;
+	}
 }
 
-std::vector<int> AST::getStatementNumbers(ASTType type)
+std::vector<ASTNode*> AST::getStatementNodes(ASTType type)
 {
-	std::vector<int> list;
+	if (type == ALL) {
+		return _stmtNodes;
+	}
 
-	search(_root, list, type);
+	std::vector<int> stmtNumList = getStatementNumbers(type);
+	std::vector<ASTNode*> stmtNodes;
 
-	return list;
+	for (int i = 0; i < stmtNumList.size(); i++) {
+		stmtNodes.push_back(getStatementNode(stmtNumList[i]));
+	}
+
+	return stmtNodes;
 }
 
 void AST::search(ASTNode* node, std::vector<ASTNode*> &list, int stmtNum, ASTType type)
@@ -181,9 +129,4 @@ void AST::search(ASTNode* node, std::vector<int> &list, ASTType type)
 		
 		node = node->getNext();
 	}
-}
-
-ASTNode* AST::buildExpressionNode(std::string expression)
-{
-	return _expParser.parse(expression);
 }

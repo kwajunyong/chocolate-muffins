@@ -1,6 +1,9 @@
 #pragma once
 
 #include "AST.h"
+#include "ASTTraverser.h"
+#include "ASTMatcher.h"
+#include "ASTExpressionBuilder.h"
 #include "VarTable.h"
 #include "ProcTable.h"
 #include "Follows.h"
@@ -17,6 +20,10 @@ public:
 
 	AST* getAST();
 	void setAST(AST* ast);
+
+	ASTTraverser* getASTTraverser();
+	ASTMatcher* getASTMatcher();
+	ASTExpressionBuilder* getASTExpressionBuilder();
 
 	VarTable* getVarTable();
 	void setVarTable(VarTable* varTable);
@@ -43,6 +50,9 @@ public:
 	void setNumOfStmt(int numOfStmt);
 private:
 	AST* _ast;
+	ASTTraverser* _traverser;
+	ASTMatcher* _matcher;
+	ASTExpressionBuilder* _exprBuilder;
 	
 	VarTable* _varTable;
 	ProcTable* _procTable;

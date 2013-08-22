@@ -10,11 +10,13 @@ void DesignExtractor::extract(PKB* pkb)
 {
 	_pkb = pkb;
 
-	ASTNode* rootNode = _pkb->getAST()->getRootNode();
+	_ast = _pkb->getAST();
 	_varTable = _pkb->getVarTable();
 	_procTable = _pkb->getProcTable();
 	_numOfStmt = _pkb->getNumOfStmt();
-
+	
+	ASTNode* rootNode = _pkb->getAST()->getRootNode();
+	
 	_follows = new Follows();
 	_parent = new Parent();
 	_modifies = new Modifies(_numOfStmt, _varTable, _procTable);
@@ -41,6 +43,8 @@ void DesignExtractor::traverseAST(ASTNode* node, std::vector<int> statements, st
 		updateStatements(node, statements);
 		updateProcedure(node, procedure);
 		
+		extractStatementNodes(node);
+
 		extractFollows(node);
 		extractParent(node);
 
@@ -72,6 +76,14 @@ void DesignExtractor::updateProcedure(ASTNode* node, std::string &procedure)
 {
 	if (node->getType() == PROCEDURE) {
 		procedure = node->getName();
+	}
+}
+
+void DesignExtractor::extractStatementNodes(ASTNode* node)
+{
+	if (isStatement(node)) {
+		//std::cout << node->print() << std::endl;
+		_ast->addStatementNodeToList(node);
 	}
 }
 

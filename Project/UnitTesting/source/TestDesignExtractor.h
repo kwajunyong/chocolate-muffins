@@ -11,6 +11,7 @@ class TestDesignExtractor : public CPPUNIT_NS::TestFixture
 {
 	CPPUNIT_TEST_SUITE(TestDesignExtractor);
 
+	CPPUNIT_TEST(testStmtNodes);
 	CPPUNIT_TEST(testFollows);
 	CPPUNIT_TEST(testParent);
 	CPPUNIT_TEST(testModifies);
@@ -23,9 +24,7 @@ public:
 	void setUp();
 	void tearDown();
 
-	void testAST();
-	void testVarTable();
-	void testProcTable();
+	void testStmtNodes();
 	void testFollows();
 	void testParent();
 	void testModifies();
@@ -37,6 +36,7 @@ private:
 	Parser parser;
 	DesignExtractor extractor;
 
+	AST* ast;
 	VarTable* varTable;
 	ProcTable* procTable;
 	Follows* follows;
@@ -46,6 +46,7 @@ private:
 	Calls* calls;
 	int numOfStmt;
 
+	std::vector<std::string> expectedStmt();
 	Follows expectedFollows();
 	Parent expectedParent();
 	Modifies expectedModifies();

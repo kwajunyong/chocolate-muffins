@@ -9,17 +9,12 @@
 class TestAST: public CPPUNIT_NS::TestFixture
 {
 	CPPUNIT_TEST_SUITE(TestAST);
-	
-	CPPUNIT_TEST(testTraverse);
-	
+
 	CPPUNIT_TEST(testGetStatementNode);
 	CPPUNIT_TEST(testGetStatementType);
 	
 	CPPUNIT_TEST(testGetStatementNodes);
 	CPPUNIT_TEST(testGetStatementNumbers);
-	
-	CPPUNIT_TEST(testMatchTree);
-	CPPUNIT_TEST(testMatchSubTree);
 	
 	CPPUNIT_TEST_SUITE_END();
 
