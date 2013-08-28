@@ -22,6 +22,8 @@ private:
 	ASTNode* _root;
 
 	std::vector<ASTNode*> _stmtNodes;
+
+	std::vector<int> _stmt;
 	std::vector<int> _assignStmt;
 	std::vector<int> _whileStmt;
 	std::vector<int> _ifStmt;

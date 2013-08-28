@@ -37,7 +37,9 @@ bool AST::addStatementNodeToList(ASTNode* node)
 			return false;
 	}
 
+	_stmt.push_back(node->getStatementNumber());
 	_stmtNodes.push_back(node);
+	
 	return true;
 }
 
@@ -59,8 +61,6 @@ ASTType AST::getStatementType(int stmtNum)
 
 std::vector<int> AST::getStatementNumbers(ASTType type)
 {	
-	std::vector<int> stmtNumList;
-
 	switch (type) {
 		case ASSIGN:
 			return _assignStmt;
@@ -71,13 +71,9 @@ std::vector<int> AST::getStatementNumbers(ASTType type)
 		case CALL:
 			return _callStmt;
 		case ALL:
-			for (int i = 1; i <= _stmtNodes.size(); i++) {
-				stmtNumList.push_back(i);
-			}
-			
-			return stmtNumList;
+			return _stmt;
 		default:
-			return stmtNumList;
+			return std::vector<int>();
 	}
 }
 

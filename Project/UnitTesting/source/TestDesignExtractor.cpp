@@ -45,6 +45,13 @@ void TestDesignExtractor::testStmtNodes()
 	std::vector<int> expectedStmt;
 	std::vector<int> actualStmt;
 
+	int tempAll[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+	expectedStmt.assign(tempAll, tempAll + 19);
+
+	actualStmt = ast->getStatementNumbers(ALL);
+
+	CPPUNIT_ASSERT(expectedStmt == actualStmt);
+
 	int tempAssign[] = {4, 9, 10, 13, 14, 15, 16, 17, 18, 19};
 	expectedStmt.assign(tempAssign, tempAssign + 10);
 
