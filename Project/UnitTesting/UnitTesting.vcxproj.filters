@@ -42,13 +42,19 @@
     <ClCompile Include="source\TestVarTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\TestExpressionParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\TestParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\TestDesignExtractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TestASTExpressionBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TestASTMatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TestASTTraverser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,13 +83,19 @@
     <ClInclude Include="source\TestVarTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\TestExpressionParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\TestParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\TestDesignExtractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestASTExpressionBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestASTMatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestASTTraverser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

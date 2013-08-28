@@ -13,7 +13,11 @@
   <ItemGroup>
     <ClInclude Include="..\source\Affects.h" />
     <ClInclude Include="..\source\AST.h" />
+    <ClInclude Include="..\source\ASTExpressionBuilder.h" />
+    <ClInclude Include="..\source\ASTMatcher.h" />
     <ClInclude Include="..\source\ASTNode.h" />
+    <ClInclude Include="..\source\ASTTraverser.h" />
+    <ClInclude Include="..\source\ASTType.h" />
     <ClInclude Include="..\source\Calls.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
@@ -31,7 +35,10 @@
   <ItemGroup>
     <ClCompile Include="..\source\Affects.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
+    <ClCompile Include="..\source\ASTExpressionBuilder.cpp" />
+    <ClCompile Include="..\source\ASTMatcher.cpp" />
     <ClCompile Include="..\source\ASTNode.cpp" />
+    <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionParser.cpp" />

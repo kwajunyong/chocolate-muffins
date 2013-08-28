@@ -12,6 +12,9 @@ int main(int argc, char* argv[])
 	
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestASTNode").makeTest());	
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestAST").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestASTExpressionBuilder").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestASTMatcher").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestASTTraverser").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestVarTable").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestProcTable").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestFollows").makeTest());

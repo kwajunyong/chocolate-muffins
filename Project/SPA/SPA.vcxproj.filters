@@ -63,6 +63,18 @@
     <ClInclude Include="..\source\Calls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\ASTExpressionBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ASTMatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ASTTraverser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ASTType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ASTNode.cpp">
@@ -108,6 +120,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\Calls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ASTExpressionBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ASTMatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ASTTraverser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

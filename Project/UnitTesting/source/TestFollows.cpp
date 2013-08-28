@@ -43,7 +43,7 @@ void TestFollows::testGetFollowedBy()
 {
 	generateFollows();
 
-	vector<int> expected;
+	std::vector<int> expected;
 
 	expected.push_back(2);
 	CPPUNIT_ASSERT(follows.getFollowedBy(1, false) == expected);
@@ -56,7 +56,7 @@ void TestFollows::testGetTransitiveFollowedBy()
 {
 	generateFollows();
 
-	vector<int> expected;
+	std::vector<int> expected;
 
 	int temp[] = {2, 3, 4};
 	expected.assign(temp, temp + 3);
@@ -70,7 +70,7 @@ void TestFollows::testGetFollows()
 {
 	generateFollows();
 
-	vector<int> expected;
+	std::vector<int> expected;
 
 	expected.push_back(3);
 	CPPUNIT_ASSERT(follows.getFollows(4, false) == expected);
@@ -83,7 +83,7 @@ void TestFollows::testGetTransitiveFollows()
 {
 	generateFollows();
 
-	vector<int> expected;
+	std::vector<int> expected;
 
 	int temp[] = {3, 2, 1};
 	expected.assign(temp, temp + 3);

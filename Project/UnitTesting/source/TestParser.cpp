@@ -13,6 +13,7 @@ void TestParser::setUp()
 	}
 
 	ast = pkb->getAST();
+	traverser = pkb->getASTTraverser();
 	varTable = pkb->getVarTable();
 	procTable = pkb->getProcTable();
 	numOfStmt = pkb->getNumOfStmt();
@@ -26,7 +27,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestParser);
 void TestParser::testAST()
 {
 	std::vector<std::string> expected = expectedAST();
-	std::vector<std::string> actual = ast->traverse(ast->getRootNode());
+	std::vector<std::string> actual = traverser->traverse(ast->getRootNode());
 
 	for (int i = 0; i<expected.size(); i++) {
 		CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);

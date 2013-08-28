@@ -30,6 +30,7 @@ private:
 	Parser parser;
 
 	AST* ast;
+	ASTTraverser* traverser;
 	VarTable* varTable;
 	ProcTable* procTable;
 	int numOfStmt;
