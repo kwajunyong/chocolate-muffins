@@ -7,7 +7,7 @@ void TestParser::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("..\\source\\Test.txt");
+		pkb = parser.parse("Test.txt");
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
 	}
@@ -29,7 +29,7 @@ void TestParser::testAST()
 	std::vector<std::string> expected = expectedAST();
 	std::vector<std::string> actual = traverser->traverse(ast->getRootNode());
 
-	for (int i = 0; i<expected.size(); i++) {
+	for (size_t i = 0; i<expected.size(); i++) {
 		CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);
 	}
 }

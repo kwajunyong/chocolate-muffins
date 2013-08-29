@@ -153,7 +153,7 @@ void DesignExtractor::traverseCalls()
 	std::vector<std::pair<std::string, std::string>> calls;
 	std::vector<int> visited(_procTable->getSize(), 0);
 
-	for (int i = 0; i < _procTable->getSize(); i++) {
+	for (size_t i = 0; i < _procTable->getSize(); i++) {
 		if (visited[i] == 0) {
 			traverseCalls(_procTable->getName(i), visited, calls);
 		}
@@ -174,7 +174,7 @@ void DesignExtractor::traverseCalls(std::string procedure, std::vector<int> &vis
 
 	std::vector<std::string> calledProc = _calls->getCalled(procedure, false);
 
-	for (int i = 0; i < calledProc.size(); i++) {
+	for (size_t i = 0; i < calledProc.size(); i++) {
 		if (visited[_procTable->getIndex(calledProc[i])] == 0) {
 			traverseCalls(calledProc[i], visited, calls);
 		} else if (visited[_procTable->getIndex(calledProc[i])] == 1) {
@@ -184,7 +184,7 @@ void DesignExtractor::traverseCalls(std::string procedure, std::vector<int> &vis
 
 	visited[_procTable->getIndex(procedure)] = 2;
 
-	for (int i = 0; i < calledProc.size(); i++) {
+	for (size_t i = 0; i < calledProc.size(); i++) {
 		calls.push_back(make_pair<std::string, std::string>(calledProc[i], procedure));
 	}
 }
@@ -222,7 +222,7 @@ void DesignExtractor::extractModifiesFromCallNodes()
 	ASTNode* node;
 	std::vector<std::string> variables;
 
-	for (int i = 0; i < _callNodes.size(); i++) {
+	for (size_t i = 0; i < _callNodes.size(); i++) {
 		node = _callNodes[i];
 		
 		variables = _modifies->getModifiedVar(node->getName());
@@ -243,7 +243,7 @@ void DesignExtractor::extractUsesFromCallNodes()
 	ASTNode* node;
 	std::vector<std::string> variables;
 
-	for (int i = 0; i < _callNodes.size(); i++) {
+	for (size_t i = 0; i < _callNodes.size(); i++) {
 		node = _callNodes[i];
 		
 		variables = _uses->getUsedVar(node->getName());

@@ -22,7 +22,7 @@ bool Calls::isCalls(string procedure1, string procedure2, bool transitive)
 	{
 		vector<string> querys = calls[procedure1];
 		
-		for(int i = 0; i < querys.size(); i++)
+		for(size_t i = 0; i < querys.size(); i++)
 		{
 			if(querys[i] == procedure2)
 			{
@@ -53,7 +53,7 @@ vector<string> Calls::getCalls(string procedure, bool transitive)
 			return answers;
 		}*/
 
-		for(int i = 0; i < answers.size(); i++)
+		for(size_t i = 0; i < answers.size(); i++)
 		{
 			if(answers.size() > 0)
 			{
@@ -61,7 +61,7 @@ vector<string> Calls::getCalls(string procedure, bool transitive)
 			}
 		}
 
-		for(int i = 0; i < temp.size(); i++)
+		for(size_t i = 0; i < temp.size(); i++)
 		{
 			for(int j = 0; j < temp[i].size(); j++)
 			{
@@ -103,7 +103,7 @@ vector<string> Calls::getCalled(string procedure, bool transitive)
 			return answers;
 		}*/
 
-		for(int i = 0; i < answers.size(); i++)
+		for(size_t i = 0; i < answers.size(); i++)
 		{
 			if(answers.size() > 0)
 			{
@@ -111,7 +111,7 @@ vector<string> Calls::getCalled(string procedure, bool transitive)
 			}
 		}
 
-		for(int i = 0; i < temp.size(); i++)
+		for(size_t i = 0; i < temp.size(); i++)
 		{
 			for(int j = 0; j < temp[i].size(); j++)
 			{
@@ -138,7 +138,7 @@ bool Calls::compute(string procedure1, string procedure2)
 	vector<string> querys = calls[procedure1];
 	bool check = false;
 
-	for(int i = 0; i < querys.size(); i++)
+	for(size_t i = 0; i < querys.size(); i++)
 	{
 		string temp = querys[i];
 

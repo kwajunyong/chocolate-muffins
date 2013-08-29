@@ -35,12 +35,14 @@ bool ASTMatcher::matchTree(ASTNode* tree, ASTNode* compare)
 			if (nodeChild == NULL && compareChild == NULL) {
 				return true;
 			}
-
-			if (nodeChild == NULL || compareChild == NULL) {
-				return false;
+			
+			if (nodeChild != NULL && compareChild != NULL) {
+				break;
 			}
 		}
 	}
+
+	return false;
 }
 
 bool ASTMatcher::matchSubTree(ASTNode* tree, ASTNode* subtree)
@@ -54,7 +56,7 @@ bool ASTMatcher::matchSubTree(ASTNode* tree, ASTNode* subtree)
 	}
 
 	if (matchTree(tree, subtree)) {
-			return true;
+		return true;
 	}
 
 	ASTNode* child = tree->getChild();

@@ -89,7 +89,7 @@ std::vector<std::string> Modifies::getModifiedVar(int stmtNum)
 		return results;
 	}
 
-	for (int i = 0; i < _varModifies[stmtNum-1].size(); i++) {
+	for (size_t i = 0; i < _varModifies[stmtNum-1].size(); i++) {
 		if (_varModifies[stmtNum - 1][i]) {
 			results.push_back(_varTable->getName(i));
 		}
@@ -108,7 +108,7 @@ std::vector<std::string> Modifies::getModifiedVar(std::string procedure)
 		return results;
 	}
 
-	for (int i = 0; i < _procModifies[procIndex].size(); i++) {
+	for (size_t i = 0; i < _procModifies[procIndex].size(); i++) {
 		if (_procModifies[procIndex][i]) {
 			results.push_back(_varTable->getName(i));
 		}
@@ -127,7 +127,7 @@ std::vector<int> Modifies::getModifiesStmt(std::string variable)
 		return results;
 	}
 
-	for (int i = 0; i < _varModifies.size(); i++) {
+	for (size_t i = 0; i < _varModifies.size(); i++) {
 		if (_varModifies[i][varIndex]) {
 			results.push_back(i + 1);
 		}
@@ -146,7 +146,7 @@ std::vector<std::string> Modifies::getModifiesProc(std::string variable)
 		return results;
 	}
 
-	for (int i = 0; i < _procModifies.size(); i++) {
+	for (size_t i = 0; i < _procModifies.size(); i++) {
 		if (_procModifies[i][varIndex]) {
 			results.push_back(_procTable->getName(i));
 		}

@@ -86,7 +86,7 @@ std::vector<ASTNode*> AST::getStatementNodes(ASTType type)
 	std::vector<int> stmtNumList = getStatementNumbers(type);
 	std::vector<ASTNode*> stmtNodes;
 
-	for (int i = 0; i < stmtNumList.size(); i++) {
+	for (size_t i = 0; i < stmtNumList.size(); i++) {
 		stmtNodes.push_back(getStatementNode(stmtNumList[i]));
 	}
 

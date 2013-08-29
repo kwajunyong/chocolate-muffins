@@ -16,6 +16,7 @@ PKB* Parser::parse(std::string fileName)
 	_ast = new AST();
 	_varTable = new VarTable();
 	_procTable = new ProcTable();
+	_calls = new Calls();
 
 	getToken();
 
@@ -27,6 +28,7 @@ PKB* Parser::parse(std::string fileName)
 	pkb->setAST(_ast);
 	pkb->setVarTable(_varTable);
 	pkb->setProcTable(_procTable);
+	pkb->setCalls(_calls);
 
 	if (!isKeyword("")) {
 		throw ParseException(_stmtNum, _token, "Unnecessary token");

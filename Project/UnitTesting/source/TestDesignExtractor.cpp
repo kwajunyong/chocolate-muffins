@@ -7,7 +7,7 @@ void TestDesignExtractor::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("..\\source\\Test.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
@@ -36,7 +36,7 @@ void TestDesignExtractor::testStmtNodes()
 	std::vector<std::string> actual;
 	std::vector<ASTNode*> stmtNodes = ast->getStatementNodes(ALL);
 
-	for (int i = 0; i < stmtNodes.size(); i++) {
+	for (size_t i = 0; i < stmtNodes.size(); i++) {
 		actual.push_back(stmtNodes[i]->print());
 	}
 
@@ -105,7 +105,7 @@ void TestDesignExtractor::testModifies()
 
 	std::vector<std::string> variables = varTable->getAllNames();
 
-	for (int i = 0; i < variables.size(); i++) {
+	for (size_t i = 0; i < variables.size(); i++) {
 		CPPUNIT_ASSERT(expected.getModifiesStmt(variables[i]) == modifies->getModifiesStmt(variables[i]));
 		CPPUNIT_ASSERT(expected.getModifiesProc(variables[i]) == modifies->getModifiesProc(variables[i]));
 	}
@@ -117,7 +117,7 @@ void TestDesignExtractor::testUses()
 
 	std::vector<std::string> variables = varTable->getAllNames();
 
-	for (int i = 0; i < variables.size(); i++) {
+	for (size_t i = 0; i < variables.size(); i++) {
 		CPPUNIT_ASSERT(expected.getUsesStmt(variables[i]) == uses->getUsesStmt(variables[i]));
 		CPPUNIT_ASSERT(expected.getUsesProc(variables[i]) == uses->getUsesProc(variables[i]));
 	}
@@ -129,7 +129,7 @@ void TestDesignExtractor::testCalls()
 
 	std::vector<std::string> procedures = procTable->getAllNames();
 
-	for (int i = 0; i < procedures.size(); i++) {
+	for (size_t i = 0; i < procedures.size(); i++) {
 		CPPUNIT_ASSERT(expected.getCalls(procedures[i], false) == calls->getCalls(procedures[i], false));
 	}
 }

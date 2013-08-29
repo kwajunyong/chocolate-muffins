@@ -1,0 +1,12 @@
+title SPA High-level Sequence Diagram
+
+Front-End Controller->Parser: parse(STRING filepath)
+Parser->DesignExtractor: extract(PKB* pkb)
+DesignExtractor-->Parser: 
+Parser-->Front-End Controller: PKB*
+Front-End Controller->QueryPreprocesser: process(STRING query)
+QueryPreprocesser-->Front-End Controller: QueryTree*
+Front-End Controller->QueryEvaluator: setPKB(PKB* pkb)
+QueryEvaluator-->Front-End Controller: 
+Front-End Controller->QueryEvaluator: evaluate(QueryTree* query)
+QueryEvaluator-->Front-End Controller: QueryResult

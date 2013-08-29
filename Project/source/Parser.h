@@ -24,11 +24,12 @@ private:
 	
 	std::string _token;
 	void getToken();
-	
+
 	int _stmtNum;
 	AST* _ast;
 	VarTable* _varTable;
 	ProcTable* _procTable;
+	Calls* _calls;
 
 	ASTNode* program();
 	ASTNode* procedure();

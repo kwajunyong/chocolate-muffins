@@ -89,7 +89,7 @@ std::vector<std::string> Uses::getUsedVar(int stmtNum)
 		return results;
 	}
 
-	for (int i = 0; i < _varUses[stmtNum-1].size(); i++) {
+	for (size_t i = 0; i < _varUses[stmtNum-1].size(); i++) {
 		if (_varUses[stmtNum - 1][i]) {
 			results.push_back(_varTable->getName(i));
 		}
@@ -108,7 +108,7 @@ std::vector<std::string> Uses::getUsedVar(std::string procedure)
 		return results;
 	}
 
-	for (int i = 0; i < _procUses[procIndex].size(); i++) {
+	for (size_t i = 0; i < _procUses[procIndex].size(); i++) {
 		if (_procUses[procIndex][i]) {
 			results.push_back(_varTable->getName(i));
 		}
@@ -127,7 +127,7 @@ std::vector<int> Uses::getUsesStmt(std::string variable)
 		return results;
 	}
 
-	for (int i = 0; i < _varUses.size(); i++) {
+	for (size_t i = 0; i < _varUses.size(); i++) {
 		if (_varUses[i][varIndex]) {
 			results.push_back(i + 1);
 		}
@@ -146,7 +146,7 @@ std::vector<std::string> Uses::getUsesProc(std::string variable)
 		return results;
 	}
 
-	for (int i = 0; i < _procUses.size(); i++) {
+	for (size_t i = 0; i < _procUses.size(); i++) {
 		if (_procUses[i][varIndex]) {
 			results.push_back(_procTable->getName(i));
 		}

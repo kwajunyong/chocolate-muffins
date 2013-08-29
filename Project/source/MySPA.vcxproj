@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EC7FCB21-6010-4E8B-A648-510D0DB48357}</ProjectGuid>
+    <RootNamespace>MySPA</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\Users\Junyong\Documents\NUS Assignments\Year 3.1\CS3202 - Software Engineering Project II\Tools\CppUnit\cppunit-1.12.1\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\Junyong\Documents\NUS Assignments\Year 3.1\CS3202 - Software Engineering Project II\Tools\CppUnit\cppunit-1.12.1\lib\cppunit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Unit Tests...</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTMatcher.h" />
+    <ClInclude Include="ASTNode.h" />
+    <ClInclude Include="ASTTraverser.h" />
+    <ClInclude Include="ASTType.h" />
+    <ClInclude Include="Calls.h" />
+    <ClInclude Include="DesignExtractor.h" />
+    <ClInclude Include="ASTExpressionBuilder.h" />
+    <ClInclude Include="Follows.h" />
+    <ClInclude Include="Modifies.h" />
+    <ClInclude Include="Parent.h" />
+    <ClInclude Include="ParseException.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="PKB.h" />
+    <ClInclude Include="ProcTable.h" />
+    <ClInclude Include="TestAST.h" />
+    <ClInclude Include="TestASTMatcher.h" />
+    <ClInclude Include="TestASTNode.h" />
+    <ClInclude Include="TestASTTraverser.h" />
+    <ClInclude Include="TestDesignExtractor.h" />
+    <ClInclude Include="TestASTExpressionBuilder.h" />
+    <ClInclude Include="TestFollows.h" />
+    <ClInclude Include="TestModifies.h" />
+    <ClInclude Include="TestParent.h" />
+    <ClInclude Include="TestParser.h" />
+    <ClInclude Include="TestProcTable.h" />
+    <ClInclude Include="TestUses.h" />
+    <ClInclude Include="TestVarTable.h" />
+    <ClInclude Include="Uses.h" />
+    <ClInclude Include="VarTable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AST.cpp" />
+    <ClCompile Include="ASTMatcher.cpp" />
+    <ClCompile Include="ASTNode.cpp" />
+    <ClCompile Include="ASTTraverser.cpp" />
+    <ClCompile Include="Calls.cpp" />
+    <ClCompile Include="DesignExtractor.cpp" />
+    <ClCompile Include="ASTExpressionBuilder.cpp" />
+    <ClCompile Include="Follows.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Modifies.cpp" />
+    <ClCompile Include="Parent.cpp" />
+    <ClCompile Include="ParseException.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="PKB.cpp" />
+    <ClCompile Include="ProcTable.cpp" />
+    <ClCompile Include="TestAST.cpp" />
+    <ClCompile Include="TestASTMatcher.cpp" />
+    <ClCompile Include="TestASTNode.cpp" />
+    <ClCompile Include="TestASTTraverser.cpp" />
+    <ClCompile Include="TestDesignExtractor.cpp" />
+    <ClCompile Include="TestASTExpressionBuilder.cpp" />
+    <ClCompile Include="TestFollows.cpp" />
+    <ClCompile Include="TestModifies.cpp" />
+    <ClCompile Include="TestParent.cpp" />
+    <ClCompile Include="TestParser.cpp" />
+    <ClCompile Include="TestProcTable.cpp" />
+    <ClCompile Include="TestUses.cpp" />
+    <ClCompile Include="TestVarTable.cpp" />
+    <ClCompile Include="Uses.cpp" />
+    <ClCompile Include="VarTable.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

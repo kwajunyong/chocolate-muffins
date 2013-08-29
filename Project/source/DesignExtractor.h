@@ -48,7 +48,6 @@ private:
 	void extractUses(ASTNode* node, std::vector<int> statements, std::string procedure);
 
 	void extractCalls(ASTNode* node, std::string procedure);
-
 	void validateCall(ASTNode* node);
 
 	void traverseCalls();
