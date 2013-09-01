@@ -1,7 +1,7 @@
 procedure First {
 	while a {
 		while b {
-			if c {
+			if c then {
 				d = e;
 			} else {
 				call Fourth;
@@ -16,7 +16,7 @@ procedure Second {
 }
 
 procedure Third {
-	if f {
+	if f then {
 		g = h; 
 	} else {
 		g = h; 

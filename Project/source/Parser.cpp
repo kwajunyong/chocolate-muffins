@@ -202,6 +202,7 @@ ASTNode* Parser::ifStmt()
 	ASTNode* varNode = new ASTNode(_token, VARIABLE, 0);
 	matchName();
 
+	matchKeyword("then");
 	matchKeyword("{");
 
 	ASTNode* ifStmtListNode = statementList();
