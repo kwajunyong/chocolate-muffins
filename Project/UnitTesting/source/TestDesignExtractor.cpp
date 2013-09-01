@@ -7,7 +7,7 @@ void TestDesignExtractor::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("Test.txt");
+		pkb = parser.parse("..\\source\\Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
