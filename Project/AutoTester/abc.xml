@@ -1,0 +1,121 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>AutoTester</name><parsing_time_taken>9.000000</parsing_time_taken>
+</info>
+<queries>
+<category name=" simple testcase with if or while to test basic queries and pattern">
+<query>
+<id assignment Modifies="1" >1</id><querystr><![CDATA[variable v; Select v such that Modifies(2, v)]]></querystr>
+<timeout/>
+</query>
+<query>
+<id if Modifies="1" >2</id><querystr><![CDATA[variable v; Select v such that Modifies(3, v)]]></querystr>
+<stuans>lion,z</stuans>
+<correct>z,lion</correct>
+<time_taken>1690.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id while Modifies="1" >3</id><querystr><![CDATA[while w; variable v; Select v such that Modifies(w, v)]]></querystr>
+<timeout/>
+</query>
+<query>
+<id assignment Uses="1" >4</id><exception/>
+<querystr><![CDATA[variable a; Select a such that Uses(10, a)]]></querystr>
+</query>
+<query>
+<id if Uses="1" >5</id><querystr><![CDATA[variable v; if ifs; Select v such that Uses(ifs, v)]]></querystr>
+<stuans>z,oo,tiger,lion,bear,zoo,JY,cry,X,Ah,haha,shake,AH,SHAKE</stuans>
+<correct>zoo,lion,tiger,bear,JY,cry</correct>
+<time_taken>178353.000000</time_taken>
+<failed>
+<missing></missing>
+<additional>AH,Ah,SHAKE,X,haha,oo,shake,z</additional>
+<summary>
+<expected>6</expected>
+<matched>6</matched>
+<missing>0</missing>
+<additional>8</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id while Uses="1" >6</id><querystr><![CDATA[while w; variable v;  Select v such that Uses(w, v)]]></querystr>
+<stuans>AH,Ah,JY,haha,lion,oo,shake,tiger</stuans>
+<correct>oo,Ah,lion,tiger,haha,shake,AH,JY,shake</correct>
+<time_taken>522.000000</time_taken>
+<failed>
+<missing>shake</missing>
+<additional></additional>
+<summary>
+<expected>9</expected>
+<matched>8</matched>
+<missing>1</missing>
+<additional>0</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id procedure Modifies="1" >7</id><exception/>
+<querystr><![CDATA[variable sian;  Select sian such that Modifies(_, sian)]]></querystr>
+</query>
+<query>
+<id modifies fixed variable="1" >8</id><querystr><![CDATA[stmt s; Select s such that Modifies(s, "z")]]></querystr>
+<stuans>1,3,4,7,8</stuans>
+<correct>1,3,4,7,8</correct>
+<time_taken>2955.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id procedure Uses="1" >9</id><exception/>
+<querystr><![CDATA[variable s; Select s such that Uses(_, s)]]></querystr>
+</query>
+<query>
+<id ="1" >10</id><querystr><![CDATA[variable s; stmt v; Select v such that Modifies(v, s)]]></querystr>
+<stuans>z,oo,tiger,lion,bear,zoo,JY,cry,X,Ah,haha,shake,AH,SHAKE</stuans>
+<correct>z,tiger,lion,X,JY,SHAKE</correct>
+<time_taken>1331.000000</time_taken>
+<failed>
+<missing></missing>
+<additional>AH,Ah,bear,cry,haha,oo,shake,zoo</additional>
+<summary>
+<expected>6</expected>
+<matched>6</matched>
+<missing>0</missing>
+<additional>8</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id ="1" >11</id><querystr><![CDATA[variable v; stmt s; Select s such that Uses(s, v)]]></querystr>
+<stuans>1,2,3,4,5,6,7,8,9,10,11,12</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12</correct>
+<time_taken>844.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ="1" >12</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "oo")]]></querystr>
+<stuans>1,7</stuans>
+<correct>1,7</correct>
+<time_taken>825.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ="1" >13</id><querystr><![CDATA[stmt s; Select s such that Modifies(s, "JY") and Uses(s, "JY")]]></querystr>
+<stuans>7,9,12</stuans>
+<correct>7,12</correct>
+<time_taken>4926.000000</time_taken>
+<failed>
+<missing></missing>
+<additional>9</additional>
+<summary>
+<expected>2</expected>
+<matched>2</matched>
+<missing>0</missing>
+<additional>1</additional>
+</summary>
+</failed>
+</query>
+<query>
+<id Follows="1" >14</id>

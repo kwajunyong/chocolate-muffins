@@ -17,15 +17,27 @@ TestWrapper::TestWrapper() {
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+	Parser parser;
+	DesignExtractor extractor;
+
+	try {
+		pkb = parser.parse(filename);
+		extractor.extract(pkb);
+		qm = new QueryManager(pkb);
+	qv = new QueryValidator(qm, pkb);
+
+	} catch (ParseException pe) {
+		cout << pe.what();
+		getchar();
+	}
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-// call your evaluator to evaluate the query here
-  // ...code to evaluate query...
+	
+	qv->processInputQuery(query);
+	qm->execute();
+	results = qm->outputResult();
+	qm->resetEverything();
 
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
 }

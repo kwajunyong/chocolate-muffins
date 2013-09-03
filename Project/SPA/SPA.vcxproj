@@ -11,45 +11,77 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\Affects.h" />
     <ClInclude Include="..\source\AST.h" />
-    <ClInclude Include="..\source\ASTExpressionBuilder.h" />
-    <ClInclude Include="..\source\ASTMatcher.h" />
     <ClInclude Include="..\source\ASTNode.h" />
-    <ClInclude Include="..\source\ASTTraverser.h" />
+    <ClInclude Include="..\source\ASTParameter.h" />
+    <ClInclude Include="..\source\ASTParameterValue.h" />
     <ClInclude Include="..\source\ASTType.h" />
     <ClInclude Include="..\source\Calls.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
+    <ClInclude Include="..\source\EnumType.h" />
+    <ClInclude Include="..\source\ExpressionParser.h" />
     <ClInclude Include="..\source\Follows.h" />
+    <ClInclude Include="..\source\FollowsEngine.h" />
+    <ClInclude Include="..\source\FollowsStarEngine.h" />
     <ClInclude Include="..\source\Modifies.h" />
+    <ClInclude Include="..\source\ModifiesEngine.h" />
+    <ClInclude Include="..\source\NextEngine.h" />
     <ClInclude Include="..\source\Parent.h" />
+    <ClInclude Include="..\source\ParentEngine.h" />
+    <ClInclude Include="..\source\ParentStarEngine.h" />
     <ClInclude Include="..\source\ParseException.h" />
     <ClInclude Include="..\source\Parser.h" />
     <ClInclude Include="..\source\PKB.h" />
     <ClInclude Include="..\source\ProcTable.h" />
+    <ClInclude Include="..\source\QueryClass.h" />
+    <ClInclude Include="..\source\QueryManager.h" />
+    <ClInclude Include="..\source\QueryTree.h" />
+    <ClInclude Include="..\source\QueryValidator.h" />
     <ClInclude Include="..\source\Uses.h" />
+    <ClInclude Include="..\source\UsesEngine.h" />
     <ClInclude Include="..\source\VarTable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\Affects.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
-    <ClCompile Include="..\source\ASTExpressionBuilder.cpp" />
-    <ClCompile Include="..\source\ASTMatcher.cpp" />
     <ClCompile Include="..\source\ASTNode.cpp" />
-    <ClCompile Include="..\source\ASTTraverser.cpp" />
+    <ClCompile Include="..\source\ASTParameter.cpp" />
+    <ClCompile Include="..\source\ASTParameterValue.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
+    <ClCompile Include="..\source\ExpressionParser.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
+    <ClCompile Include="..\source\FollowsEngine.cpp" />
+    <ClCompile Include="..\source\FollowsStarEngine.cpp" />
     <ClCompile Include="..\source\Modifies.cpp" />
+    <ClCompile Include="..\source\ModifiesEngine.cpp" />
+    <ClCompile Include="..\source\NextEngine.cpp" />
     <ClCompile Include="..\source\Parent.cpp" />
+    <ClCompile Include="..\source\ParentEngine.cpp" />
+    <ClCompile Include="..\source\ParentStarEngine.cpp" />
     <ClCompile Include="..\source\ParseException.cpp" />
     <ClCompile Include="..\source\Parser.cpp" />
     <ClCompile Include="..\source\PKB.cpp" />
     <ClCompile Include="..\source\ProcTable.cpp" />
+    <ClCompile Include="..\source\QueryClass.cpp" />
+    <ClCompile Include="..\source\QueryManager.cpp" />
+    <ClCompile Include="..\source\QueryTree.cpp" />
+    <ClCompile Include="..\source\QueryValidator.cpp" />
     <ClCompile Include="..\source\Uses.cpp" />
+    <ClCompile Include="..\source\UsesEngine.cpp" />
     <ClCompile Include="..\source\VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\source\Test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DC21A1EA-D2C6-4D14-A2B4-E025B64BDE81}</ProjectGuid>
@@ -83,6 +115,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

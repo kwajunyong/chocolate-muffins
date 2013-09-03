@@ -5,11 +5,19 @@
 #include <iostream>
 #include <list>
 
+#include "..\..\source\Parser.h"
+#include "..\..\source\DesignExtractor.h"
+#include "..\..\source\QueryValidator.h"
+#include "..\..\source\PKB.h"
+#include "..\..\source\QueryManager.h"
+
+
 // include your other headers here
 #include "AbstractWrapper.h"
 
 class TestWrapper : public AbstractWrapper {
  public:
+
   // default constructor
   TestWrapper();
   
@@ -21,6 +29,12 @@ class TestWrapper : public AbstractWrapper {
   
   // method for evaluating a query
   virtual void evaluate(std::string query, std::list<std::string>& results);
+private:
+		PKB *pkb;
+		QueryManager *qm;
+		QueryValidator *qv;
+			
+		
 };
 
 #endif
