@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\Affects.h" />
     <ClInclude Include="..\source\AST.h" />
+    <ClInclude Include="..\source\ASTExpressionBuilder.h" />
+    <ClInclude Include="..\source\ASTMatcher.h" />
     <ClInclude Include="..\source\ASTNode.h" />
     <ClInclude Include="..\source\ASTParameter.h" />
     <ClInclude Include="..\source\ASTParameterValue.h" />
+    <ClInclude Include="..\source\ASTTraverser.h" />
     <ClInclude Include="..\source\ASTType.h" />
     <ClInclude Include="..\source\Calls.h" />
     <ClInclude Include="..\source\Definition.h" />
@@ -44,17 +46,20 @@
     <ClInclude Include="..\source\VarTable.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\Affects.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
+    <ClCompile Include="..\source\ASTExpressionBuilder.cpp" />
+    <ClCompile Include="..\source\ASTMatcher.cpp" />
     <ClCompile Include="..\source\ASTNode.cpp" />
     <ClCompile Include="..\source\ASTParameter.cpp" />
     <ClCompile Include="..\source\ASTParameterValue.cpp" />
+    <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionParser.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
     <ClCompile Include="..\source\FollowsEngine.cpp" />
     <ClCompile Include="..\source\FollowsStarEngine.cpp" />
+    <ClCompile Include="..\source\Main.cpp" />
     <ClCompile Include="..\source\Modifies.cpp" />
     <ClCompile Include="..\source\ModifiesEngine.cpp" />
     <ClCompile Include="..\source\NextEngine.cpp" />
