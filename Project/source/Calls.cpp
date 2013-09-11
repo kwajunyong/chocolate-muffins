@@ -42,17 +42,6 @@ vector<string> Calls::getCalls(string procedure, bool transitive)
 	{
 		answers = calls[procedure];
 
-		if(answers.size() == 0)
-		{
-			answers.push_back(procedure);
-			return answers;
-		}
-
-		/*if(answers.size() == 1)
-		{
-			return answers;
-		}*/
-
 		for(size_t i = 0; i < answers.size(); i++)
 		{
 			if(answers.size() > 0)
@@ -91,17 +80,6 @@ vector<string> Calls::getCalled(string procedure, bool transitive)
 	if(transitive)
 	{
 		answers = called[procedure];
-
-		/*if(answers.size() == 0)
-		{
-			answers.push_back(procedure);
-			return answers;
-		}*/
-
-		/*if(answers.size() == 1)
-		{
-			return answers;
-		}*/
 
 		for(size_t i = 0; i < answers.size(); i++)
 		{
@@ -151,35 +129,3 @@ bool Calls::compute(string procedure1, string procedure2)
 	}
 	return check;
 }
-
-//int main()
-//{
-//	Calls c;
-//	c.addCalls("one", "two");
-//	c.addCalls("one", "three");
-//	c.addCalls("one", "four");
-//	c.addCalls("two", "five");
-//	c.addCalls("six", "seven");
-//	//c.addCalls("three", "six");
-//
-//	//vector<string> querys = c.getCalls("one", true);
-//	vector<string> querys = c.getCalled("five", true);
-//
-//	for(int i = 0; i < querys.size(); i++)
-//	{
-//		string x = querys[i];
-//		cout << x << endl;
-//	}
-//
-//	/*if(c.isCalls("one", "five", true))
-//	{
-//		cout << "true" << endl;
-//	}
-//	else
-//	{
-//		cout << "false" << endl;
-//	}*/
-//
-//	system("Pause");
-//	return 0;
-//}
