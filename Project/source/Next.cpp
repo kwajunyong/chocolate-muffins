@@ -6,6 +6,8 @@ Next::Next(void) {}
 
 Next::~Next(void) {}
 
+vector<int> visited;
+
 bool Next::addNext(int stmtNum1, int stmtNum2)
 {
 	for(int i = 0; i < next[stmtNum1].size(); i++)
@@ -126,6 +128,9 @@ bool Next::compute(int stmtNum1, int stmtNum2)
 	vector<int> querys = next[stmtNum1];
 	bool check = false;
 
+	if(stmtNum1 != stmtNum2)
+		visited.push_back(stmtNum1);
+
 	for(int i = 0; i < querys.size(); i++)
 	{
 		int temp = querys[i];
@@ -133,9 +138,12 @@ bool Next::compute(int stmtNum1, int stmtNum2)
 		if(temp == stmtNum2)
 			return true;
 		else
-			check = compute(temp, stmtNum2);
-			if(check)
+			if(find(visited.begin(), visited.end(), temp) == visited.end())
+			{
+				check = compute(temp, stmtNum2);
+				if(check)
 				break;
+			}
 	}
 	return check;
 }
@@ -146,26 +154,35 @@ bool Next::compute(int stmtNum1, int stmtNum2)
 //
 //	n.addNext(1, 2);
 //	n.addNext(2, 3);
+//	n.addNext(3, 4);
+//	n.addNext(3, 7);
 //	n.addNext(4, 5);
-//	n.addNext(4, 3);
+//	n.addNext(5, 6);
+//	n.addNext(6, 3);
+//	n.addNext(7, 8);
+//	n.addNext(7, 9);
+//	n.addNext(8, 10);
+//	n.addNext(9, 10);
+//	n.addNext(10, 11);
+//	n.addNext(11, 12);
 //
-//	/*if(n.isNext(1, 6, true))
+//	if(n.isNext(1, 12, true))
 //	{
 //		cout << "true" << endl;
 //	}
 //	else
 //	{
 //		cout << "false" << endl;
-//	}*/
+//	}
 //
-//	//vector<int> querys = n.getNext(4, true);
-//	vector<int> querys = n.getNexted(1, true);
+//	//vector<int> querys = n.getNext(1, false); //Select n such that Next*(1,n)
+//	//vector<int> querys = n.getNexted(1, true);
 //
-//	for(int i = 0; i < querys.size(); i++)
+//	/*for(int i = 0; i < querys.size(); i++)
 //	{
 //		int x = querys[i];
 //		cout << x << endl;
-//	}
+//	}*/
 //
 //	system("Pause");
 //	return 0;
