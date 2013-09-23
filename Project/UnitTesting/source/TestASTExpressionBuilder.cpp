@@ -14,11 +14,16 @@ void TestASTExpressionBuilder::testBuild()
 {
 	ASTNode* node;
 
-	ASTNode* node1 = exprBuilder.build("m");
-	CPPUNIT_ASSERT(expectedOne() == traverser.traverse(node1));
+	CPPUNIT_ASSERT_THROW(exprBuilder.build(""), ParseException);
+	CPPUNIT_ASSERT_THROW(exprBuilder.build("+"), ParseException);
+	CPPUNIT_ASSERT_THROW(exprBuilder.build("+ m"), ParseException);
+	CPPUNIT_ASSERT_THROW(exprBuilder.build("m +"), ParseException);
 
-	ASTNode* node2 = exprBuilder.build("m + n");
-	CPPUNIT_ASSERT(expectedTwo() == traverser.traverse(node2));
+	node = exprBuilder.build("m");
+	CPPUNIT_ASSERT(expectedOne() == traverser.traverse(node));
+
+	node = exprBuilder.build("m + n");
+	CPPUNIT_ASSERT(expectedTwo() == traverser.traverse(node));
 
 	node = exprBuilder.build("m + n - 1");
 	CPPUNIT_ASSERT(expectedThree() == traverser.traverse(node));
@@ -27,6 +32,9 @@ void TestASTExpressionBuilder::testBuild()
 	CPPUNIT_ASSERT(expectedFour() == traverser.traverse(node));
 
 	node = exprBuilder.build("(m + n) * 1");
+	CPPUNIT_ASSERT(expectedFive() == traverser.traverse(node));
+
+	node = exprBuilder.build("((((((m + n))) * 1)))");
 	CPPUNIT_ASSERT(expectedFive() == traverser.traverse(node));
 }
 

@@ -8,10 +8,25 @@ ASTExpressionBuilder::~ASTExpressionBuilder(void)
 
 ASTNode* ASTExpressionBuilder::build(std::string expression)
 {
+	if (expression.empty()) {
+		throw ParseException("Unable to parse expression");
+	}
+
 	_expression.clear();
 	_expression.str(expression);
 
-	getToken();
+	tokeniseExpression();
+
+	return shuntingYardAlgorithm();
+}
+
+ASTNode* ASTExpressionBuilder::build(std::list<std::string> tokens)
+{
+	_tokens = tokens;
+
+	if (_tokens.empty()) {
+		throw ParseException("Unable to parse expression");
+	}
 
 	return shuntingYardAlgorithm();
 }
@@ -41,14 +56,16 @@ void ASTExpressionBuilder::getToken()
 	_token = token;
 }
 
-int ASTExpressionBuilder::getOprPriority(std::string operate)
+void ASTExpressionBuilder::tokeniseExpression()
 {
-	if (operate == "*" || operate == "/") {
-		return 2;
-	} else if (operate == "+" || operate == "-") {
-		return 1;
-	} else {
-		return 0;	
+	_tokens.clear();
+
+	getToken();
+
+	while (_token != "") {
+		_tokens.push_back(_token);
+
+		getToken();
 	}
 }
 
@@ -85,88 +102,33 @@ bool ASTExpressionBuilder::isDigits()
 
 ASTNode* ASTExpressionBuilder::shuntingYardAlgorithm()
 {
-	std::stack<std::string> operators;
-	std::stack<ASTNode*> results;
+	_operators.clear();
+	_results.clear();
 
-	ASTNode* operatorNode;
-	ASTNode* leftNode;
-	ASTNode* rightNode;
+	while (!_tokens.empty()) {
+		_token = _tokens.front();
+		_tokens.pop_front();
 
-	ASTType type;
-
-	while (_token != "") {
-		 if (isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
-			while (!operators.empty() && getOprPriority(_token) <= getOprPriority(operators.top())) {				
-				if (operators.top() == "+") {
-					type = PLUS;
-				} else if (operators.top() == "-") {
-					type = MINUS;
-				} else if (operators.top() == "*") {
-					type = TIMES;
-				}else if (operators.top() == "/") {
-					type = DIVIDE;
-				}
-
-				operatorNode = new ASTNode("", type, 0);
-
-				rightNode = results.top();
-				results.pop();
-				
-				leftNode = results.top();
-				results.pop();
-
-				operatorNode->joinChild(leftNode);
-				leftNode->joinNext(rightNode);
-
-				results.push(operatorNode);
-				
-				operators.pop();
+		if (isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
+			while (!_operators.empty() && getOprPriority(_token) <= getOprPriority(_operators.back())) {				
+				buildOperators();
 			}
 
-			operators.push(_token);
+			_operators.push_back(_token);
 		} else if (isKeyword("(")) {
-			operators.push("(");
+			_operators.push_back("(");
 		} else if (isKeyword(")")) {
-			while (!operators.empty() && operators.top() != "(") {				
-				if (operators.top() == "+") {
-					type = PLUS;
-				} else if (operators.top() == "-") {
-					type = MINUS;
-				} else if (operators.top() == "*") {
-					type = TIMES;
-				}else if (operators.top() == "/") {
-					type = DIVIDE;
-				}
-
-				operatorNode = new ASTNode("", type, 0);
-
-				rightNode = results.top();
-				results.pop();
-				
-				leftNode = results.top();
-				results.pop();
-
-				operatorNode->joinChild(leftNode);
-				leftNode->joinNext(rightNode);
-
-				results.push(operatorNode);
-
-				operators.pop();
+			while (!_operators.empty() && _operators.back() != "(") {				
+				buildOperators();
 			}
 
-			if (operators.empty()) {
+			if (_operators.empty()) {
 				throw ParseException(_token, "Mismatched parentheses");
 			}
 
-			operators.pop();
+			_operators.pop_back();
 		} else if (isDigits() || isName()) {
-			if (isDigits()) {
-				type = CONSTANT;
-			} else if (isName()) {
-				type = VARIABLE;
-			}
-
-			results.push(new ASTNode(_token, type, 0));
+			buildOperands();
 		} else {
 			throw ParseException(_token, "Unable to parse expression");
 		}
@@ -174,39 +136,83 @@ ASTNode* ASTExpressionBuilder::shuntingYardAlgorithm()
 		getToken();
 	}
 
-	while (!operators.empty()) {
-		if (operators.top() == "(") {
+	while (!_operators.empty()) {
+		if (_operators.back() == "(") {
 			throw ParseException(_token, "Mismatched parentheses");
 		}
-				
-		if (operators.top() == "+") {
-			type = PLUS;
-		} else if (operators.top() == "-") {
-			type = MINUS;
-		} else if (operators.top() == "*") {
-			type = TIMES;
-		}else if (operators.top() == "/") {
-			type = DIVIDE;
-		}
 
-		operatorNode = new ASTNode("", type, 0);
-
-		rightNode = results.top();
-		results.pop();
-				
-		leftNode = results.top();
-		results.pop();
-
-		operatorNode->joinChild(leftNode);
-		leftNode->joinNext(rightNode);
-
-		results.push(operatorNode);
-
-		operators.pop();
+		buildOperators();
 	}
 
-	ASTNode* expNode = results.top();
-	results.pop();
+	ASTNode* expNode = _results.back();
+	_results.pop_back();
 
 	return expNode;
+}
+
+
+int ASTExpressionBuilder::getOprPriority(std::string operate)
+{
+	if (operate == "*" || operate == "/") {
+		return 2;
+	} else if (operate == "+" || operate == "-") {
+		return 1;
+	} else {
+		return 0;	
+	}
+}
+
+void ASTExpressionBuilder::buildOperators()
+{
+	ASTNode* operatorNode;
+	ASTNode* leftNode;
+	ASTNode* rightNode;
+
+	ASTType type;
+
+	if (_operators.back() == "+") {
+		type = PLUS;
+	} else if (_operators.back() == "-") {
+		type = MINUS;
+	} else if (_operators.back() == "*") {
+		type = TIMES;
+	}else if (_operators.back() == "/") {
+		type = DIVIDE;
+	}
+
+	operatorNode = new ASTNode("", type, 0);
+
+	if (!_results.empty()) {
+		rightNode = _results.back();
+		_results.pop_back();
+	} else {
+		throw ParseException(_token, "Unable to parse expression");
+	}
+
+	if (!_results.empty()) {
+		leftNode = _results.back();
+		_results.pop_back();
+	} else {
+		throw ParseException(_token, "Unable to parse expression");
+	}
+
+	operatorNode->joinChild(leftNode);
+	leftNode->joinNext(rightNode);
+
+	_results.push_back(operatorNode);
+
+	_operators.pop_back();
+}
+
+void ASTExpressionBuilder::buildOperands()
+{
+	ASTType type;
+
+	if (isDigits()) {
+		type = CONSTANT;
+	} else if (isName()) {
+		type = VARIABLE;
+	}
+
+	_results.push_back(new ASTNode(_token, type, 0));
 }
