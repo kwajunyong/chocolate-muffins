@@ -6,13 +6,17 @@ ProcTable::ProcTable(void)
 ProcTable::~ProcTable(void)
 {}
 
-int ProcTable::addProcedure(std::string procedure)
+bool ProcTable::addProcedure(std::string procedure)
 {
+	bool success = false;
+
 	if (getIndex(procedure) < 0) {
 		_procTable.push_back(procedure);
+
+		success = true;
 	}
 	
-	return getIndex(procedure);
+	return success;
 }
 
 int ProcTable::getIndex(std::string procedure)

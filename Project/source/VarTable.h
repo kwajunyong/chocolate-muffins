@@ -9,7 +9,7 @@ public:
 	VarTable(void);
 	~VarTable(void);
 
-	int addVariable(std::string variable);
+	bool addVariable(std::string variable);
 	
 	int getIndex(std::string variable);
 	std::string getName(int index);

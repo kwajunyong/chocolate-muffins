@@ -12,8 +12,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestVarTable);
 
 void TestVarTable::testAddVariable()
 {
-	CPPUNIT_ASSERT_EQUAL(0, varTable.addVariable("a"));
-	CPPUNIT_ASSERT_EQUAL(0, varTable.addVariable("a"));
+	CPPUNIT_ASSERT_EQUAL(true, varTable.addVariable("a"));
+	CPPUNIT_ASSERT_EQUAL(false, varTable.addVariable("a"));
 }
 
 void TestVarTable::testGetIndex()

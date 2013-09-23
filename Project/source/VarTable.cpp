@@ -6,13 +6,17 @@ VarTable::VarTable(void)
 VarTable::~VarTable(void)
 {}
 
-int VarTable::addVariable(std::string variable)
+bool VarTable::addVariable(std::string variable)
 {
+	bool success = false;
+
 	if (getIndex(variable) < 0) {
 		_varTable.push_back(variable);
+		
+		success = true;
 	}
 	
-	return getIndex(variable);
+	return success;
 }
 
 int VarTable::getIndex(std::string variable)

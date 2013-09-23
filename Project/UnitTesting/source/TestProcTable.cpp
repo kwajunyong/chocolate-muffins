@@ -12,8 +12,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestProcTable);
 
 void TestProcTable::testAddProcedure()
 {
-	CPPUNIT_ASSERT_EQUAL(0, procTable.addProcedure("a"));
-	CPPUNIT_ASSERT_EQUAL(0, procTable.addProcedure("a"));
+	CPPUNIT_ASSERT_EQUAL(true, procTable.addProcedure("a"));
+	CPPUNIT_ASSERT_EQUAL(false, procTable.addProcedure("a"));
 }
 
 void TestProcTable::testGetIndex()
