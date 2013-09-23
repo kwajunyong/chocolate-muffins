@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Simple">
+      <UniqueIdentifier>{2fea70e5-23c3-4a44-9f50-0ae031fb6bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simple\Parser">
+      <UniqueIdentifier>{2e344e36-2b57-4ff9-9228-efbf7fe68e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simple\DesignExtractor">
+      <UniqueIdentifier>{c15fcd4a-9d1c-4819-87db-cbd44631f920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\ASTNode.h">
@@ -37,9 +46,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\ExpressionParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\Follows.h">
@@ -140,9 +146,6 @@
     <ClCompile Include="..\source\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\ExpressionParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\Follows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -209,14 +212,55 @@
     <ClCompile Include="..\source\ASTTraverser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\Next.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\source\Test.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse1.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\readme.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse2.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse3.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse4.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse5.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse6.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse7.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\Parser\Parse8.txt">
+      <Filter>Simple\Parser</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract1.txt">
+      <Filter>Simple\DesignExtractor</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract2.txt">
+      <Filter>Simple\DesignExtractor</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract3.txt">
+      <Filter>Simple\DesignExtractor</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract4.txt">
+      <Filter>Simple\DesignExtractor</Filter>
+    </None>
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\readme.txt">
+      <Filter>Simple\DesignExtractor</Filter>
+    </None>
+    <None Include="..\source\Simple\Integration.txt">
+      <Filter>Simple</Filter>
+    </None>
   </ItemGroup>
 </Project>

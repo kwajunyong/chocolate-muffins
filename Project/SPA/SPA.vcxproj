@@ -23,7 +23,6 @@
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\EnumType.h" />
-    <ClInclude Include="..\source\ExpressionParser.h" />
     <ClInclude Include="..\source\Follows.h" />
     <ClInclude Include="..\source\FollowsEngine.h" />
     <ClInclude Include="..\source\FollowsStarEngine.h" />
@@ -56,11 +55,9 @@
     <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
-    <ClCompile Include="..\source\ExpressionParser.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
     <ClCompile Include="..\source\FollowsEngine.cpp" />
     <ClCompile Include="..\source\FollowsStarEngine.cpp" />
-    <ClCompile Include="..\source\Main.cpp" />
     <ClCompile Include="..\source\Modifies.cpp" />
     <ClCompile Include="..\source\ModifiesEngine.cpp" />
     <ClCompile Include="..\source\Next.cpp" />
@@ -81,14 +78,28 @@
     <ClCompile Include="..\source\VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\source\Test.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\source\Simple\Integration.txt" />
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract1.txt" />
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract2.txt" />
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract3.txt" />
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\Extract4.txt" />
+    <None Include="..\source\Simple\Unit Test\DesignExtractor\readme.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse1.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse2.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse3.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse4.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse5.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse6.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse7.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\Parse8.txt" />
+    <None Include="..\source\Simple\Unit Test\Parser\readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DC21A1EA-D2C6-4D14-A2B4-E025B64BDE81}</ProjectGuid>
