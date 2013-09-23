@@ -21,15 +21,17 @@ public:
 private:
 	std::ifstream _file;
 	void openFile(std::string fileName);
+	void closeFile();
 	
 	std::string _token;
 	void getToken();
 
+	PKB* _pkb;
+	
 	int _stmtNum;
 	AST* _ast;
 	VarTable* _varTable;
 	ProcTable* _procTable;
-	Calls* _calls;
 
 	ASTNode* program();
 	ASTNode* procedure();
@@ -50,7 +52,7 @@ private:
 	bool isKeyword(std::string keyword);
 	void matchKeyword(std::string keyword);
 
-	int getOprPriority(std::string operate);
+	void checkRedundantToken(); 
 
-	ASTNode* shuntingYardAlgorithm();
+	std::list<std::string> getExpressionTokens();
 };

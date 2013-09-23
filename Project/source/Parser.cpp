@@ -10,13 +10,12 @@ PKB* Parser::parse(std::string fileName)
 {
 	openFile(fileName);
 
-	PKB* pkb = new PKB();
+	_pkb = new PKB();
 
 	_stmtNum = 0;
 	_ast = new AST();
 	_varTable = new VarTable();
 	_procTable = new ProcTable();
-	_calls = new Calls();
 
 	getToken();
 
@@ -24,25 +23,33 @@ PKB* Parser::parse(std::string fileName)
 	
 	_ast->setRootNode(rootNode);
 
-	pkb->setNumOfStmt(_stmtNum);
-	pkb->setAST(_ast);
-	pkb->setVarTable(_varTable);
-	pkb->setProcTable(_procTable);
-	pkb->setCalls(_calls);
+	_pkb->setNumOfStmt(_stmtNum);
+	_pkb->setAST(_ast);
+	_pkb->setVarTable(_varTable);
+	_pkb->setProcTable(_procTable);
 
-	if (!isKeyword("")) {
-		throw ParseException(_stmtNum, _token, "Unnecessary token");
-	}
+	checkRedundantToken();
 
-	return pkb;
+	closeFile();
+
+	return _pkb;
 }
 
 void Parser::openFile(std::string fileName)
 {
+	closeFile();
+
 	_file.open(fileName);
 
 	if (_file.fail()) {
 		throw ParseException(fileName, "Unable to find/open file");
+	}
+}
+
+void Parser::closeFile()
+{
+	if (_file.is_open()) {
+		_file.close();
 	}
 }
 
@@ -95,7 +102,10 @@ ASTNode* Parser::procedure()
 {
 	matchKeyword("procedure");
 
-	_procTable->addProcedure(_token);
+	if (_procTable->addProcedure(_token) == false) {
+		throw ParseException(_stmtNum, _token, "Duplicate procedure names");
+	}
+
 	ASTNode* procNode = new ASTNode(_token, PROCEDURE, 0);
 	matchName();
 
@@ -150,7 +160,7 @@ ASTNode* Parser::statement()
 		return assignStmt();
 	}
 
-	throw ParseException(_stmtNum, _token, "Unable to parse statements");
+	throw ParseException(_stmtNum, _token, "Unable to parse statement");
 }
 
 ASTNode* Parser::assignStmt()
@@ -235,7 +245,19 @@ ASTNode* Parser::callStmt() {
 
 ASTNode* Parser::expression()
 {
-	return shuntingYardAlgorithm();
+	std::list<std::string> tokens = getExpressionTokens();
+
+	ASTNode* expNode;
+
+	try {
+		expNode = _pkb->getASTExpressionBuilder()->build(tokens);
+	} catch (ParseException pe) {
+		pe.setStatementNumber(_stmtNum);
+
+		throw pe;
+	}
+
+	return expNode;
 }
 
 bool Parser::isDigits()
@@ -296,143 +318,34 @@ void Parser::matchKeyword(std::string keyword)
 	}
 }
 
-int Parser::getOprPriority(std::string operate)
+void Parser::checkRedundantToken()
 {
-	if (operate == "*" || operate == "/") {
-		return 2;
-	} else if (operate == "+" || operate == "-") {
-		return 1;
-	} else {
-		return 0;	
+	if (!isKeyword("")) {
+		throw ParseException(_stmtNum, _token, "Unnecessary token");
 	}
 }
 
-ASTNode* Parser::shuntingYardAlgorithm()
+std::list<std::string> Parser::getExpressionTokens()
 {
-	std::stack<std::string> operators;
-	std::stack<ASTNode*> results;
-
-	ASTNode* operatorNode;
-	ASTNode* leftNode;
-	ASTNode* rightNode;
-
-	ASTType type;
+	std::list<std::string> tokens;
 
 	while (!isKeyword(";")) {
-		 if (isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
-			while (!operators.empty() && getOprPriority(_token) <= getOprPriority(operators.top())) {				
-				if (operators.top() == "+") {
-					type = PLUS;
-				} else if (operators.top() == "-") {
-					type = MINUS;
-				} else if (operators.top() == "*") {
-					type = TIMES;
-				}else if (operators.top() == "/") {
-					type = DIVIDE;
-				}
-
-				operatorNode = new ASTNode("", type, 0);
-
-				rightNode = results.top();
-				results.pop();
-				
-				leftNode = results.top();
-				results.pop();
-
-				operatorNode->joinChild(leftNode);
-				leftNode->joinNext(rightNode);
-
-				results.push(operatorNode);
-				
-				operators.pop();
-			}
-
-			operators.push(_token);
-		} else if (isKeyword("(")) {
-			operators.push("(");
-		} else if (isKeyword(")")) {
-			while (!operators.empty() && operators.top() != "(") {				
-				if (operators.top() == "+") {
-					type = PLUS;
-				} else if (operators.top() == "-") {
-					type = MINUS;
-				} else if (operators.top() == "*") {
-					type = TIMES;
-				}else if (operators.top() == "/") {
-					type = DIVIDE;
-				}
-
-				operatorNode = new ASTNode("", type, 0);
-
-				rightNode = results.top();
-				results.pop();
-				
-				leftNode = results.top();
-				results.pop();
-
-				operatorNode->joinChild(leftNode);
-				leftNode->joinNext(rightNode);
-
-				results.push(operatorNode);
-
-				operators.pop();
-			}
-
-			if (operators.empty()) {
-				throw ParseException(_stmtNum, _token, "Mismatched parentheses");
-			}
-
-			operators.pop();
-		} else if (isDigits() || isName()) {
-			if (isDigits()) {
-				type = CONSTANT;
-			} else if (isName()) {
-				type = VARIABLE;
-
-				_varTable->addVariable(_token);
-			}
-
-			results.push(new ASTNode(_token, type, 0));
+		if (isKeyword("(") || isKeyword(")")) {
+			tokens.push_back(_token);
+		} else if (isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
+			tokens.push_back(_token);
+		} else if (isDigits()) {
+			tokens.push_back(_token);
+		} else if (isName()) {
+			_varTable->addVariable(_token);
+			
+			tokens.push_back(_token);
 		} else {
 			throw ParseException(_stmtNum, _token, "Unable to parse expression");
 		}
-
+		
 		getToken();
 	}
 
-	while (!operators.empty()) {
-		if (operators.top() == "(") {
-			throw ParseException(_stmtNum, _token, "Mismatched parentheses");
-		}
-				
-		if (operators.top() == "+") {
-			type = PLUS;
-		} else if (operators.top() == "-") {
-			type = MINUS;
-		} else if (operators.top() == "*") {
-			type = TIMES;
-		}else if (operators.top() == "/") {
-			type = DIVIDE;
-		}
-
-		operatorNode = new ASTNode("", type, 0);
-
-		rightNode = results.top();
-		results.pop();
-				
-		leftNode = results.top();
-		results.pop();
-
-		operatorNode->joinChild(leftNode);
-		leftNode->joinNext(rightNode);
-
-		results.push(operatorNode);
-
-		operators.pop();
-	}
-
-	ASTNode* expNode = results.top();
-	results.pop();
-
-	return expNode;
+	return tokens;
 }
