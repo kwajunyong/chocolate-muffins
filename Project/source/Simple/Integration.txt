@@ -39,4 +39,37 @@ procedure Fifth {
 	l = m + n - 1;
 	l = m + n * 1;
 	l = (m + n) * 1;
+	l = ((((((m + n))) * 1)));
+}
+
+procedure Sixth {
+	if p then {
+		if q then {
+			r = s;
+		} else {
+			s = r;
+		}
+	} else {
+		if q then {
+			r = s;
+		} else {
+			r = s;
+		}
+	}
+
+	while o {
+		if p then {
+			if q then {
+				r = s;
+			} else {
+				r = s;
+			}
+		} else {
+			if q then {
+				r = s;
+			} else {
+				r = s;
+			}
+		}
+	}
 }

@@ -1,0 +1,5 @@
+procedure Haha {
+	fruits2 = (apple + orange) - 100;
+}
+
+p

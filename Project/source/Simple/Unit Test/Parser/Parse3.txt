@@ -1,0 +1,5 @@
+procedure Haha {
+	while 1grapes {
+		fruits = (apple + orange) - 100;
+	}
+}

@@ -1,0 +1,5 @@
+procedure Haha {
+	while orange {
+		100;
+	}
+}

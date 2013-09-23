@@ -1,0 +1,11 @@
+procedure Haha {
+	call Hoho;
+}
+
+procedure Hehe {
+	call Haha;
+}
+
+procedure Hoho {
+	call Hehe;
+}

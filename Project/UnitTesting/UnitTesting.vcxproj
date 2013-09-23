@@ -71,8 +71,8 @@
     <ClCompile Include="source\TestASTMatcher.cpp" />
     <ClCompile Include="source\TestASTNode.cpp" />
     <ClCompile Include="source\TestASTTraverser.cpp" />
+    <ClCompile Include="source\TestCalls.cpp" />
     <ClCompile Include="source\TestDesignExtractor.cpp" />
-    <ClCompile Include="source\TestExpressionParser.cpp" />
     <ClCompile Include="source\TestFollows.cpp" />
     <ClCompile Include="source\TestModifies.cpp" />
     <ClCompile Include="source\TestParent.cpp" />
@@ -88,8 +88,8 @@
     <ClInclude Include="source\TestASTMatcher.h" />
     <ClInclude Include="source\TestASTNode.h" />
     <ClInclude Include="source\TestASTTraverser.h" />
+    <ClInclude Include="source\TestCalls.h" />
     <ClInclude Include="source\TestDesignExtractor.h" />
-    <ClInclude Include="source\TestExpressionParser.h" />
     <ClInclude Include="source\TestFollows.h" />
     <ClInclude Include="source\TestModifies.h" />
     <ClInclude Include="source\TestParent.h" />
