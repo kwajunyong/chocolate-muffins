@@ -29,6 +29,7 @@ private:
 	Uses* _uses;
 
 	Calls* _calls;
+	Next* _next;
 
 	int _numOfStmt;
 
@@ -50,6 +51,8 @@ private:
 	void extractCalls(ASTNode* node, std::string procedure);
 	void validateCall(ASTNode* node);
 
+	void extractNext(ASTNode* node);
+
 	void traverseCalls();
 	void traverseCalls(std::string procedure, std::vector<int> &visited, std::vector<std::pair<std::string, std::string>> &calls);
 
@@ -63,9 +66,13 @@ private:
 
 	bool isStatement(ASTNode* node);
 	bool isFirstChild(ASTNode* node);
-	
+	bool isLastChild(ASTNode* node);
+
 	bool isFollows(ASTNode* node);
 	bool isParent(ASTNode* node);
 	bool isModifies(ASTNode* node);
 	bool isUses(ASTNode* node);
+
+	std::vector<int> processIfNode(ASTNode* node);
+	void process(ASTNode* node, std::vector<int> &results);
 };

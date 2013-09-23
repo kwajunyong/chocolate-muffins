@@ -22,9 +22,11 @@ void DesignExtractor::extract(PKB* pkb)
 	_modifies = new Modifies(_numOfStmt, _varTable, _procTable);
 	_uses = new Uses(_numOfStmt, _varTable, _procTable);
 	_calls = new Calls();
+	_next = new Next();
 
 	std::vector<int> statements;
 	std::string procedure = "";
+
 	traverseAST(rootNode, statements, procedure);
 
 	pkb->setFollows(_follows);
@@ -32,6 +34,7 @@ void DesignExtractor::extract(PKB* pkb)
 	pkb->setModifies(_modifies);
 	pkb->setUses(_uses);
 	pkb->setCalls(_calls);
+	pkb->setNext(_next);
 
 	traverseCalls();
 	extractFromCallNodes();
@@ -52,6 +55,7 @@ void DesignExtractor::traverseAST(ASTNode* node, std::vector<int> statements, st
 		extractUses(node, statements, procedure);
 
 		extractCalls(node, procedure);
+		extractNext(node);
 
 		if (node->getChild() != NULL) {
 			traverseAST(node->getChild(), statements, procedure);
@@ -106,7 +110,7 @@ void DesignExtractor::extractParent(ASTNode* node)
 void DesignExtractor::extractModifies(ASTNode* node, std::vector<int> statements, std::string procedure)
 {
 	if (isModifies(node)) {
-		for (int i=0; i<statements.size(); i++) {
+		for (size_t i=0; i<statements.size(); i++) {
 			//std::cout << "Modifies(" << statements[i] << ", " << node->getName() << ")" << std::endl;
 			_modifies->addModifiesStmt(statements[i], node->getName());
 		}
@@ -119,7 +123,7 @@ void DesignExtractor::extractModifies(ASTNode* node, std::vector<int> statements
 void DesignExtractor::extractUses(ASTNode* node, std::vector<int> statements, std::string procedure)
 {
 	if (isUses(node)) {
-		for (int i=0; i<statements.size(); i++) {
+		for (size_t i=0; i<statements.size(); i++) {
 			//std::cout << "Uses(" << statements[i] << ", " << node->getName() << ")" << std::endl;
 			_uses->addUsesStmt(statements[i], node->getName());
 		}
@@ -141,6 +145,83 @@ void DesignExtractor::extractCalls(ASTNode* node, std::string procedure)
 	}
 }
 
+void DesignExtractor::extractNext(ASTNode* node)
+{
+	if (isStatement(node)) {		
+		// Follows
+		if ((node->getType() == ASSIGN || node->getType() == CALL || node->getType() == WHILE) && !isLastChild(node)) {
+			//std::cout << "Next(" << node->getStatementNumber() << ", " << node->getNext()->getStatementNumber() << ")" << std::endl;
+			_next->addNext(node->getStatementNumber(), node->getNext()->getStatementNumber());
+		}
+
+		// Parent
+		if ((node->getParent()->getParent()->getType() == IF || node->getParent()->getParent()->getType() == WHILE) && isFirstChild(node)) {
+			//std::cout << "Next(" << node->getParent()->getParent()->getStatementNumber() << ", " << node->getStatementNumber() << ")" << std::endl;
+			_next->addNext(node->getParent()->getParent()->getStatementNumber(), node->getStatementNumber());
+		}
+
+		// Last child - Assign/Call/While
+		if ((node->getType() == ASSIGN || node->getType() == CALL || node->getType() == WHILE) && isLastChild(node)) {
+			// End of while
+			if (node->getParent()->getParent()->getType() == WHILE) {
+				//std::cout << "Next(" << node->getStatementNumber() << ", " << node->getParent()->getParent()->getStatementNumber() << ")" << std::endl;
+				_next->addNext(node->getStatementNumber(), node->getParent()->getParent()->getStatementNumber());
+			}
+
+			// End of if
+			if (node->getParent()->getParent()->getType() == IF && !isLastChild(node->getParent()->getParent())) {
+				//std::cout << "Next(" << node->getStatementNumber() << ", " << node->getParent()->getParent()->getNext()->getStatementNumber() << ")" << std::endl;
+				_next->addNext(node->getStatementNumber(), node->getParent()->getParent()->getNext()->getStatementNumber());
+			} 
+		}
+
+		// Last child - If
+		if (node->getType() == IF && isLastChild(node)) {
+			std::vector<int> results = processIfNode(node);
+		
+			// End of while
+			if (node->getParent()->getParent()->getType() == WHILE) {
+				for (size_t i=0; i<results.size(); i++) {
+					//std::cout << "Next(" << results[i] << ", " << node->getParent()->getParent()->getStatementNumber() << ")" << std::endl;
+					_next->addNext(results[i], node->getParent()->getParent()->getStatementNumber());
+				}
+			}
+
+			// End of if
+			if (node->getParent()->getParent()->getType() == IF && !isLastChild(node->getParent()->getParent())) {
+				for (size_t i=0; i<results.size(); i++) {
+					//std::cout << "Next(" << results[i] << ", " << node->getParent()->getParent()->getNext()->getStatementNumber() << ")" << std::endl;
+					_next->addNext(results[i], node->getParent()->getParent()->getNext()->getStatementNumber());
+				}
+			}
+		}
+	}
+}
+
+std::vector<int> DesignExtractor::processIfNode(ASTNode* node)
+{
+	std::vector<int> results;
+
+	process(node->getChild(), results);
+
+	return results;
+}
+
+void DesignExtractor::process(ASTNode* node, std::vector<int> &results)
+{
+	while (node != NULL) {
+		if (isStatement(node) && node->getType() != IF && node->getNext() == NULL) {
+			results.push_back(node->getStatementNumber());
+		}
+
+		if (node->getChild() != NULL && node->getType() != ASSIGN && node->getType() != CALL && node->getType() != WHILE) {
+			process(node->getChild(), results);
+		}
+
+		node = node->getNext();
+	}
+}
+
 void DesignExtractor::validateCall(ASTNode* node)
 {
 	if (_procTable->getIndex(node->getName()) < 0) {
@@ -153,7 +234,7 @@ void DesignExtractor::traverseCalls()
 	std::vector<std::pair<std::string, std::string>> calls;
 	std::vector<int> visited(_procTable->getSize(), 0);
 
-	for (size_t i = 0; i < _procTable->getSize(); i++) {
+	for (int i = 0; i < _procTable->getSize(); i++) {
 		if (visited[i] == 0) {
 			traverseCalls(_procTable->getName(i), visited, calls);
 		}
@@ -193,7 +274,7 @@ void DesignExtractor::extractModifiesFromCall(std::pair<std::string, std::string
 {
 	std::vector<std::string> variables = _modifies->getModifiedVar(call.second);
 
-	for (int i=0; i<variables.size(); i++) {
+	for (size_t i=0; i<variables.size(); i++) {
 		//std::cout << "Modifies(" << call.first << ", " << variables[i] << ")" << std::endl;
 		_modifies->addModifiesProc(call.first, variables[i]);
 	}
@@ -203,7 +284,7 @@ void DesignExtractor::extractUsesFromCall(std::pair<std::string, std::string> ca
 {
 	std::vector<std::string> variables = _uses->getUsedVar(call.second);
 
-	for (int i=0; i<variables.size(); i++) {
+	for (size_t i=0; i<variables.size(); i++) {
 		//std::cout << "Uses(" << call.first << ", " << variables[i] << ")" << std::endl;
 		_uses->addUsesProc(call.first, variables[i]);
 	}
@@ -228,7 +309,7 @@ void DesignExtractor::extractModifiesFromCallNodes()
 		variables = _modifies->getModifiedVar(node->getName());
 
 		while (isStatement(node)) {
-			for (int j = 0; j < variables.size(); j++) {
+			for (size_t j = 0; j < variables.size(); j++) {
 				//std::cout << "Modifies(" << node->getStatementNumber() << ", " << variables[j] << ")" << std::endl;
 				_modifies->addModifiesStmt(node->getStatementNumber(), variables[j]);
 			}
@@ -249,7 +330,7 @@ void DesignExtractor::extractUsesFromCallNodes()
 		variables = _uses->getUsedVar(node->getName());
 
 		while (isStatement(node)) {
-			for (int j = 0; j < variables.size(); j++) {
+			for (size_t j = 0; j < variables.size(); j++) {
 				//std::cout << "Uses(" << node->getStatementNumber() << ", " << variables[j] << ")" << std::endl;
 				_uses->addUsesStmt(node->getStatementNumber(), variables[j]);
 			}
@@ -267,6 +348,11 @@ bool DesignExtractor::isStatement(ASTNode* node)
 bool DesignExtractor::isFirstChild(ASTNode* node)
 {
 	return node->getPrevious() == NULL;
+}
+
+bool DesignExtractor::isLastChild(ASTNode* node)
+{
+	return node->getNext() == NULL;
 }
 
 bool DesignExtractor::isFollows(ASTNode* node)

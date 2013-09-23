@@ -1,7 +1,11 @@
 #include "PKB.h"
 
 PKB::PKB(void)
-{}
+{
+	_traverser = new ASTTraverser();
+	_matcher = new ASTMatcher();
+	_exprBuilder = new ASTExpressionBuilder();
+}
 
 PKB::~PKB(void)
 {}
@@ -99,6 +103,16 @@ Calls* PKB::getCalls()
 void PKB::setCalls(Calls* calls)
 {
 	_calls = calls;
+}
+
+Next* PKB::getNext()
+{
+	return _next;
+}
+
+void PKB::setNext(Next* next)
+{
+	_next = next;
 }
 
 int PKB::getNumOfStmt()

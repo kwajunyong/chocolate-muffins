@@ -11,6 +11,7 @@
 #include "Modifies.h"
 #include "Uses.h"
 #include "Calls.h"
+#include "Next.h"
 
 class PKB
 {
@@ -46,6 +47,9 @@ public:
 	Calls* getCalls();
 	void setCalls(Calls* calls);
 
+	Next* getNext();
+	void setNext(Next* next);
+
 	int getNumOfStmt();
 	void setNumOfStmt(int numOfStmt);
 private:
@@ -64,6 +68,7 @@ private:
 	Uses* _uses;
 	
 	Calls* _calls;
+	Next* _next;
 
 	int _numOfStmt;
 };
