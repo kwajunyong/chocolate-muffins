@@ -123,6 +123,9 @@
     <ClInclude Include="..\source\Next.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\ListManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ASTNode.cpp">
@@ -213,6 +216,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\Next.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ListManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

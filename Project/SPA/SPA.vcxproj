@@ -26,6 +26,7 @@
     <ClInclude Include="..\source\Follows.h" />
     <ClInclude Include="..\source\FollowsEngine.h" />
     <ClInclude Include="..\source\FollowsStarEngine.h" />
+    <ClInclude Include="..\source\ListManager.h" />
     <ClInclude Include="..\source\Modifies.h" />
     <ClInclude Include="..\source\ModifiesEngine.h" />
     <ClInclude Include="..\source\Next.h" />
@@ -58,6 +59,7 @@
     <ClCompile Include="..\source\Follows.cpp" />
     <ClCompile Include="..\source\FollowsEngine.cpp" />
     <ClCompile Include="..\source\FollowsStarEngine.cpp" />
+    <ClCompile Include="..\source\ListManager.cpp" />
     <ClCompile Include="..\source\Modifies.cpp" />
     <ClCompile Include="..\source\ModifiesEngine.cpp" />
     <ClCompile Include="..\source\Next.cpp" />
