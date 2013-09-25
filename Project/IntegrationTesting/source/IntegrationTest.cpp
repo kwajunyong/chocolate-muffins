@@ -6,6 +6,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+
+	// hendri uses to test listmanager
+
+	/*
+	  
+	
 	// Get the top level suite from the registry
 	CPPUNIT_NS::Test *suite = CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest();
 	CppUnit::TextUi::TestRunner runner;
@@ -21,5 +27,5 @@ int main(int argc, char* argv[])
 
 	getchar();
 
-	return wasSucessful ? 0 : 1;
+	return wasSucessful ? 0 : 1; */
 }
