@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <list>
+//#include <utility>
+
 
 /*  List Manager is used to store the list of variable and their relationship
 
@@ -30,9 +32,13 @@ public:
 	ListManager();
 	
 	void updateList(string variableName, const vector<string> &listValue);
-	void updateList(string variableName1, string variableName2, vector<string, string> &relationshipValue);
+	void updateList(string variableName1, string variableName2, vector<pair<string, string>> &relationshipValue);
    
 private:	
+
+   void findVariable(const string &variableName, int &firstList, int &secondList); // find respective list index
+
+
    const string &getValueAt(list<string>* valueList, int index);
 
    void sortVariable(string variable);
@@ -49,4 +55,9 @@ private:
    vector<list<string>*>::iterator bLookup(vector<list<string>*> * valueList, string value, int index);
 
    void createANewList(string variableName, const vector<string> &listValue);
+   void createANewList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
+   void appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
+	    string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first);
+
+   void shortenList(vector<list<string>*> * valueList, int index1, int index2, const vector<pair<string, string>> &relationshipValue);
 };
