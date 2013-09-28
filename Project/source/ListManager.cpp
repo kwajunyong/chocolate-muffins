@@ -1,6 +1,6 @@
 #include "ListManager.h"
 #include <algorithm>
-
+#include <iterator>
 ListManager::ListManager() {
 
 }
@@ -17,12 +17,12 @@ void ListManager::updateList(string variableName1, string variableName2, vector<
 	else if (varOneFirst == -1) { // varTwo is not empty
 		sortVariable(mainList.at(varTwoFirst), varTwoSecond); // disaster waiting to happen because i will forget to sort. 
 		appendVariable(mainList.at(varTwoFirst), variableList.at(varTwoFirst), 
-			  varTwoSecond, variableName1, relationshipValue, false);
+			varTwoSecond, variableName1, relationshipValue, false);
 
-	} else if (varTwoFirst = -1) {// varOne is not empty
+	} else if (varTwoFirst == -1) {// varOne is not empty
 		sortVariable(mainList.at(varOneFirst), varOneSecond);
 		appendVariable(mainList.at(varOneFirst), variableList.at(varOneFirst), 
-			  varOneSecond, variableName2, relationshipValue, true);
+			varOneSecond, variableName2, relationshipValue, true);
 
 	} else  if (varOneFirst == varTwoFirst) { // they both exists in the same list
 		sortVariable(mainList.at(varOneFirst), varOneSecond);
@@ -30,73 +30,158 @@ void ListManager::updateList(string variableName1, string variableName2, vector<
 		shortenList(mainList.at(varOneFirst), varOneSecond, varTwoSecond, relationshipValue);
 
 	} else { // they both exist in dfferent list.
-		// mergelist 
+		// mergelist
+
 		// sort both
 		sortVariable(mainList.at(varOneFirst), varOneSecond);
 		// sort both
-		sortVariable(mainList.at(varTwoFirst), varTwoSecond);
+		sortVariable(mainList.at(varTwoFirst), varTwoSecond);		
+		mergeList(mainList.at(varOneFirst), mainList.at(varTwoFirst), varOneSecond, varTwoSecond, relationshipValue);
 
+		// delete the second list;
+		mainList.erase(mainList.begin() + varTwoFirst);
 
+        // copy the variable to first list
+		vector<string> &varList1 = variableList.at(varOneFirst);					
+		vector<string> &varList2 = variableList.at(varTwoFirst);					
+		copy (varList2.begin(), varList2.end(), std::back_inserter(varList1));
+	    
+		variableList.erase(variableList.begin() + varTwoFirst);		
 	}
 }
 
 // ASSUME Sorting the first variable. 
 // uninformed deleting, hope it will work out on average *cross finger*. 
-void mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
-	   int index1, int index2, const vector<pair<string, string>> &relationshipValue) {
-	   
-		vector<list<string>*> newList;// temporary list;
-	    vector<list<string>*>::iterator iterFound;
-	    vector<pair<string, string>>::const_iterator iterListValue;
 
-	    string secondValue;
-	  string first;
-	string second;
-	string value;
-	for (iterListValue = relationshipValue.begin(); 
-		     iterListValue != relationshipValue.end(); iterListValue++) {
-				 first= (*iterListValue).first;
+// benchmark here
+void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
+	int index1, int index2, const vector<pair<string, string>> &relationshipValue) {
+
+		vector<list<string>*> newList;// temporary list;
+		vector<list<string>*>::iterator iterFoundList1, iterFoundList2;
+		vector<list<string>*>::iterator iterList1, iterList2;
+		vector<pair<string, string>>::const_iterator iterListValue;
+
+		list<string>* variableTuple1;
+		list<string>* variableTuple2;
+		list<string>* tempList;
+
+		list<string>::iterator iterVariable;
+
+		string secondValue;
+		string first;
+		string second;
+		string value;
+		for (iterListValue = relationshipValue.begin(); 
+			iterListValue != relationshipValue.end(); iterListValue++) {
+				first= (*iterListValue).first;
 				second = (*iterListValue).second;
-	}
+
+				iterFoundList1 = bLookup(valueList1, first, index1);
+				iterFoundList2 = bLookup(valueList2, second, index2);
+
+				iterList1 = iterFoundList1;
+				iterList2 = iterFoundList2;
+
+				/* --------------------------------------- (Looks like neon light)
+				   valueList1                     valueList2
+				   ==========                     ==========
+				   a     b                        c      d
+				   x  ->  1                       1   -> 8 
+				   y  ->  1                       1 - > 9
+				   z ->   1                       3 -> 10
+				   a -> 2						  4 -> 11 	
+				   b -> 2                           
+				   c -> 2
+
+				   if merging between b and c. Let's say relation contains (1,1), (2,3)
+				   We will find b using blookup and c using blookup (assume sorted)
+				   for value in b (using while(true) 
+				      for value in c (using while(true)
+					     do join 
+				------------------------------------------*/ 
+				// if found both
+				if (iterFoundList1 != valueList1->end() &&
+					iterFoundList2 != valueList2->end()) {
+
+
+						while (true) {						   
+							
+							while (true) {
+								if (iterList2 == valueList2->end() || 
+									   getValueAt(*iterList2, index2).compare(second) !=0)
+									   break; 
+
+								variableTuple1 = *iterList1;
+								variableTuple2 = *iterList2;					   
+								// copy from variableTuple1
+							
+								tempList = new list<string>(*variableTuple1);					   
+								// copy from variableTuple2
+								tempList->insert(tempList->end(), variableTuple2->begin(), variableTuple2->end());	
+								newList.push_back(tempList);
+								iterList2++;
+							}
+
+							iterList2 = iterFoundList2;
+							iterList1++;
+							
+							if (iterList1 == valueList1->end() || getValueAt(*iterList1, index1).compare(first) != 0) 
+								break;
+						}
+				}
+		}
+		// remember when after clear must delete the list properly. 
+
+
+		// new list 1
+		clearVariableList(*valueList1);
+
+		valueList1->assign(newList.begin(), newList.end());
+
+		//copy(newList.begin(), newList.end(), valueList1->begin());
+
+		
 }
 
 
 void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int index2, 
 	const vector<pair<string, string>> &relationshipValue) {
 
-	vector<list<string>*> newList;// temporary list;
-	vector<list<string>*>::iterator iterFound;
-	vector<pair<string, string>>::const_iterator iterListValue;
-	string secondValue;
-	string first;
-	string second;
-	string value;
-	for (iterListValue = relationshipValue.begin(); 
-		     iterListValue != relationshipValue.end(); iterListValue++) {
-				 first= (*iterListValue).first;
+		vector<list<string>*> newList;// temporary list;
+		vector<list<string>*>::iterator iterFound;
+		vector<pair<string, string>>::const_iterator iterListValue;
+		string secondValue;
+		string first;
+		string second;
+		string value;
+		for (iterListValue = relationshipValue.begin(); 
+			iterListValue != relationshipValue.end(); iterListValue++) {
+				first= (*iterListValue).first;
 				second = (*iterListValue).second;
-		iterFound = bLookup(valueList, first, index1);
+				iterFound = bLookup(valueList, first, index1);
 
-		
-			if (iterFound != valueList->end()) {
-				do {
-					 secondValue = getValueAt(*iterFound,index2);
 
-					 if (secondValue.compare(second))					     
-					       newList.push_back((*iterFound));
+				if (iterFound != valueList->end()) {
+					do {
+						secondValue = getValueAt(*iterFound,index2);
 
-					iterFound++;
-					if (iterFound == valueList->end()) 
-						break;
+						if (secondValue.compare(second))					     
+							newList.push_back((*iterFound));
 
-					value = getValueAt((*iterFound), index1);
+						iterFound++;
+						if (iterFound == valueList->end()) 
+							break;
 
-					if (value.compare(first) != 0)
-						break;
-				} while (true);
-			}
-	}
-	copy(newList.begin(), newList.end(), valueList->begin());
+						value = getValueAt((*iterFound), index1);
+
+						if (value.compare(first) != 0)
+							break;
+					} while (true);
+				}
+		}
+		valueList->clear();
+		copy(newList.begin(), newList.end(), valueList->begin());
 }
 
 
@@ -107,9 +192,9 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 void ListManager::appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
 	string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first) {
 
-		vector<list<string>*> newList;// temporary list;
+		vector<list<string>*> newTupleList;// temporary list;
 		vector<list<string>*>::iterator iterFound;
-
+		list<string>* newList;
 
 		vector<pair<string, string>>::const_iterator iterListValue;
 
@@ -130,11 +215,14 @@ void ListManager::appendVariable(vector<list<string>*> * valueList, vector<strin
 
 			if (iterFound != valueList->end()) {
 				do {
-					(*iterFound)->push_back(valuer);
-					newList.push_back((*iterFound));
+					newList = new list<string>(**iterFound);
+					newList->push_back(valuer);
+					newTupleList.push_back(newList);
+					
 					iterFound++;
 					if (iterFound == valueList->end()) 
 						break;
+
 					value = getValueAt((*iterFound), index);
 
 					if (value.compare(looker) != 0)
@@ -143,12 +231,8 @@ void ListManager::appendVariable(vector<list<string>*> * valueList, vector<strin
 			}
 		}
 
-		valueList->clear();
-
-		// copy from the temp list to the original list. Let's hope it's fast. 
-		for (iterFound = newList.begin(); iterFound != newList.end(); iterFound++) {		
-			valueList->push_back((*iterFound)); // complicated. 
-		}
+		clearVariableList(*valueList);
+		valueList->assign(newTupleList.begin(), newTupleList.end());
 
 		variable.push_back(newvariableName);
 }
@@ -170,13 +254,14 @@ void ListManager::findVariable(const string &variableName, int &first, int &seco
 
 			vector<string> &variableList  = *iterVariableContainer;
 			secondList = 0;		
-			for (iterVariableList = variableList.begin(); iterVariableList != variableList.begin(); 
+			for (iterVariableList = variableList.begin(); iterVariableList != variableList.end(); 
 				iterVariableList++) {
-					secondList++;
 					if (variableName.compare((*iterVariableList)) == 0) {
 						found = true;
 						break;
 					}
+					secondList++;
+
 			}
 
 			if (found) {
@@ -194,6 +279,16 @@ void ListManager::findVariable(const string &variableName, int &first, int &seco
 	}
 
 
+}
+
+void ListManager::clearVariableList(vector<list<string>*> &varList) {
+	vector<list<string>*>::iterator iterVarList;
+
+	for (iterVarList = varList.begin(); iterVarList != varList.end(); iterVarList++) {
+	    free(*iterVarList);
+	}
+
+	varList.clear();
 }
 
 void ListManager::updateList(string variableName, const vector<string> &listValue) {
@@ -219,10 +314,17 @@ void ListManager::updateList(string variableName, const vector<string> &listValu
 
 void ListManager::createANewList(string variableName, const vector<string> &listValue) {
 
-	list<string> * newVariableList = new list<string>(listValue.begin(), listValue.end());
+	vector<string>::const_iterator  iterListValue;
+	list<string> * newVariableList ;
 	vector<list<string>*> *headerList = new vector<list<string>*>();
 
-	headerList->push_back(newVariableList);
+	for (iterListValue = listValue.begin(); iterListValue != listValue.end(); iterListValue++) {
+		newVariableList = new list<string>;
+		newVariableList->push_back(*iterListValue);		
+		headerList->push_back(newVariableList);
+	}
+	
+
 	mainList.push_back(headerList);
 
 	vector<string> variable;
@@ -230,22 +332,20 @@ void ListManager::createANewList(string variableName, const vector<string> &list
 	variableList.push_back(variable);
 }
 
-void ListManager::createANewList(string variableName1, string variableName2, 
+void ListManager::createANewList(const string &variableName1, const string &variableName2, 
 	const vector<pair<string, string>> &relationshipValue) {
 
-		list<string> * newVariableList1 = new list<string>();
-		list<string> * newVariableList2 = new list<string>();
-
+		list<string> * newVariableList;
+		vector<list<string>*> *headerList = new vector<list<string>*>();
 		vector<pair<string, string>>::const_iterator pairIterator;
 
 		for (pairIterator = relationshipValue.begin(); pairIterator != relationshipValue.end(); pairIterator++) {
-			newVariableList1->push_back(pairIterator->first);
-			newVariableList2->push_back(pairIterator->second);
+			newVariableList =  new list<string>();
+			newVariableList->push_back(pairIterator->first);
+			newVariableList->push_back(pairIterator->second);
+			headerList->push_back(newVariableList);
 		}
-		vector<list<string>*> *headerList = new vector<list<string>*>();
-
-		headerList->push_back(newVariableList1);
-		headerList->push_back(newVariableList2);
+				
 		mainList.push_back(headerList);
 
 		vector<string> variable;
@@ -285,11 +385,9 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 			}
 		}
 
-		valueList->clear();
+		clearVariableList(*valueList);
 		// copy from the temp list to the original list. Let's hope it's fast. 
-		for (iterFound = newList.begin(); iterFound != newList.end(); iterFound++) {		
-			valueList->push_back((*iterFound)); // complicated. 
-		}
+			valueList->assign(newList.begin(), newList.end()); 
 	}
 }
 
@@ -297,7 +395,8 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valueList, string value, int index) {
 
 	vector<list<string>*>::iterator iter;
-
+	// this is not binary lookup. 
+	// must ensure binary lookup find the first element. 
 	for (iter = valueList->begin(); iter != valueList->end(); iter++) {
 		if (getValueAt((*iter), index).compare(value) == 0) {
 			return iter;
@@ -337,29 +436,22 @@ void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int star
 	iValue = getValueAt(valueList->at(i), varIndex);
 	jValue = getValueAt(valueList->at(j), varIndex);
 
-	while (i <= middle && j <= end) {			
+	while (i <= middle || j <= end) {			
 		string variableType = "string";
 
 		if (variableType.compare("string") == 0)  {
 			if ((iValue.compare(jValue) <= 0 && i <= middle) || j > end) {
 				newList.push_back(valueList->at(i));
 				i++;
-				iValue = getValueAt(valueList->at(i), varIndex);
+				if (i <= middle) 
+					iValue = getValueAt(valueList->at(i), varIndex);
 			} else if (j <= end) {
 				newList.push_back(valueList->at(j));
 				j++;
-				jValue = getValueAt(valueList->at(j), varIndex);
+				if (j <= end)
+					jValue = getValueAt(valueList->at(j), varIndex);
 			}		
-		} else { // integer type 			
-			if ((atoi(iValue.c_str()) <= atoi(jValue.c_str()) && i <= middle) || j > end) {
-				newList.push_back(valueList->at(i));
-				i++;
-				iValue = getValueAt(valueList->at(i), varIndex);
-			} else if (j <= end) {
-				newList.push_back(valueList->at(j));
-				j++;
-				jValue = getValueAt(valueList->at(j), varIndex);
-			}		
+		} else { // integer type 						
 		}
 	} // finish while 
 

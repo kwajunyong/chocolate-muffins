@@ -55,9 +55,12 @@ private:
    vector<list<string>*>::iterator bLookup(vector<list<string>*> * valueList, string value, int index);
 
    void createANewList(string variableName, const vector<string> &listValue);
-   void createANewList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
+   void createANewList(const string &variableName1, const string &variableName2, const vector<pair<string, string>> &relationshipValue);
    void appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
 	    string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first);
 
    void shortenList(vector<list<string>*> * valueList, int index1, int index2, const vector<pair<string, string>> &relationshipValue);
+   void mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
+	int index1, int index2, const vector<pair<string, string>> &relationshipValue);
+   void clearVariableList(vector<list<string>*> &varList);
 };
