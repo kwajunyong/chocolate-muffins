@@ -84,20 +84,20 @@ vector<int> Next::getNext(int stmtNum, bool transitive)
 	return answers;
 }
 
-vector<int> Next::getNexted(int stmtNum, bool transitive)
+vector<int> Next::getPrevious(int stmtNum, bool transitive)
 {
 	vector<int> answers;
 	vector<vector<int>> temp;
 
 	if(transitive)
 	{
-		answers = nexted[stmtNum];
+		answers = previous[stmtNum];
 
 		for(int i = 0; i < answers.size(); i++)
 		{
 			if(answers.size() > 0)
 			{
-				temp.push_back(getNexted(answers[i], true));
+				temp.push_back(getPrevious(answers[i], true));
 			}
 		}
 
@@ -114,9 +114,9 @@ vector<int> Next::getNexted(int stmtNum, bool transitive)
 	}
 	else
 	{
-		if(nexted.size() > 0)
+		if(previous.size() > 0)
 		{
-			answers = nexted[stmtNum];
+			answers = previous[stmtNum];
 		}
 	}
 
