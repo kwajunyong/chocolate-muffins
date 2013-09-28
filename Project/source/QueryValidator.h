@@ -18,6 +18,11 @@
 #include "ParentStarEngine.h"
 #include "UsesEngine.h"
 
+//testing
+#include "Parser.h"
+#include "DesignExtractor.h"
+#include "QueryTree.h"
+#include <map>
 
 using namespace std;
 
@@ -27,26 +32,33 @@ public:
 	QueryValidator(QueryManager *qm, PKB *p);
 	~QueryValidator(void);
 
-	bool processInputQuery(string inputQuery);
-	bool processSelectQuery(string inputQuery);
-
-private:
-	void initCheckingVectors();
-	bool identifyRelationship(std::string unkRelationship, std::string firstParam, std::string secondParam);
-	pair<std::string, std::string> processParameters(std::string firstParam, std::string secondParam);
-	bool replaceSubstring(std::string& inputString, const std::string& replaceTarget, const std::string& replaceValue);
-	VARIABLETYPE identifyVariableType(std::string unkVarType);
-	std::string getRawVariableType(std::string varName);
-	std::string preprocessInput(string input);
-	bool is_number(const std::string& s);
+	bool processQuery(string inputQuery);
 	
-	std::vector<std::string> queryClauses;
-	std::vector<std::string> designEntities;
-	std::vector<std::string> queryTypes;
-	vector< pair<std::string, std::string> > varList;
-	//vector< vector<QueryClass> > qcRelationships;
-	vector<QueryClass> qcRelationships;
+private:
+	string preprocessInput(string input);
+	void initCheckingTables();
+	void initQueryClauseTable();
+	void initDesignEntityTable();
+	void initQueryTypeTable();
+
+	//General Functions
+	bool replaceSubstring(string& inputString, const string& replaceTarget, const string& replaceValue);
+	bool is_number(const string& s);
+	bool processDeclarationStmt(string declarationStmt);
+	bool processSelectStmt(string selectStmt);
+	bool processQueryClauses(vector<string> queryClauses);
+	string getRawVariableType(string variableName);
+	pair<vector<string>, vector<string>> getAllowableParaType(string entityType);
+	bool paraTypeAllowed(vector<string> allowedParameterTypes, string paraType);
+	VARIABLETYPE getVariableType(std::string unkVarType);
+	bool addToQueryManager(vector < pair<string, pair<string, string>>> clausesList);
+
+	//Variables
+	vector<string> tblQueryClauses, tblDesignEntities;
+	vector< pair<string, pair<vector<string>, vector<string>>>> tblQueryTypes;
+	vector < pair<string, pair<string, string>>> entityList;
+	vector< pair<string, string> > varList;
+
 	QueryManager *queryManager;
 	PKB *pkb;
-
 };
