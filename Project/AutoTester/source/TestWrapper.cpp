@@ -35,9 +35,10 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 	
-	qv->processInputQuery(query);
-	qm->execute();
-	results = qm->outputResult();
-	qm->resetEverything();
+	// commented by hendri
+//	qv->processInputQuery(query);
+//	qm->execute();
+//	results = qm->outputResult();
+//	qm->resetEverything();
 
 }

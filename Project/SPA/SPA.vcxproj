@@ -23,6 +23,7 @@
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\EnumType.h" />
+    <ClInclude Include="..\source\ExpressionPattern.h" />
     <ClInclude Include="..\source\Follows.h" />
     <ClInclude Include="..\source\FollowsEngine.h" />
     <ClInclude Include="..\source\FollowsStarEngine.h" />
@@ -56,6 +57,7 @@
     <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
+    <ClCompile Include="..\source\ExpressionPattern.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
     <ClCompile Include="..\source\FollowsEngine.cpp" />
     <ClCompile Include="..\source\FollowsStarEngine.cpp" />

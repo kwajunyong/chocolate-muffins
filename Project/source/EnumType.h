@@ -25,5 +25,6 @@ enum VARIABLETYPE {
   VT_STATEMENTLIST, 
   VT_VARIABLELIST, // Variable 
   VT_CALL, 
-  VT_UNDERSCORE
+  VT_UNDERSCORE, 
+  VT_EXPRESSION_UNDERSCORE // Used for pattern matching. 
 };
