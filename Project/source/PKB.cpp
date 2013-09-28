@@ -5,6 +5,22 @@ PKB::PKB(void)
 	_traverser = new ASTTraverser();
 	_matcher = new ASTMatcher();
 	_exprBuilder = new ASTExpressionBuilder();
+
+	_ast = NULL;
+	
+	_varTable = NULL;
+	_procTable = NULL;
+	
+	_follows = NULL;
+	_parent = NULL;
+	
+	_modifies = NULL;
+	_uses = NULL;
+	
+	_calls = NULL;
+	_next = NULL;
+
+	_numOfStmt = 0;
 }
 
 PKB::~PKB(void)
