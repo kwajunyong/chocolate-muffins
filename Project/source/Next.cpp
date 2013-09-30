@@ -19,7 +19,7 @@ bool Next::addNext(int stmtNum1, int stmtNum2)
 	}
 
 	next[stmtNum1].push_back(stmtNum2);
-	nexted[stmtNum2].push_back(stmtNum1);
+	previous[stmtNum2].push_back(stmtNum1);
 	return true;
 }
 
