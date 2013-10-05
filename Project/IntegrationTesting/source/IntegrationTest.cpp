@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
 
 	// hendri uses to test listmanager
-	   ListManager lm; 
+	   ListManager lm(NULL); 
 
 	   vector<string>  va; 
 	   va.push_back("1");	   

@@ -1,9 +1,10 @@
 #include "QueryClass.h"
 #include "PKB.h"
-
+#include "CommonUtility.h"
 //QueryClass *QueryClass::instantiate() {
 //
 //}
+
 
 QueryClass::QueryClass () {
 }
@@ -47,5 +48,14 @@ void QueryClass::convertVector(const map<int, int> & mapList, vector<int>& resul
 	
 	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
 		resultList.push_back(mapIterator->first);
+	}
+}
+
+
+void QueryClass::convertVector(const map<int, int> & mapList, vector<string>& resultList ) {
+	map<int, int>::const_iterator mapIterator;
+	
+	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
+		resultList.push_back(NumberToString(mapIterator->first));
 	}
 }

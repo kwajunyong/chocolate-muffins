@@ -22,6 +22,7 @@ public:
 	bool hasResult();
 	void convertVector(const map<string, int> &mapList, vector<string>& resultList);
 	void convertVector(const map<int, int> &mapList, vector<int>& resultList);
+	void convertVector(const map<int, int> &mapList, vector<string>& resultList);
 protected:
 	
 

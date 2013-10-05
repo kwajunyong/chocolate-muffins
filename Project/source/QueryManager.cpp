@@ -1,5 +1,30 @@
 #include "QueryManager.h"
 
+void QueryManager::updateRelationship(const string &variable1, const string &variable2, 
+	  const vector<pair<string, string>> &relationship) {		
+
+		listManager->updateList(variable1, variable2, relationship);
+
+}
+
+string QueryManager::getVariableType(const string &variableName) {
+
+	ASTParameterValue &asp = getASTParameterValue(variableName);		  	
+	  if (asp.getASTParameter().getParameterType() == VT_WHILE || 
+		  asp.getASTParameter().getParameterType() == VT_ASSIGNMENT || 
+		  asp.getASTParameter().getParameterType() == VT_IF || 
+		  asp.getASTParameter().getParameterType() == VT_STATEMENTLIST || 
+		  asp.getASTParameter().getParameterType() == VT_CALL)
+		  return "integer";
+	  else
+		  return "string";
+
+}
+
+void QueryManager::updateRelationship(const string &variable, 	  const vector<string> &relationship) {		
+		listManager->updateList(variable, relationship);
+}
+
 void QueryManager::execute() { // multithreading 
 
 	if (!qt.isEmpty()) {
@@ -17,6 +42,7 @@ void QueryManager::execute() { // multithreading
 QueryManager::QueryManager(PKB *pkb) {
 	pkbLibrary = pkb;
 	failed = false;
+	listManager = new ListManager(this);	
 }
 void QueryManager::addExpression(VARIABLETYPE variableType, string variableName) {
 	ASTParameter param(variableName, variableType);		

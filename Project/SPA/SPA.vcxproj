@@ -21,6 +21,7 @@
     <ClInclude Include="..\source\ASTType.h" />
     <ClInclude Include="..\source\BinaryRelationEngine.h" />
     <ClInclude Include="..\source\Calls.h" />
+    <ClInclude Include="..\source\CommonUtility.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\EnumType.h" />
@@ -60,6 +61,7 @@
     <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\BinaryRelationEngine.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
+    <ClCompile Include="..\source\CommonUtility.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionPattern.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />

@@ -15,6 +15,7 @@
 #include "ASTParameter.h"
 #include "QueryTree.h"
 #include <list>
+#include "ListManager.h"
 
 using namespace std;
 
@@ -23,6 +24,7 @@ class QueryManager {
 public:	
 
 	void execute(); 
+	string getVariableType(const string &variableName);
 
 	void addQueryClass(QueryClass *qc); 
 	void addExpression(VARIABLETYPE variableType, string variableName);
@@ -38,7 +40,9 @@ public:
 	// after the execution update the vector value. 
 	void updateVector(string variableName, vector<string> &vectorString);
 	void updateVectorInteger(string variableName, vector<int> &vectorInt);
-	
+
+	void updateRelationship(const string &variable1, const string &variable2, const vector<pair<string, string>> &relationship);
+	void updateRelationship(const string &variable, const vector<string> &relationship);
 	
 	QueryManager(PKB *pkb);
 
@@ -68,4 +72,6 @@ private:
 	void convertVector(const vector<int> &from, list<string>& to);
 	void convertVector(const vector<string> &from, list<string>& to);
 	string NumberToString(int pNumber);
+	ListManager * listManager;
+
 };

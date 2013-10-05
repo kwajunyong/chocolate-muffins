@@ -25,27 +25,28 @@
 
 
 using namespace std;
-
+class QueryManager;
 class ListManager {
 
 public:
-	ListManager();
+	ListManager(QueryManager *qm);
 	
 	void updateList(string variableName, const vector<string> &listValue);
-	void updateList(string variableName1, string variableName2, vector<pair<string, string>> &relationshipValue);
+	void updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
    
 private:	
 
+	int compare(const string &value1, const string &value2, const string &variableType);
    void findVariable(const string &variableName, int &firstList, int &secondList); // find respective list index
 
 
    const string &getValueAt(list<string>* valueList, int index);
 
    void sortVariable(string variable);
-   void sortVariable(vector<list<string>*>* valueList, int varIndex); // given a list sort which particular variable;
+   void sortVariable(vector<list<string>*>* valueList, int varIndex, const string &variableName); // given a list sort which particular variable;
 
-   void quickSort(vector<list<string>*>* valueList, int varIndex, int start, int end); 
-   void merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end);
+   void mergeSort(vector<list<string>*>* valueList, int varIndex, int start, int end, const string &variableType); 
+   void merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end, const string &variableType);
 
    vector<vector<list<string>*>*> mainList;
    vector<vector<string>> variableList;	
@@ -63,4 +64,6 @@ private:
    void mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
 	int index1, int index2, const vector<pair<string, string>> &relationshipValue);
    void clearVariableList(vector<list<string>*> &varList);
+
+   QueryManager *parent;
 };

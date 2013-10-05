@@ -1,11 +1,31 @@
 #include "ListManager.h"
 #include <algorithm>
 #include <iterator>
-ListManager::ListManager() {
-
+#include "QueryManager.h"
+ListManager::ListManager(QueryManager *qm) {
+	parent = qm;
 }
 
-void ListManager::updateList(string variableName1, string variableName2, vector<pair<string, string>> &relationshipValue) {
+int ListManager::compare(const string &value1, const string &value2, const string &variableType){
+
+	if (variableType.compare("string") == 0) 
+		return value1.compare(value2);
+	else {
+		
+		int intValue1 = atoi(value1.c_str());
+		int intValue2 = atoi(value2.c_str());
+		if (intValue1 == intValue2)
+			return 0;
+		else if (intValue1 > intValue2) 
+			return 1;
+		else
+			return -1;
+	}
+
+
+
+}
+void ListManager::updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue) {
 	int varOneFirst, varOneSecond;
 	int varTwoFirst, varTwoSecond;
 
@@ -15,17 +35,17 @@ void ListManager::updateList(string variableName1, string variableName2, vector<
 	if (varOneFirst == -1 && varTwoFirst == -1) // both not found
 		createANewList(variableName1, variableName2, relationshipValue);
 	else if (varOneFirst == -1) { // varTwo is not empty
-		sortVariable(mainList.at(varTwoFirst), varTwoSecond); // disaster waiting to happen because i will forget to sort. 
+		sortVariable(mainList.at(varTwoFirst), varTwoSecond, variableName2); // disaster waiting to happen because i will forget to sort. 
 		appendVariable(mainList.at(varTwoFirst), variableList.at(varTwoFirst), 
 			varTwoSecond, variableName1, relationshipValue, false);
 
 	} else if (varTwoFirst == -1) {// varOne is not empty
-		sortVariable(mainList.at(varOneFirst), varOneSecond);
+		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 		appendVariable(mainList.at(varOneFirst), variableList.at(varOneFirst), 
 			varOneSecond, variableName2, relationshipValue, true);
 
 	} else  if (varOneFirst == varTwoFirst) { // they both exists in the same list
-		sortVariable(mainList.at(varOneFirst), varOneSecond);
+		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 
 		shortenList(mainList.at(varOneFirst), varOneSecond, varTwoSecond, relationshipValue);
 
@@ -33,9 +53,9 @@ void ListManager::updateList(string variableName1, string variableName2, vector<
 		// mergelist
 
 		// sort both
-		sortVariable(mainList.at(varOneFirst), varOneSecond);
+		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 		// sort both
-		sortVariable(mainList.at(varTwoFirst), varTwoSecond);		
+		sortVariable(mainList.at(varTwoFirst), varTwoSecond, variableName2);		
 		mergeList(mainList.at(varOneFirst), mainList.at(varTwoFirst), varOneSecond, varTwoSecond, relationshipValue);
 
 		// delete the second list;
@@ -304,7 +324,7 @@ void ListManager::updateList(string variableName, const vector<string> &listValu
 
 		// check if listvalue is empty
 		vector<list<string>*> *valueList = mainList.at(firstList);
-		sortVariable(valueList, secondList);
+		sortVariable(valueList, secondList, variableName);
 		deleteList(valueList, listValue, true, secondList);
 
 	} else {
@@ -408,25 +428,28 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 
 
 // quick quick sort variable 
-void ListManager::sortVariable(vector<list<string>*> *valueList, int varIndex) {
-	quickSort(valueList, varIndex, 0, valueList->size() - 1);
+void ListManager::sortVariable( vector<list<string>*> *valueList, int varIndex, const string &variableName) {
+	
+
+	string variableType = parent->getVariableType(variableName);
+	mergeSort(valueList, varIndex, 0, valueList->size() - 1, variableType);
 
 }
 
-void ListManager::quickSort(vector<list<string>*> *valueList, int varIndex, int start, int end) {
+void ListManager::mergeSort(vector<list<string>*> *valueList, int varIndex, int start, int end, const string &variableType) {
 
 	if (start >= end)
 		return;
 
 	int middle = (start + end) / 2;
 
-	quickSort(valueList, varIndex, start, middle);
-	quickSort(valueList, varIndex, middle + 1, end);
+	mergeSort(valueList, varIndex, start, middle, variableType);
+	mergeSort(valueList, varIndex, middle + 1, end, variableType);
 
-	merge(valueList, varIndex, start, middle, end);
+	merge(valueList, varIndex, start, middle, end, variableType);
 }
 
-void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end) {
+void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end, const string &variableType) {
 
 	int i = start; 
 	int j = middle + 1;
@@ -436,11 +459,11 @@ void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int star
 	iValue = getValueAt(valueList->at(i), varIndex);
 	jValue = getValueAt(valueList->at(j), varIndex);
 
-	while (i <= middle || j <= end) {			
-		string variableType = "string";
 
-		if (variableType.compare("string") == 0)  {
-			if ((iValue.compare(jValue) <= 0 && i <= middle) || j > end) {
+	while (i <= middle || j <= end) {			
+
+		
+			if ((compare(iValue, jValue, variableType) <= 0 && i <= middle) || j > end) {
 				newList.push_back(valueList->at(i));
 				i++;
 				if (i <= middle) 
@@ -451,8 +474,7 @@ void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int star
 				if (j <= end)
 					jValue = getValueAt(valueList->at(j), varIndex);
 			}		
-		} else { // integer type 						
-		}
+		
 	} // finish while 
 
 	// putting the list into the main list
