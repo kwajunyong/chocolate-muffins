@@ -299,8 +299,12 @@ string QueryValidator::getRawVariableType(string variableName){
 }
 
 pair<vector<string>, vector<string>> QueryValidator::getAllowableParaType(string entityType){
-	for (vector< pair<string, pair<vector<string>, vector<string>>>>::size_type counter = 0; 0 < tblQueryTypes.size(); counter++){
-		if (tblQueryTypes[counter].first == entityType){
+	// hendri 
+	// fixed a bug here: your condition was 0 < tblQueryTypes.size();
+	for (vector< pair<string, pair<vector<string>, vector<string>>>>::size_type counter = 0; counter < tblQueryTypes.size(); counter++){
+		//if (tblQueryTypes[counter].first == entityType){ // shouldn't use ==
+
+		if (tblQueryTypes[counter].first.compare(entityType) == 0 ){
 			return tblQueryTypes[counter].second;
 		}
 	}
@@ -557,7 +561,7 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;
 }
 
-int main(){
+int main1(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;

@@ -1,5 +1,6 @@
 #include "FollowsStarEngine.h"
 #include "QueryManager.h"
+#include "CommonUtility.h"
 
 FollowsStarEngine::FollowsStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_FOLLOWS_S, qm, pkb){
 
@@ -7,7 +8,7 @@ FollowsStarEngine::FollowsStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT
 }
 void FollowsStarEngine::run() {
 
-	// pre check is here
+		
 
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
@@ -16,17 +17,31 @@ void FollowsStarEngine::run() {
 	vector<int> second;
 	vector<int> first;
 
+	// there is no need to check if both is underscore
+	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
+		/*if (pkbManager->getFollows()->IsThereFollow) 
+			failed = false;
+		else
+			failed true;*/
+
+		return;
+	}
+	
+
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 		first.push_back(atoi(astParam2->getVariableName().c_str()));
-
-	} else {
+	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		first = myQM->getAllStatementList();
+	}else{
 		first = myQM->getValueListInteger(astParam1->getVariableName());
 	}
 
 	
 	if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
 		second.push_back(atoi(astParam2->getVariableName().c_str()));
-	} else {
+	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		second = myQM->getAllStatementList();
+	}	else {
 		second = myQM->getValueListInteger(astParam2->getVariableName());
 	}
 
@@ -38,38 +53,34 @@ void FollowsStarEngine::run() {
 	vector<int>::const_iterator iterFollowerList;
 	vector<int>::const_iterator iterSecond;
 
-	// will use map instead of vector in the late release 
-	// if procedureList more than variable list 
-	// then use procedure to match against variable
-	// and vice versa. 
+	bool exist;
+	bool keepRelationship = astParam1->updateAble() && astParam2->updateAble() ;
 
-	// later release
-	// will mvoe 
-	bool exist = false;
-
+	vector<pair<string, string>> resultList;
 
 	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-		vector<int> followerList = pkbManager->getFollows()->getFollowedBy((*iter), true);
-
+		vector<int> &followerList = pkbManager->getFollows()->getFollowedBy((*iter), false);
 		exist = false;
+
 		for (iterFollowerList = followerList.begin(); iterFollowerList  != followerList.end(); iterFollowerList++) { // for each variable returned check against the variable list
 			for (iterSecond = second.begin(); iterSecond  != second.end(); iterSecond++) {
 				if (*iterFollowerList == *iterSecond) {
 					exist = true;
-
-					if (finalListTwo.size() == second.size())  // if  the list contained every single variable already 
-						break;
+					
+					if (keepRelationship)
+						resultList.push_back(pair<string, string>(NumberToString(*iter), NumberToString(*iterSecond)));					
 					finalListTwo[*iterFollowerList] = 1;
+					
 				}
 			}
-
-			if (exist) { 
+			if (exist) 
 				finalListOne[*iter] = 1;
-			}
+			
 		}
 	}
 
+	
 	if (astParam1->updateAble()) {
 		vector<int> finalList; 
 		convertVector(finalListOne, finalList);
@@ -81,7 +92,21 @@ void FollowsStarEngine::run() {
 		vector<int> finalList; 
 		convertVector(finalListTwo, finalList);
 		myQM->updateVectorInteger(astParam2->getVariableName(), finalList);
+		
 	}
+
+	if (keepRelationship) {
+		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+	} else if (astParam1->updateAble()) {
+		vector<string> finalList; 
+		convertVector(finalListOne, finalList);
+		myQM->updateRelationship(astParam1->getVariableName(), finalList);
+	} else if (astParam2->updateAble()) {
+		vector<string> finalList; 
+		convertVector(finalListOne, finalList);
+		myQM->updateRelationship(astParam2->getVariableName(), finalList);
+	}
+	
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0);
 

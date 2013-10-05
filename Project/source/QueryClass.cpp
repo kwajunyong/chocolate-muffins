@@ -5,6 +5,14 @@
 //
 //}
 
+bool QueryClass::keepRelationship() {
+
+	ASTParameter *astParam1 = parameterList.at(0);
+	ASTParameter *astParam2 = parameterList.at(1);	
+
+	return astParam1->updateAble() && astParam2->updateAble();
+}
+
 
 QueryClass::QueryClass () {
 }

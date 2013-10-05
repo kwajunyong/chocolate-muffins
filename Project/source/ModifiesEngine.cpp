@@ -1,17 +1,30 @@
 #include "ModifiesEngine.h"
 #include "QueryManager.h"
+#include "CommonUtility.h"
 
 ModifiesEngine::ModifiesEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
-
-
 }
+
 void ModifiesEngine::run() {
 
 	// pre check is here
 
+	
+
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
+
+
+		// there is no need to check if both is underscore
+	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
+		/*if (pkbManager->getFollows()->IsThereFollow) 
+			failed = false;
+		else
+			failed true;*/
+
+		return;
+	}
 
 	// Procedure VS Variable 
 
@@ -19,9 +32,16 @@ void ModifiesEngine::run() {
 	if (astParam2->getParameterType() == VT_CONSTANTSTRING) 
 	{
 		second.push_back(astParam2->getVariableName());
-	} else {
-		second = myQM->getValueList(astParam2->getVariableName());
+	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		second = myQM->getAllVariable();
 	}
+	else 
+		second = myQM->getValueList(astParam2->getVariableName());
+	
+
+	bool keepRelationship = QueryClass::keepRelationship();
+
+	vector<pair<string, string>> relationship;
 
 	if (astParam1->getParameterType() == VT_CONSTANTSTRING || astParam1->getParameterType() == VT_PROCEDURE) {	
 		vector<string> procedureList;
@@ -61,8 +81,13 @@ void ModifiesEngine::run() {
 					if ((*iterProcedure).compare(*iterProcedureResult) == 0) {
 						exist = true;
 
-						if (finalProcedureList.size() == procedureList.size())  // if the procedure has been moved 
+						if (keepRelationship)
+							relationship.push_back(pair<string, string>(*iterProcedure,*iter));
+
+						// if second is underscore, just care for yourself
+						if (astParam2->getParameterType() == VT_UNDERSCORE) 
 							break;
+
 						finalProcedureList[*iterProcedureResult] = 1;
 					}
 				}
@@ -79,17 +104,24 @@ void ModifiesEngine::run() {
 
 			myQM->updateVector(astParam1->getVariableName(), finalList);
 
+			if (!keepRelationship) {
+				myQM->updateRelationship(astParam1->getVariableName(), finalList);
+			}
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) {
 			vector<string> finalList; 
 			convertVector(finalVariableList, finalList);
 
 			myQM->updateVector(astParam2->getVariableName(), finalList);
+
+			if (!keepRelationship) {
+				myQM->updateRelationship(astParam2->getVariableName(), finalList);
+			}
 		}
 
 		failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0);
 
-
+	
 
 
 	} else { // Statement Vs Variable 
@@ -121,6 +153,11 @@ void ModifiesEngine::run() {
 
 			vector<string> variableList = pkbManager->getModifies()->getModifiedVar(*iter);
 
+			if (astParam2->getParameterType() == VT_UNDERSCORE) { // if the second variable is only underscore
+				if (variableList.size() != 0)
+					finalStatementList[*iter] = 1;
+					continue;
+			}			
 
 			exist = false;
 			for (iterVariableResult = variableList.begin(); iterVariableResult  != variableList.end(); iterVariableResult++) { // for each variable returned check against the variable list
@@ -128,8 +165,11 @@ void ModifiesEngine::run() {
 					if ((*iterVariable).compare(*iterVariableResult) == 0) {
 						exist = true;
 
-						if (finalVariableList.size() == second.size())  // if  the list contained every single variable already 
-							break;
+						
+						if (keepRelationship)
+							relationship.push_back(pair<string, string>(NumberToString(*iter),*iterVariableResult));
+
+						
 						finalVariableList[*iterVariable] = 1;
 					}
 				}
@@ -140,22 +180,34 @@ void ModifiesEngine::run() {
 			}
 		}
 
-		if (astParam1->getParameterType() != VT_UNDERSCORE && astParam1->getParameterType() != VT_CONSTANTINTEGER) {
+		if (astParam1->updateAble()) {
 			vector<int> finalList; 
 			convertVector(finalStatementList, finalList);
 			myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
+			
+			if (!keepRelationship) {
+				vector<string> finalResultList;
+				convertVector(finalStatementList, finalList);
+				myQM->updateRelationship(astParam1->getVariableName(), finalResultList);
+			}
 
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) { // change to updatable function later one. 
 			vector<string> finalList; 
 			convertVector(finalVariableList, finalList);
 			myQM->updateVector(astParam2->getVariableName(), finalList);
+			if (!keepRelationship) {
+				myQM->updateRelationship(astParam2->getVariableName(), finalList);
+			}
 		}
 
 		failed = (finalStatementList.size() == 0 && finalVariableList.size() == 0);
-
-
 	}
+
+	if (keepRelationship) 
+		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
+	
+	
 
 
 }

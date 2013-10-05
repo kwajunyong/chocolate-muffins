@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-	// hendri uses to test listmanager
+	/* hendri uses to test listmanager
 	   ListManager lm(NULL); 
 
 	   vector<string>  va; 
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 
 	   int a;
 	   cin  >> a;
-	/*
+	
 	  
 	
 	// Get the top level suite from the registry

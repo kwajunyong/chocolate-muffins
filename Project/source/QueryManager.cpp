@@ -84,6 +84,9 @@ const vector<string>& QueryManager::getValueList(string variableName)  {
 	return astParamValue.getValueList();
 }
 
+const vector<string> &QueryManager::getAllVariable() {
+	return pkbLibrary->getVarTable()->getAllNames();
+}
 const vector<int>& QueryManager::getValueListInteger(string variableName)  {    	
 	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
 	// will create an intermediate called cache manager that will store all the information sorted 
@@ -92,6 +95,16 @@ const vector<int>& QueryManager::getValueListInteger(string variableName)  {
 		astParamValue.initialize(pkbLibrary);
 	return astParamValue.getValueListInteger();
 }
+
+const vector<int> &QueryManager::getAllStatementList() {
+
+	if (myAllList.size() ==0) 
+		for (int i = 0; i < pkbLibrary->getNumOfStmt(); i++) 
+			myAllList.push_back(i);		
+
+	return myAllList;
+}
+
 
 // consider removing this. 
 void QueryManager::initializeExpression(string variableName) {	

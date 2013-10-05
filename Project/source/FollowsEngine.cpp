@@ -6,8 +6,7 @@ FollowsEngine::FollowsEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_FOLLOWS
 
 }
 void FollowsEngine::run() {
-
-	// pre check is here
+	
 
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
@@ -16,16 +15,31 @@ void FollowsEngine::run() {
 	vector<int> second;
 	vector<int> first;
 
+	// there is no need to check if both is underscore
+	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
+		/*if (pkbManager->getFollows()->IsThereFollow) 
+			failed = false;
+		else
+			failed true;*/
+
+		return;
+	}
+	
+
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 		first.push_back(atoi(astParam2->getVariableName().c_str()));
-	} else {
+	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		first = myQM->getAllStatementList();
+	}else{
 		first = myQM->getValueListInteger(astParam1->getVariableName());
 	}
 
 	
 	if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
 		second.push_back(atoi(astParam2->getVariableName().c_str()));
-	} else {
+	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		second = myQM->getAllStatementList();
+	}	else {
 		second = myQM->getValueListInteger(astParam2->getVariableName());
 	}
 
