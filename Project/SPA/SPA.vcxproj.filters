@@ -129,6 +129,9 @@
     <ClInclude Include="..\source\ExpressionPattern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\BinaryRelationEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ASTNode.cpp">
@@ -225,6 +228,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\ExpressionPattern.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\BinaryRelationEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

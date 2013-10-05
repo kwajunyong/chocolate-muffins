@@ -23,11 +23,12 @@ vector<ASTParameter*> &QueryClass::getParameterList() {
 	return parameterList;
 }
 
-void QueryClass::addParam(string parameterName, VARIABLETYPE parameterType) {
+void QueryClass::addParam(const string &parameterName, VARIABLETYPE parameterType) {
 	// validation goes here
 	ASTParameter* astParameter = new ASTParameter(parameterName, parameterType);
 	parameterList.push_back(astParameter);
 }
+
 
 void QueryClass::convertVector(const map<string, int> & mapList, vector<string>& resultList ) {
 	map<string, int>::const_iterator mapIterator;
