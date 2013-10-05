@@ -72,14 +72,14 @@ void ParentStarEngine::run() {
 
 	if (astParam1->updateAble()) {
 		vector<int> finalList; 
-		convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
 
 	} 
 	
 	if (astParam2->updateAble()) { 
 		vector<int> finalList; 
-		convertVector(finalListTwo, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateVectorInteger(astParam2->getVariableName(), finalList);
 	}
 

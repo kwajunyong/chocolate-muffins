@@ -32,14 +32,14 @@ public:
 	list<string> outputResult();
 
 	void resetEverything(); // reset all the expression to be null so that it can be reused again. might not be useful. 
-	const vector<string>& getValueList(string) ;
+	vector<string> getValueList(string) ;
 	
 	const vector<int>& getAllStatementList() ;
 	const vector<string>& getAllVariable() ;
 
 	bool variableExists(string);
 	void initializeExpression(string variableName);
-	const vector<int>& getValueListInteger(string variableName)  ;
+	vector<int> getValueListInteger(string variableName)  ;
 	
 	// after the execution update the vector value. 
 	void updateVector(string variableName, vector<string> &vectorString);

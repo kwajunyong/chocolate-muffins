@@ -5,6 +5,7 @@
 #include "PKB.h"
 #include <string>
 #include <vector>
+#include "CommonUtility.h"
 using namespace std;
 class QueryManager;
 class QueryClass {
@@ -23,9 +24,7 @@ public:
 	vector<ASTParameter*> &getParameterList();
 	
 	bool hasResult();
-	void convertVector(const map<string, int> &mapList, vector<string>& resultList);
-	void convertVector(const map<int, int> &mapList, vector<int>& resultList);
-	void convertVector(const map<int, int> &mapList, vector<string>& resultList);
+	
 protected:
 	
 

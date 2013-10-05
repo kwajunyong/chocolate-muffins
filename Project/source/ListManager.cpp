@@ -5,6 +5,47 @@
 ListManager::ListManager(QueryManager *qm) {
 	parent = qm;
 }
+vector<int> ListManager::getValueListInteger(string &variableName) {
+	map<int, int> tempResult;
+   int firstList, secondList;
+   findVariable(variableName, firstList, secondList);
+
+   if (firstList != -1) {
+	  vector<list<string>*>* valueList = mainList.at(firstList);
+
+	  vector<list<string>*>::iterator iterList;
+
+	  for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
+		  tempResult[atoi(getValueAt(*iterList, secondList).c_str())] = 1;
+	  }
+
+   }
+   vector<int> resultList;
+   CommonUtility::convertVector(tempResult, resultList);
+
+   return resultList;
+}
+
+vector<string> ListManager::getValueListString(string &variableName) {
+   map<string, int> tempResult;
+   int firstList, secondList;
+   findVariable(variableName, firstList, secondList);
+
+   if (firstList != -1) {
+	  vector<list<string>*>* valueList = mainList.at(firstList);
+
+	  vector<list<string>*>::iterator iterList;
+
+	  for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
+	      tempResult[getValueAt(*iterList, secondList)] = 1;
+	  }
+
+   }
+   vector<string> resultList;
+   CommonUtility::convertVector(tempResult, resultList);
+
+   return resultList;
+}
 
 int ListManager::compare(const string &value1, const string &value2, const string &variableType){
 

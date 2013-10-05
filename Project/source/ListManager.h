@@ -33,6 +33,10 @@ public:
 	
 	void updateList(string variableName, const vector<string> &listValue);
 	void updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
+
+	vector<int> getValueListInteger(string &variableName); 
+	vector<string> getValueListString(string &variableName); 
+
    
 private:	
 

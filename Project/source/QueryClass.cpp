@@ -39,31 +39,8 @@ void QueryClass::addParam(const string &parameterName, VARIABLETYPE parameterTyp
 }
 
 
-void QueryClass::convertVector(const map<string, int> & mapList, vector<string>& resultList ) {
-	map<string, int>::const_iterator mapIterator;
-	
-	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
-		resultList.push_back(mapIterator->first);
-	}
-}
+
 
 bool QueryClass::hasResult() {
 	return !failed;
-}
-
-void QueryClass::convertVector(const map<int, int> & mapList, vector<int>& resultList ) {
-	map<int, int>::const_iterator mapIterator;
-	
-	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
-		resultList.push_back(mapIterator->first);
-	}
-}
-
-
-void QueryClass::convertVector(const map<int, int> & mapList, vector<string>& resultList ) {
-	map<int, int>::const_iterator mapIterator;
-	
-	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
-		resultList.push_back(NumberToString(mapIterator->first));
-	}
 }

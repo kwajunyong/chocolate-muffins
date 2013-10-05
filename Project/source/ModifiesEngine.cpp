@@ -1,6 +1,5 @@
 #include "ModifiesEngine.h"
 #include "QueryManager.h"
-#include "CommonUtility.h"
 
 ModifiesEngine::ModifiesEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
 }
@@ -100,7 +99,7 @@ void ModifiesEngine::run() {
 
 		if (astParam1->getParameterType() == VT_PROCEDURE) {
 			vector<string> finalList; 
-			convertVector(finalProcedureList, finalList);
+			CommonUtility::convertVector(finalProcedureList, finalList);
 
 			myQM->updateVector(astParam1->getVariableName(), finalList);
 
@@ -110,7 +109,7 @@ void ModifiesEngine::run() {
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) {
 			vector<string> finalList; 
-			convertVector(finalVariableList, finalList);
+			CommonUtility::convertVector(finalVariableList, finalList);
 
 			myQM->updateVector(astParam2->getVariableName(), finalList);
 
@@ -168,7 +167,7 @@ void ModifiesEngine::run() {
 
 						
 						if (keepRelationship)
-							relationship.push_back(pair<string, string>(NumberToString(*iter),*iterVariableResult));
+							relationship.push_back(pair<string, string>(CommonUtility::NumberToString(*iter),*iterVariableResult));
 
 						
 						finalVariableList[*iterVariable] = 1;
@@ -183,19 +182,19 @@ void ModifiesEngine::run() {
 
 		if (astParam1->updateAble()) {
 			vector<int> finalList; 
-			convertVector(finalStatementList, finalList);
+			CommonUtility::convertVector(finalStatementList, finalList);
 			myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
 			
 			if (!keepRelationship) {
 				vector<string> finalResultList;
-				convertVector(finalStatementList, finalList);
+				CommonUtility::convertVector(finalStatementList, finalList);
 				myQM->updateRelationship(astParam1->getVariableName(), finalResultList);
 			}
 
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) { // change to updatable function later one. 
 			vector<string> finalList; 
-			convertVector(finalVariableList, finalList);
+			CommonUtility::convertVector(finalVariableList, finalList);
 			myQM->updateVector(astParam2->getVariableName(), finalList);
 			if (!keepRelationship) {
 				myQM->updateRelationship(astParam2->getVariableName(), finalList);

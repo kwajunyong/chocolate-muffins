@@ -74,26 +74,30 @@ void QueryManager::updateVectorInteger(string variableName, vector<int> &vectorS
 	astParamValue.setValueListInteger (vectorString);
 }
 
-const vector<string>& QueryManager::getValueList(string variableName)  {    	
+ vector<string> QueryManager::getValueList(string variableName)  {    	
 	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
 	// will create an intermediate called cache manager that will store all the information sorted 
 	// instead of just returning vector
-	if (astParamValue.hasNotInitialized()) 
+	if (astParamValue.hasNotInitialized()) {
 		astParamValue.initialize(pkbLibrary);
-
 	return astParamValue.getValueList();
+	} else
+		return listManager->getValueListString(variableName);
 }
 
 const vector<string> &QueryManager::getAllVariable() {
 	return pkbLibrary->getVarTable()->getAllNames();
 }
-const vector<int>& QueryManager::getValueListInteger(string variableName)  {    	
+vector<int> QueryManager::getValueListInteger(string variableName)  {    	
 	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
 	// will create an intermediate called cache manager that will store all the information sorted 
 	// instead of just returning vector
-	if (astParamValue.hasNotInitialized()) 
+	if (astParamValue.hasNotInitialized()) {
 		astParamValue.initialize(pkbLibrary);
 	return astParamValue.getValueListInteger();
+	
+	}else
+		return listManager->getValueListInteger(variableName);
 }
 
 const vector<int> &QueryManager::getAllStatementList() {

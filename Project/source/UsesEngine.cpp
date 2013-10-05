@@ -1,5 +1,6 @@
 #include "UsesEngine.h"
 #include "QueryManager.h"
+#include "CommonUtility.h"
 
 UsesEngine::UsesEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_USES, qm, pkb){
 
@@ -74,14 +75,14 @@ void UsesEngine::run() {
 
 		if (astParam1->getParameterType() == VT_PROCEDURE) {
 			vector<string> finalList; 
-			convertVector(finalProcedureList, finalList);
+			CommonUtility::convertVector(finalProcedureList, finalList);
 
 			myQM->updateVector(astParam1->getVariableName(), finalList);
 
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) {
 			vector<string> finalList; 
-			convertVector(finalVariableList, finalList);
+			CommonUtility::convertVector(finalVariableList, finalList);
 
 			myQM->updateVector(astParam2->getVariableName(), finalList);
 		}
@@ -137,13 +138,13 @@ void UsesEngine::run() {
 
 		if (astParam1->getParameterType() != VT_UNDERSCORE && astParam1->getParameterType() != VT_CONSTANTINTEGER) {
 			vector<int> finalList; 
-			convertVector(finalStatementList, finalList);
+			CommonUtility::convertVector(finalStatementList, finalList);
 			myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
 
 		} 
 		if (astParam2->getParameterType() == VT_VARIABLELIST) { // change to updatable function later one. 
 			vector<string> finalList; 
-			convertVector(finalVariableList, finalList);
+			CommonUtility::convertVector(finalVariableList, finalList);
 			myQM->updateVector(astParam2->getVariableName(), finalList);
 		}
 

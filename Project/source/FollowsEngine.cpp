@@ -67,7 +67,7 @@ void FollowsEngine::run() {
 					exist = true;
 					
 					if (keepRelationship)
-						resultList.push_back(pair<string, string>(NumberToString(*iter), NumberToString(*iterSecond)));					
+						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(*iter), CommonUtility::NumberToString(*iterSecond)));					
 					finalListTwo[*iterFollowerList] = 1;
 					break;
 				}
@@ -81,14 +81,14 @@ void FollowsEngine::run() {
 	
 	if (astParam1->updateAble()) {
 		vector<int> finalList; 
-		convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
 
 	} 
 	
 	if (astParam2->updateAble()) { 
 		vector<int> finalList; 
-		convertVector(finalListTwo, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateVectorInteger(astParam2->getVariableName(), finalList);
 		
 	}
@@ -97,11 +97,11 @@ void FollowsEngine::run() {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
 	} else if (astParam1->updateAble()) {
 		vector<string> finalList; 
-		convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
 	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 	
