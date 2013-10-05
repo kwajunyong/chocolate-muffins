@@ -99,7 +99,7 @@ const vector<int>& QueryManager::getValueListInteger(string variableName)  {
 const vector<int> &QueryManager::getAllStatementList() {
 
 	if (myAllList.size() ==0) 
-		for (int i = 0; i < pkbLibrary->getNumOfStmt(); i++) 
+		for (int i = 1; i <= pkbLibrary->getNumOfStmt(); i++) 
 			myAllList.push_back(i);		
 
 	return myAllList;

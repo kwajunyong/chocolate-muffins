@@ -128,8 +128,9 @@ void ModifiesEngine::run() {
 		vector<int> statementList;
 		if (astParam1->getParameterType() == VT_CONSTANTINTEGER) 
 			statementList.push_back(atoi(astParam1->getVariableName().c_str()));
-		else
-
+		else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+			statementList = myQM->getAllStatementList();
+		} else
 			statementList = myQM->getValueListInteger (astParam1->getVariableName());
 
 		map<int, int> finalStatementList;
