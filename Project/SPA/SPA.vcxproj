@@ -28,6 +28,7 @@
     <ClInclude Include="..\source\Follows.h" />
     <ClInclude Include="..\source\FollowsEngine.h" />
     <ClInclude Include="..\source\FollowsStarEngine.h" />
+    <ClInclude Include="..\source\IfPattern.h" />
     <ClInclude Include="..\source\ListManager.h" />
     <ClInclude Include="..\source\Modifies.h" />
     <ClInclude Include="..\source\ModifiesEngine.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="..\source\Uses.h" />
     <ClInclude Include="..\source\UsesEngine.h" />
     <ClInclude Include="..\source\VarTable.h" />
+    <ClInclude Include="..\source\WhilePattern.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\AST.cpp" />

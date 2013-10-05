@@ -132,6 +132,12 @@
     <ClInclude Include="..\source\BinaryRelationEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\WhilePattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\IfPattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ASTNode.cpp">
