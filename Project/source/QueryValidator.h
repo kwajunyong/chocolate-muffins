@@ -17,6 +17,8 @@
 #include "ParentEngine.h"
 #include "ParentStarEngine.h"
 #include "UsesEngine.h"
+#include "ExpressionPattern.h"
+#include "BinaryRelationEngine.h"
 
 //testing
 #include "Parser.h"
@@ -47,6 +49,7 @@ private:
 	bool processDeclarationStmt(string declarationStmt);
 	bool processSelectStmt(string selectStmt);
 	bool processQueryClauses(vector<string> queryClauses);
+	bool processPatternClauses(vector<string> patternClauses);
 	string getRawVariableType(string variableName);
 	pair<vector<string>, vector<string>> getAllowableParaType(string entityType);
 	bool paraTypeAllowed(vector<string> allowedParameterTypes, string paraType);
