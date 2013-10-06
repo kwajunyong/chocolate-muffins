@@ -58,5 +58,5 @@ int main(int argc, char* argv[])
 
 	qm->execute();
 	list<string> l = qm->outputResult();
-
+	return 0;
 }
