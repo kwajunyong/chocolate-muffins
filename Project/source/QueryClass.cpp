@@ -38,6 +38,10 @@ void QueryClass::addParam(const string &parameterName, VARIABLETYPE parameterTyp
 	parameterList.push_back(astParameter);
 }
 
+void QueryClass::addParam(const string &parameterName, VARIABLETYPE parameterType, const string &attribute) {
+	cout << "Implement in children";
+}
+
 
 
 
