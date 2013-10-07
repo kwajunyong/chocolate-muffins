@@ -42,3 +42,12 @@ void CommonUtility::convertVector(const map<int, int> & mapList, vector<string>&
 		resultList.push_back(NumberToString(mapIterator->first));
 	}
 }
+
+void CommonUtility::convertIntVectorToString(const vector<int>& from, vector<string>& resultList) {
+
+	vector<int>::const_iterator mapIterator;
+	
+	for (mapIterator = from.begin(); mapIterator != from.end(); mapIterator++) {
+		resultList.push_back(NumberToString(*mapIterator));
+	}
+}
