@@ -86,6 +86,7 @@
     <ClCompile Include="..\source\Uses.cpp" />
     <ClCompile Include="..\source\UsesEngine.cpp" />
     <ClCompile Include="..\source\VarTable.cpp" />
+    <ClCompile Include="..\source\WhilePattern.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

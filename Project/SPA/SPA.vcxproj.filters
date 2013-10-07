@@ -245,6 +245,9 @@
     <ClCompile Include="..\source\CommonUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\WhilePattern.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\source\Simple\Unit Test\Parser\Parse1.txt">
