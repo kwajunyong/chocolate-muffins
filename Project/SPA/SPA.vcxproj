@@ -35,6 +35,7 @@
     <ClInclude Include="..\source\ModifiesEngine.h" />
     <ClInclude Include="..\source\Next.h" />
     <ClInclude Include="..\source\NextEngine.h" />
+    <ClInclude Include="..\source\NextStarEngine.h" />
     <ClInclude Include="..\source\Parent.h" />
     <ClInclude Include="..\source\ParentEngine.h" />
     <ClInclude Include="..\source\ParentStarEngine.h" />
@@ -73,6 +74,7 @@
     <ClCompile Include="..\source\ModifiesEngine.cpp" />
     <ClCompile Include="..\source\Next.cpp" />
     <ClCompile Include="..\source\NextEngine.cpp" />
+    <ClCompile Include="..\source\NextStarEngine.cpp" />
     <ClCompile Include="..\source\Parent.cpp" />
     <ClCompile Include="..\source\ParentEngine.cpp" />
     <ClCompile Include="..\source\ParentStarEngine.cpp" />
