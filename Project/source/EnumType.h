@@ -1,4 +1,9 @@
 #pragma once
+
+#include <string>
+
+typedef std::pair<std::string, std::string> VectorRelation;
+
 enum PARAMETERSTATUS {
 	  UNINITIALIZED, 
 	  LOADED	  
