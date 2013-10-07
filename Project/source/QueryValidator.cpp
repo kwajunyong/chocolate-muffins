@@ -249,7 +249,7 @@ std::string QueryValidator::preprocessInput(string input){
 	replaceSubstring(processedInput, " ;", ";");
 	replaceSubstring(processedInput, "; ", ";");
 	replaceSubstring(processedInput, "\n", "");
-	cout << "processed input: " << processedInput << endl;
+	//cout << "processed input: " << processedInput << endl;
 	return processedInput;
 }
 
@@ -467,40 +467,94 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 		currentClause = patternClauses[counter];
 		variablePattern = currentClause.substr(0, currentClause.find("("));
 		parameters = currentClause.substr(currentClause.find("(")+1, currentClause.length() - currentClause.find("(")-2);
-		splitResults = split(parameters, ',');
-		
-		if (splitResults.size() != 2){
-			cout << "incorrect number of parameters" << endl;
-			return false;
-		}
-		
+
 		patternType = getRawVariableType(variablePattern);
-		firstPara = splitResults[0];
-		secondPara = splitResults[0];
+		splitResults = split(parameters, ',');
 
 		QueryClass *qc = new ExpressionPattern(queryManager, pkb);
 
-		qc -> addParam(variablePattern, getVariableType(patternType));
+		if (strcmpi(patternType.c_str(), "assignment") == 0){
+			if (splitResults.size() != 2){
+				cout << "incorrect number of parameters" << endl;
+				return false;
+			}
+			
+			firstPara = splitResults[0];
+			secondPara = splitResults[1];
 
-		if (firstPara == "_")
-			qc -> addParam(splitResults[0], VT_UNDERSCORE);
-		else if (firstPara.find("_") != string::npos)
-			qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-		else if (firstPara.find("\"") != string::npos)
-			qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-		else{
-			cout << "incorrect parameter type for pattern clauses" << endl;
-			return false;
-		}
+			qc -> addParam(variablePattern, VT_ASSIGNMENT);
 
-		if (secondPara == "_")
-			qc -> addParam(splitResults[0], VT_UNDERSCORE);
-		else if (secondPara.find("_") != string::npos)
-			qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-		else if (secondPara.find("\"") != string::npos)
-			qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-		else{
-			cout << "incorrect parameter type for pattern clauses" << endl;
+			if (firstPara == "_")
+				qc -> addParam(splitResults[0], VT_UNDERSCORE);
+			else if (firstPara.find("_") != string::npos)
+				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+			else if (firstPara.find("\"") != string::npos)
+				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+			else{
+				cout << "incorrect parameter type for pattern clauses" << endl;
+				return false;
+			}
+
+			if (secondPara == "_")
+				qc -> addParam(splitResults[0], VT_UNDERSCORE);
+			else if (secondPara.find("_") != string::npos)
+				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+			else if (secondPara.find("\"") != string::npos)
+				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+			else{
+				cout << "incorrect parameter type for pattern clauses" << endl;
+				return false;
+			}
+		}else if (strcmpi(patternType.c_str(), "while") == 0){
+			if (splitResults.size() != 2){
+				cout << "incorrect number of parameters" << endl;
+				return false;
+			}
+
+			firstPara = splitResults[0];
+			secondPara = splitResults[1];
+
+			qc -> addParam(variablePattern, VT_WHILE);
+
+			if (firstPara == "_")
+				qc -> addParam(splitResults[0], VT_UNDERSCORE);
+			else if (firstPara.find("_") != string::npos)
+				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+			else if (firstPara.find("\"") != string::npos)
+				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+			else{
+				cout << "incorrect parameter type for pattern clauses" << endl;
+				return false;
+			}
+
+			if (secondPara != "_")
+				return false;
+		}else if (strcmpi(patternType.c_str(), "if") == 0){
+			if (splitResults.size() != 3){
+				cout << "incorrect number of parameters" << endl;
+				return false;
+			}
+
+			firstPara = splitResults[0];
+			secondPara = splitResults[1];
+
+			qc -> addParam(variablePattern, VT_IF);
+
+			if (firstPara == "_")
+				qc -> addParam(splitResults[0], VT_UNDERSCORE);
+			else if (firstPara.find("_") != string::npos)
+				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+			else if (firstPara.find("\"") != string::npos)
+				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+			else{
+				cout << "incorrect parameter type for pattern clauses" << endl;
+				return false;
+			}
+
+			if (secondPara != "_")
+				return false;
+		}else{
+			cout << "invalid pattern type" << endl;
 			return false;
 		}
 	}
@@ -547,6 +601,14 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 
 			entityParaPair = make_pair(splitResults[0], splitResults[1]);
 			//cout << "processed parameters: " << entityParaPair.first << ": " << entityParaPair.second << endl;
+			
+			//check if the parameters in the NEXT relationship is the same variable
+			if (strcmpi(variableEntityType.c_str(), "next") == 0){
+				if (entityParaPair.first == entityParaPair.second){
+					return false;
+				}
+			}
+			
 			firstParaType = getRawVariableType(entityParaPair.first);
 			secondParaType = getRawVariableType(entityParaPair.second);
 
@@ -671,7 +733,8 @@ int main(){
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("ComboTest2.txt");
+		//pkb = parser.parse("ComboTest2.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -679,14 +742,14 @@ int main(){
 		return 0;
 	}
 
-	QueryManager* qm = new QueryManager(pkb)	;
+	QueryManager* qm = new QueryManager(pkb);
 
 	QueryClass* qc = new UsesEngine(qm, pkb);
 
 	QueryValidator qv(qm, pkb);
 
 	//qv.processQuery("assign a, b; variable v; select a such that modifies (a , v)");
-	//qv.processQuery("assign a, b; variable v; select a such that pattern a (_ , _\"a+b\_")");
-	qv.processQuery("assign a, b; variable v; select a such that modifies (a , v) and v.VarName = \"a\"");
+	qv.processQuery("assign a, b; variable v; while w; select a such that pattern w (\"x\", _)");
+	//qv.processQuery("assign a, b; variable v; select a such that modifies (a , v) and v.VarName = \"a\"");
 	cout << "end";
 }

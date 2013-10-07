@@ -19,6 +19,8 @@
 #include "UsesEngine.h"
 #include "ExpressionPattern.h"
 #include "BinaryRelationEngine.h"
+#include "IfPattern.h"
+#include "WhilePattern.h"
 
 //testing
 #include "Parser.h"
