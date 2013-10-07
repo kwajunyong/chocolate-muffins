@@ -1,6 +1,6 @@
 #include "Next.h"
 
-;using namespace std;
+using namespace std;
 
 Next::Next(void) {}
 
