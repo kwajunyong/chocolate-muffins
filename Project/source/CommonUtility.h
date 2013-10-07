@@ -14,4 +14,5 @@ public:
 
 	static void convertVector(const map<int, int> &mapList, vector<int>& resultList);
 	static void convertVector(const map<int, int> &mapList, vector<string>& resultList);
+	static void convertToMap(const vector<int>& resultList, map<int, int> &mapList);
 };

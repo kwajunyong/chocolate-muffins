@@ -9,6 +9,15 @@ using namespace std;
      return ss.str();
   }
 
+  void CommonUtility::convertToMap(const vector<int>& resultList, map<int, int> &mapList) {
+	 vector<int>::const_iterator vectorIterator;
+	
+
+	for (vectorIterator = resultList.begin(); vectorIterator != resultList.end(); vectorIterator++) {
+		mapList[*vectorIterator] = 1;
+	}
+  }
+
   
   void CommonUtility::convertVector(const map<string, int> & mapList, vector<string>& resultList ) {
 	map<string, int>::const_iterator mapIterator;
