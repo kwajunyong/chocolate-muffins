@@ -1,16 +1,16 @@
-#include "WhilePattern.h"
+#include "IfPattern.h"
 #include "QueryManager.h"
-WhilePattern::WhilePattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+IfPattern::IfPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
 
 
 }
-void WhilePattern::run() {
+void IfPattern::run() {
 
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
 		
-	vector<ASTNode*> nodes = pkbManager->getAST()->getStatementNodes(WHILE);
+	vector<ASTNode*> nodes = pkbManager->getAST()->getStatementNodes(IF);
 
 	ASTNode* node;
 
