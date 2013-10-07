@@ -20,7 +20,9 @@
     <ClInclude Include="..\source\ASTTraverser.h" />
     <ClInclude Include="..\source\ASTType.h" />
     <ClInclude Include="..\source\BinaryRelationEngine.h" />
+    <ClInclude Include="..\source\CallEngine.h" />
     <ClInclude Include="..\source\Calls.h" />
+    <ClInclude Include="..\source\CallStarEngine.h" />
     <ClInclude Include="..\source\CommonUtility.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
@@ -61,7 +63,9 @@
     <ClCompile Include="..\source\ASTParameterValue.cpp" />
     <ClCompile Include="..\source\ASTTraverser.cpp" />
     <ClCompile Include="..\source\BinaryRelationEngine.cpp" />
+    <ClCompile Include="..\source\CallEngine.cpp" />
     <ClCompile Include="..\source\Calls.cpp" />
+    <ClCompile Include="..\source\CallStarEngine.cpp" />
     <ClCompile Include="..\source\CommonUtility.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionPattern.cpp" />

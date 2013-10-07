@@ -1,11 +1,11 @@
-#include "NextEngine.h"
+#include "NextStarEngine.h"
 #include "QueryManager.h"
 
-NextEngine::NextEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+NextStarEngine::NextStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
 
 
 }
-void NextEngine::run() {
+void NextStarEngine::run() {
 	
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
