@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main1(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	// Get the top level suite from the registry
 	CPPUNIT_NS::Test *suite = CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest();

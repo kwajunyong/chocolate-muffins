@@ -22,6 +22,7 @@ using namespace std;
 class QueryManager {
 	
 public:	
+	vector<int> getAllList(ASTType asttype);
 
 	void execute(); 
 	string getVariableType(const string &variableName);

@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\AffectEngine.h" />
+    <ClInclude Include="..\Source\AffectStarEngine.h" />
     <ClInclude Include="..\source\AST.h" />
     <ClInclude Include="..\source\ASTExpressionBuilder.h" />
     <ClInclude Include="..\source\ASTMatcher.h" />
@@ -55,6 +57,8 @@
     <ClInclude Include="..\source\WhilePattern.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\AffectEngine.cpp" />
+    <ClCompile Include="..\Source\AffectStarEngine.cpp" />
     <ClCompile Include="..\source\AST.cpp" />
     <ClCompile Include="..\source\ASTExpressionBuilder.cpp" />
     <ClCompile Include="..\source\ASTMatcher.cpp" />

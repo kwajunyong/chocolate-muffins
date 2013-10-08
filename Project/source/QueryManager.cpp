@@ -74,6 +74,10 @@ void QueryManager::updateVectorInteger(string variableName, vector<int> &vectorS
 	astParamValue.setValueListInteger (vectorString);
 }
 
+vector<int> QueryManager::getAllList(ASTType asttype) {
+	return pkbLibrary->getAST()->getStatementNumbers(asttype);		
+}
+
  vector<string> QueryManager::getValueList(string variableName)  {    	
 	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
 	// will create an intermediate called cache manager that will store all the information sorted 

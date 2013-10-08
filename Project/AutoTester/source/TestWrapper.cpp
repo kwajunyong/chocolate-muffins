@@ -3,16 +3,16 @@
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
 AbstractWrapper* WrapperFactory::createWrapper() {
-  if (wrapper == 0) wrapper = new TestWrapper;
-  return wrapper;
+	if (wrapper == 0) wrapper = new TestWrapper;
+	return wrapper;
 }
 // Do not modify the following line
 volatile bool TestWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  // create any objects here as instance variables of this class
-  // as well as any initialization required for your spa program
+	// create any objects here as instance variables of this class
+	// as well as any initialization required for your spa program
 }
 
 // method for parsing the SIMPLE source
@@ -24,7 +24,7 @@ void TestWrapper::parse(std::string filename) {
 		pkb = parser.parse(filename);
 		extractor.extract(pkb);
 		qm = new QueryManager(pkb);
-	qv = new QueryValidator(qm, pkb);
+		qv = new QueryValidator(qm, pkb);
 
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -34,12 +34,20 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-	
-	
+
+	static int a = 0;
 	if (qv->processQuery(query)) {
-	qm->execute();
-	results = qm->outputResult();
-	qm->resetEverything();
+		//qm->execute();
+		//results = qm->outputResult();
+		//qm->resetEverything();
+
 	}
+		a++;
+
+			if (a == 30)  {
+		   a = 31;
+		}
+
+	//cin >> a;
 
 }
