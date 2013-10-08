@@ -249,7 +249,7 @@ std::string QueryValidator::preprocessInput(string input){
 	replaceSubstring(processedInput, " ;", ";");
 	replaceSubstring(processedInput, "; ", ";");
 	replaceSubstring(processedInput, "\n", "");
-	//cout << "processed input: " << processedInput << endl;
+	cout << "processed input: " << processedInput << endl;
 	return processedInput;
 }
 
@@ -304,7 +304,9 @@ pair<vector<string>, vector<string>> QueryValidator::getAllowableParaType(string
 	for (vector< pair<string, pair<vector<string>, vector<string>>>>::size_type counter = 0; counter < tblQueryTypes.size(); counter++){
 		//if (tblQueryTypes[counter].first == entityType){ // shouldn't use ==
 
-		if (tblQueryTypes[counter].first.compare(entityType) == 0 ){
+		cout << "allowed para type:" << tblQueryTypes[counter].first << ": " << entityType << ": " << strcmpi(tblQueryTypes[counter].first.c_str(), entityType.c_str()) << endl;
+
+		if (strcmpi(tblQueryTypes[counter].first.c_str(), entityType.c_str()) == 0 ){
 			return tblQueryTypes[counter].second;
 		}
 	}
@@ -416,6 +418,7 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				qc -> addParam(secondPara, getVariableType(secondParaRawType));
 			}
 		}else{//all non-extended clauses
+			cout << "modifies: " << strcmpi(entityType.c_str(), "Modifies") << endl;
 			if (strcmpi(entityType.c_str(), "Modifies") == 0){
 				qc = new ModifiesEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Uses") == 0){
@@ -467,94 +470,40 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 		currentClause = patternClauses[counter];
 		variablePattern = currentClause.substr(0, currentClause.find("("));
 		parameters = currentClause.substr(currentClause.find("(")+1, currentClause.length() - currentClause.find("(")-2);
-
-		patternType = getRawVariableType(variablePattern);
 		splitResults = split(parameters, ',');
+		
+		if (splitResults.size() != 2){
+			cout << "incorrect number of parameters" << endl;
+			return false;
+		}
+		
+		patternType = getRawVariableType(variablePattern);
+		firstPara = splitResults[0];
+		secondPara = splitResults[0];
 
 		QueryClass *qc = new ExpressionPattern(queryManager, pkb);
 
-		if (strcmpi(patternType.c_str(), "assignment") == 0){
-			if (splitResults.size() != 2){
-				cout << "incorrect number of parameters" << endl;
-				return false;
-			}
-			
-			firstPara = splitResults[0];
-			secondPara = splitResults[1];
+		qc -> addParam(variablePattern, getVariableType(patternType));
 
-			qc -> addParam(variablePattern, VT_ASSIGNMENT);
+		if (firstPara == "_")
+			qc -> addParam(splitResults[0], VT_UNDERSCORE);
+		else if (firstPara.find("_") != string::npos)
+			qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+		else if (firstPara.find("\"") != string::npos)
+			qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+		else{
+			cout << "incorrect parameter type for pattern clauses" << endl;
+			return false;
+		}
 
-			if (firstPara == "_")
-				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
-				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
-				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
-				return false;
-			}
-
-			if (secondPara == "_")
-				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (secondPara.find("_") != string::npos)
-				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (secondPara.find("\"") != string::npos)
-				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
-				return false;
-			}
-		}else if (strcmpi(patternType.c_str(), "while") == 0){
-			if (splitResults.size() != 2){
-				cout << "incorrect number of parameters" << endl;
-				return false;
-			}
-
-			firstPara = splitResults[0];
-			secondPara = splitResults[1];
-
-			qc -> addParam(variablePattern, VT_WHILE);
-
-			if (firstPara == "_")
-				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
-				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
-				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
-				return false;
-			}
-
-			if (secondPara != "_")
-				return false;
-		}else if (strcmpi(patternType.c_str(), "if") == 0){
-			if (splitResults.size() != 3){
-				cout << "incorrect number of parameters" << endl;
-				return false;
-			}
-
-			firstPara = splitResults[0];
-			secondPara = splitResults[1];
-
-			qc -> addParam(variablePattern, VT_IF);
-
-			if (firstPara == "_")
-				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
-				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
-				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
-				return false;
-			}
-
-			if (secondPara != "_")
-				return false;
-		}else{
-			cout << "invalid pattern type" << endl;
+		if (secondPara == "_")
+			qc -> addParam(splitResults[0], VT_UNDERSCORE);
+		else if (secondPara.find("_") != string::npos)
+			qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
+		else if (secondPara.find("\"") != string::npos)
+			qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
+		else{
+			cout << "incorrect parameter type for pattern clauses" << endl;
 			return false;
 		}
 	}
@@ -601,14 +550,6 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 
 			entityParaPair = make_pair(splitResults[0], splitResults[1]);
 			//cout << "processed parameters: " << entityParaPair.first << ": " << entityParaPair.second << endl;
-			
-			//check if the parameters in the NEXT relationship is the same variable
-			if (strcmpi(variableEntityType.c_str(), "next") == 0){
-				if (entityParaPair.first == entityParaPair.second){
-					return false;
-				}
-			}
-			
 			firstParaType = getRawVariableType(entityParaPair.first);
 			secondParaType = getRawVariableType(entityParaPair.second);
 
@@ -733,8 +674,7 @@ int main(){
 	PKB* pkb;
 
 	try {
-		//pkb = parser.parse("ComboTest2.txt");
-		pkb = parser.parse("Test.txt");
+		pkb = parser.parse("ComboTest2.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -742,14 +682,14 @@ int main(){
 		return 0;
 	}
 
-	QueryManager* qm = new QueryManager(pkb);
+	QueryManager* qm = new QueryManager(pkb)	;
 
 	QueryClass* qc = new UsesEngine(qm, pkb);
 
 	QueryValidator qv(qm, pkb);
 
 	//qv.processQuery("assign a, b; variable v; select a such that modifies (a , v)");
-	qv.processQuery("assign a, b; variable v; while w; select a such that pattern w (\"x\", _)");
-	//qv.processQuery("assign a, b; variable v; select a such that modifies (a , v) and v.VarName = \"a\"");
+	//qv.processQuery("assign a, b; variable v; select a such that pattern a (_ , _\"a+b\_")");
+	qv.processQuery("assign a, b; variable v; select a such that Modifies (a , v) and v.VarName = \"a\"");
 	cout << "end";
 }
