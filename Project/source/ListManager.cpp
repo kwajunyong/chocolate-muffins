@@ -5,46 +5,56 @@
 ListManager::ListManager(QueryManager *qm) {
 	parent = qm;
 }
+
+void ListManager::getValueListMapInteger(string &variableName, FastSearchInteger &tempResult) {
+
+	int firstList, secondList;
+	findVariable(variableName, firstList, secondList);
+
+	if (firstList != -1) {
+		vector<list<string>*>* valueList = mainList.at(firstList);
+
+		vector<list<string>*>::iterator iterList;
+
+		for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
+			tempResult[atoi(getValueAt(*iterList, secondList).c_str())] = true;
+		}
+
+	}
+
+}
+void ListManager::getValueListMapString(string &variableName, FastSearchString &tempResult) {
+
+	int firstList, secondList;
+	findVariable(variableName, firstList, secondList);
+
+	if (firstList != -1) {
+		vector<list<string>*>* valueList = mainList.at(firstList);
+		vector<list<string>*>::iterator iterList;
+		for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
+			tempResult[getValueAt(*iterList, secondList)] = true;
+		}
+	}
+}
+
 vector<int> ListManager::getValueListInteger(string &variableName) {
-	map<int, int> tempResult;
-   int firstList, secondList;
-   findVariable(variableName, firstList, secondList);
+	FastSearchInteger tempResult;
+	getValueListMapInteger(variableName,tempResult);
+	vector<int> resultList;
 
-   if (firstList != -1) {
-	  vector<list<string>*>* valueList = mainList.at(firstList);
+	CommonUtility::convertVector(tempResult, resultList);
 
-	  vector<list<string>*>::iterator iterList;
-
-	  for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
-		  tempResult[atoi(getValueAt(*iterList, secondList).c_str())] = 1;
-	  }
-
-   }
-   vector<int> resultList;
-   CommonUtility::convertVector(tempResult, resultList);
-
-   return resultList;
+	return resultList;
 }
 
 vector<string> ListManager::getValueListString(string &variableName) {
-   map<string, int> tempResult;
-   int firstList, secondList;
-   findVariable(variableName, firstList, secondList);
+	FastSearchString tempResult;
 
-   if (firstList != -1) {
-	  vector<list<string>*>* valueList = mainList.at(firstList);
+	getValueListMapString(variableName, tempResult);
 
-	  vector<list<string>*>::iterator iterList;
-
-	  for (iterList = valueList->begin(); iterList != valueList->end(); iterList++) {
-	      tempResult[getValueAt(*iterList, secondList)] = 1;
-	  }
-
-   }
-   vector<string> resultList;
-   CommonUtility::convertVector(tempResult, resultList);
-
-   return resultList;
+	vector<string> resultList;
+	CommonUtility::convertVector(tempResult, resultList);
+	return resultList;
 }
 
 int ListManager::compare(const string &value1, const string &value2, const string &variableType){
@@ -52,7 +62,7 @@ int ListManager::compare(const string &value1, const string &value2, const strin
 	if (variableType.compare("string") == 0) 
 		return value1.compare(value2);
 	else {
-		
+
 		int intValue1 = atoi(value1.c_str());
 		int intValue2 = atoi(value2.c_str());
 		if (intValue1 == intValue2)
@@ -102,11 +112,11 @@ void ListManager::updateList(string variableName1, string variableName2, const v
 		// delete the second list;
 		mainList.erase(mainList.begin() + varTwoFirst);
 
-        // copy the variable to first list
+		// copy the variable to first list
 		vector<string> &varList1 = variableList.at(varOneFirst);					
 		vector<string> &varList2 = variableList.at(varTwoFirst);					
 		copy (varList2.begin(), varList2.end(), std::back_inserter(varList1));
-	    
+
 		variableList.erase(variableList.begin() + varTwoFirst);		
 	}
 }
@@ -145,21 +155,21 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 				iterList2 = iterFoundList2;
 
 				/* --------------------------------------- (Looks like neon light)
-				   valueList1                     valueList2
-				   ==========                     ==========
-				   a     b                        c      d
-				   x  ->  1                       1   -> 8 
-				   y  ->  1                       1 - > 9
-				   z ->   1                       3 -> 10
-				   a -> 2						  4 -> 11 	
-				   b -> 2                           
-				   c -> 2
+				valueList1                     valueList2
+				==========                     ==========
+				a     b                        c      d
+				x  ->  1                       1   -> 8 
+				y  ->  1                       1 - > 9
+				z ->   1                       3 -> 10
+				a -> 2						  4 -> 11 	
+				b -> 2                           
+				c -> 2
 
-				   if merging between b and c. Let's say relation contains (1,1), (2,3)
-				   We will find b using blookup and c using blookup (assume sorted)
-				   for value in b (using while(true) 
-				      for value in c (using while(true)
-					     do join 
+				if merging between b and c. Let's say relation contains (1,1), (2,3)
+				We will find b using blookup and c using blookup (assume sorted)
+				for value in b (using while(true) 
+				for value in c (using while(true)
+				do join 
 				------------------------------------------*/ 
 				// if found both
 				if (iterFoundList1 != valueList1->end() &&
@@ -167,16 +177,16 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 
 
 						while (true) {						   
-							
+
 							while (true) {
 								if (iterList2 == valueList2->end() || 
-									   getValueAt(*iterList2, index2).compare(second) !=0)
-									   break; 
+									getValueAt(*iterList2, index2).compare(second) !=0)
+									break; 
 
 								variableTuple1 = *iterList1;
 								variableTuple2 = *iterList2;					   
 								// copy from variableTuple1
-							
+
 								tempList = new list<string>(*variableTuple1);					   
 								// copy from variableTuple2
 								tempList->insert(tempList->end(), variableTuple2->begin(), variableTuple2->end());	
@@ -186,7 +196,7 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 
 							iterList2 = iterFoundList2;
 							iterList1++;
-							
+
 							if (iterList1 == valueList1->end() || getValueAt(*iterList1, index1).compare(first) != 0) 
 								break;
 						}
@@ -202,7 +212,7 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 
 		//copy(newList.begin(), newList.end(), valueList1->begin());
 
-		
+
 }
 
 
@@ -279,7 +289,7 @@ void ListManager::appendVariable(vector<list<string>*> * valueList, vector<strin
 					newList = new list<string>(**iterFound);
 					newList->push_back(valuer);
 					newTupleList.push_back(newList);
-					
+
 					iterFound++;
 					if (iterFound == valueList->end()) 
 						break;
@@ -346,7 +356,7 @@ void ListManager::clearVariableList(vector<list<string>*> &varList) {
 	vector<list<string>*>::iterator iterVarList;
 
 	for (iterVarList = varList.begin(); iterVarList != varList.end(); iterVarList++) {
-	    free(*iterVarList);
+		free(*iterVarList);
 	}
 
 	varList.clear();
@@ -384,7 +394,7 @@ void ListManager::createANewList(string variableName, const vector<string> &list
 		newVariableList->push_back(*iterListValue);		
 		headerList->push_back(newVariableList);
 	}
-	
+
 
 	mainList.push_back(headerList);
 
@@ -406,7 +416,7 @@ void ListManager::createANewList(const string &variableName1, const string &vari
 			newVariableList->push_back(pairIterator->second);
 			headerList->push_back(newVariableList);
 		}
-				
+
 		mainList.push_back(headerList);
 
 		vector<string> variable;
@@ -448,7 +458,7 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 
 		clearVariableList(*valueList);
 		// copy from the temp list to the original list. Let's hope it's fast. 
-			valueList->assign(newList.begin(), newList.end()); 
+		valueList->assign(newList.begin(), newList.end()); 
 	}
 }
 
@@ -470,7 +480,7 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 
 // quick quick sort variable 
 void ListManager::sortVariable( vector<list<string>*> *valueList, int varIndex, const string &variableName) {
-	
+
 
 	string variableType = parent->getVariableType(variableName);
 	mergeSort(valueList, varIndex, 0, valueList->size() - 1, variableType);
@@ -503,19 +513,19 @@ void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int star
 
 	while (i <= middle || j <= end) {			
 
-		
-			if ((compare(iValue, jValue, variableType) <= 0 && i <= middle) || j > end) {
-				newList.push_back(valueList->at(i));
-				i++;
-				if (i <= middle) 
-					iValue = getValueAt(valueList->at(i), varIndex);
-			} else if (j <= end) {
-				newList.push_back(valueList->at(j));
-				j++;
-				if (j <= end)
-					jValue = getValueAt(valueList->at(j), varIndex);
-			}		
-		
+
+		if ((compare(iValue, jValue, variableType) <= 0 && i <= middle) || j > end) {
+			newList.push_back(valueList->at(i));
+			i++;
+			if (i <= middle) 
+				iValue = getValueAt(valueList->at(i), varIndex);
+		} else if (j <= end) {
+			newList.push_back(valueList->at(j));
+			j++;
+			if (j <= end)
+				jValue = getValueAt(valueList->at(j), varIndex);
+		}		
+
 	} // finish while 
 
 	// putting the list into the main list

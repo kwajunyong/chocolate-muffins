@@ -65,20 +65,19 @@ void QueryManager::addQueryClass(QueryClass* qc)  {
 }
 
 void QueryManager::updateVector(string variableName, vector<string> &vectorString) {
-	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
-	astParamValue.setValueList(vectorString);
+	/*ASTParameterValue &astParamValue = getASTParameterValue(variableName);
+	astParamValue.setValueList(vectorString);*/
 }
 
 void QueryManager::updateVectorInteger(string variableName, vector<int> &vectorString) {
-	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
-	astParamValue.setValueListInteger (vectorString);
+	/*ASTParameterValue &astParamValue = getASTParameterValue(variableName);
+	astParamValue.setValueListInteger (vectorString);*/
 }
 
 vector<int> QueryManager::getAllList(ASTType asttype) {
 	return pkbLibrary->getAST()->getStatementNumbers(asttype);		
 }
-
- vector<string> QueryManager::getValueList(string variableName)  {    	
+vector<string> QueryManager::getValueList(string variableName)  {    	
 	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
 	// will create an intermediate called cache manager that will store all the information sorted 
 	// instead of just returning vector
@@ -89,6 +88,7 @@ vector<int> QueryManager::getAllList(ASTType asttype) {
 		return listManager->getValueListString(variableName);
 }
 
+
 const vector<string> &QueryManager::getAllVariable() {
 	return pkbLibrary->getVarTable()->getAllNames();
 }
@@ -98,11 +98,40 @@ vector<int> QueryManager::getValueListInteger(string variableName)  {
 	// instead of just returning vector
 	if (astParamValue.hasNotInitialized()) {
 		astParamValue.initialize(pkbLibrary);
-	return astParamValue.getValueListInteger();
-	
-	}else
+		return astParamValue.getValueListInteger();	
+	}else		
 		return listManager->getValueListInteger(variableName);
 }
+
+FastSearchInteger QueryManager::getValueListIntegerMap(string variableName)  {    	
+	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
+	// will create an intermediate called cache manager that will store all the information sorted 
+	// instead of just returning vector
+	if (astParamValue.hasNotInitialized()) {
+		astParamValue.initialize(pkbLibrary);
+		return astParamValue.getValueListIntegerMap();	
+	}else		{
+		FastSearchInteger result;
+		listManager->getValueListMapInteger(variableName, result);
+		return result;		
+	}
+}
+
+
+FastSearchString QueryManager::getValueListMap(string variableName)  {    	
+	ASTParameterValue &astParamValue = getASTParameterValue(variableName);
+	// will create an intermediate called cache manager that will store all the information sorted 
+	// instead of just returning vector
+	if (astParamValue.hasNotInitialized()) {
+		astParamValue.initialize(pkbLibrary);
+		return astParamValue.getValueListMap();	
+	}else {
+		FastSearchString result;
+		listManager->getValueListMapString(variableName, result);
+		return result;	
+	}
+}
+
 
 const vector<int> &QueryManager::getAllStatementList() {
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <list>
+#include "EnumType.h"
 //#include <utility>
 
 
@@ -36,8 +37,11 @@ public:
 
 	vector<int> getValueListInteger(string &variableName); 
 	vector<string> getValueListString(string &variableName); 
-
    
+	 void getValueListMapInteger(string &variableName, FastSearchInteger & fsi); 
+	 void getValueListMapString(string &variableName, FastSearchString &fsi); 
+	
+
 private:	
 
 	int compare(const string &value1, const string &value2, const string &variableType);

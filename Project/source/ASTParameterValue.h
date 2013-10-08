@@ -13,6 +13,10 @@ public:
 	void reset() ;
 	const  vector<string>& getValueList() ; 
 	const  vector<int>& getValueListInteger() ; 
+
+	FastSearchString getValueListMap() ; 
+	FastSearchInteger getValueListIntegerMap() ; 
+
 	void initialize(PKB * pkb);
 
 	void setValueList(const vector<string> & valueList);

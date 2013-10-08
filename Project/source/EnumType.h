@@ -1,8 +1,12 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 typedef std::pair<std::string, std::string> VectorRelation;
+
+typedef std::map<std::string, bool> FastSearchString;
+typedef std::map<int, bool> FastSearchInteger;
 
 enum PARAMETERSTATUS {
 	  UNINITIALIZED, 
