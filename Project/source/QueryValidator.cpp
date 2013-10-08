@@ -80,6 +80,7 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("while");
 	firstParaType.push_back("procedure");
 	firstParaType.push_back("call");
+	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
 
@@ -109,6 +110,7 @@ void QueryValidator::initQueryTypeTable(){
 	secondParaType.push_back("if");
 	secondParaType.push_back("while");
 	secondParaType.push_back("call");
+	secondParaType.push_back("stmt");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -124,6 +126,7 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("if");
 	firstParaType.push_back("while");
 	firstParaType.push_back("assign");
+	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
 
@@ -133,6 +136,7 @@ void QueryValidator::initQueryTypeTable(){
 	secondParaType.push_back("if");
 	secondParaType.push_back("while");
 	secondParaType.push_back("call");
+	secondParaType.push_back("stmt");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -467,7 +471,7 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 }
 
 bool QueryValidator::processPatternClauses(vector<string> patternClauses){
-	string currentClause, variablePattern, parameters, patternType, firstPara, secondPara;
+	string currentClause, variablePattern, parameters, patternType, firstPara, secondPara, thirdPara;
 	vector<string> splitResults;
 
 	for (vector<string>::size_type counter = 0; counter < patternClauses.size(); counter++){
@@ -480,7 +484,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 		QueryClass *qc = new ExpressionPattern(queryManager, pkb);
 
-		if (strcmpi(patternType.c_str(), "assignment") == 0){
+		if (strcmpi(patternType.c_str(), "assign") == 0){
 			if (splitResults.size() != 2){
 				cout << "incorrect number of parameters" << endl;
 				return false;
@@ -534,8 +538,10 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				return false;
 			}
 
-			if (secondPara != "_")
+			if (secondPara != "_"){
+				cout << "second parameter is not a _ for WHILE pattern" << endl;
 				return false;
+			}
 		}else if (strcmpi(patternType.c_str(), "if") == 0){
 			if (splitResults.size() != 3){
 				cout << "incorrect number of parameters" << endl;
@@ -544,6 +550,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			firstPara = splitResults[0];
 			secondPara = splitResults[1];
+			thirdPara = splitResults[2];
 
 			qc -> addParam(variablePattern, VT_IF);
 
@@ -558,8 +565,10 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				return false;
 			}
 
-			if (secondPara != "_")
+			if (secondPara != "_" || thirdPara != "_"){
+				cout << "second/third parameter is not a _ for IF pattern" << endl;
 				return false;
+			}
 		}else{
 			cout << "invalid pattern type" << endl;
 			return false;
@@ -630,6 +639,7 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 			entityPair = make_pair(variableEntityType, entityParaPair);
 		}else{
 			//neither of the above, invalid relationship
+			cout << "invalid relationship: " << currentClause << endl;
 			return false;
 		}
 		entityList.push_back(entityPair);
@@ -739,8 +749,10 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	for (vector<string>::size_type counter = 0; counter < queryStmts.size() -1; counter++){ //omit last statement, which should be the Select statement
 		//cout << "processQuery:: declaration statement is -> " << queryStmts[counter] << endl;
-		if (!processDeclarationStmt(queryStmts[counter]))
+		if (!processDeclarationStmt(queryStmts[counter])){
+			cout << "process declaration stmt failed" << endl;
 			return false;
+		}
 	}
 
 	return processSelectStmt(selectStmt);
@@ -758,7 +770,7 @@ int main(){
 
 	try {
 		//pkb = parser.parse("ComboTest2.txt");
-		pkb = parser.parse("Test.txt");
+		pkb = parser.parse("source1Modifies.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -772,11 +784,23 @@ int main(){
 
 	QueryValidator qv(qm, pkb);
 
+	string input;
+
+	getline(cin, input);
+	//cout << "input: " << input << endl;
+	while (cin != "0"){
+		if (qv.processQuery(input) == true)
+			cout << "result is: TRUE" << endl;
+		else
+			cout << "result is: FALSE" << endl;
+		
+		getline(cin, input);
+	}
 	//qv.processQuery("assign a, b; variable v; select a such that modifies (a , v)");
 	//qv.processQuery("assign a, b; variable v; while w; select a such that pattern w (\"x\", _)");
 	//qv.processQuery("assign a, b; variable v; select a such that Modifies (a , v) and v.VarName = \"a\"");
-	qv.processQuery("assign a, b; variable v; select v such that modifies (2 , v)");
-	qv.processQuery("assign a, b; variable v; select v such that Modifies (3 , v) and Next(1,2)");
-	qv.processQuery("assign a, b; variable v; while w; select v such that Modifies (w , v)");
+	//qv.processQuery("assign a, b; variable v; select v such that modifies (2 , v)");
+	//qv.processQuery("assign a, b; variable v; select v such that Modifies (3 , v) and Next(1,2)");
+	//qv.processQuery("assign a, b; variable v; while w; select v such that Modifies (w , v)");
 	cout << "end";
 }	
