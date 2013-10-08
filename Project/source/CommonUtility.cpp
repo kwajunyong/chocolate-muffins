@@ -26,6 +26,14 @@ using namespace std;
 		resultList.push_back(mapIterator->first);
 	}
 }
+
+  void CommonUtility::convertVector(const map<string, bool> & mapList, vector<string>& resultList ) {
+	map<string, bool>::const_iterator mapIterator;
+	
+	for (mapIterator = mapList.begin(); mapIterator != mapList.end(); mapIterator++) {
+		resultList.push_back(mapIterator->first);
+	}
+}
 void CommonUtility::convertVector(const map<int, int> & mapList, vector<int>& resultList ) {
 	map<int, int>::const_iterator mapIterator;
 	
