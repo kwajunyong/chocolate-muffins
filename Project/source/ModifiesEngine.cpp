@@ -152,7 +152,7 @@ void ModifiesEngine::handleStatementListVariable() {
 
 
 	bool exist = false;
-
+	bool keepRelationship = this->keepRelationship();
 
 	if (statementList.size() >  variableList.size()) {
 		FastSearchString::const_iterator iter;	
@@ -248,4 +248,4 @@ exist = false		;
 	// and vice versa. 
 
 	
-}
+}*/
