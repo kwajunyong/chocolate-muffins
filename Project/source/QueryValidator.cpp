@@ -29,6 +29,18 @@ std::vector<std::string> split(const std::string &inputString, char delimiter) {
 }
 //end of splitting string functions
 
+std::string trim(const std::string& input, const std::string& whitespace = " ")
+{
+    const auto posStart = input.find_first_not_of(whitespace);
+    if (posStart == std::string::npos)
+        return ""; // no content
+
+    const auto posEnd = input.find_last_not_of(whitespace);
+    const auto range = posEnd - posStart + 1;
+
+    return input.substr(posStart, range);
+}
+
 bool QueryValidator::replaceSubstring(string& inputString, const string& replaceTarget, const string& replaceValue){
 	/*size_t startPosition = inputString.find(replaceTarget);
     if(startPosition == string::npos)
@@ -266,7 +278,7 @@ std::string QueryValidator::preprocessInput(string input){
 	replaceSubstring(processedInput, "; ", ";");
 	replaceSubstring(processedInput, "\n", "");
 	replaceSubstring(processedInput, "  ", " ");
-	cout << "processed input: " << processedInput << endl;
+	//cout << "processed input: " << processedInput << endl;
 	return processedInput;
 }
 
@@ -677,6 +689,8 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 	bool connectClauseDetected = false;
 	bool patternClauseDetected = false;
 
+	//cout << "processSelectStmt:: " << selectStmt << endl;
+
 	queryManager -> addResultExpression(returnResult);
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
@@ -755,6 +769,7 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	//last statement must be Select statement since declarations should all be done before Select statement
 	string selectStmt = queryStmts[queryStmts.size()-1]; 
+	selectStmt = trim(selectStmt);
 	
 	//cout << "processQuery:: select statement is -> " << selectStmt << endl;
 
@@ -765,7 +780,7 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	for (vector<string>::size_type counter = 0; counter < queryStmts.size() -1; counter++){ //omit last statement, which should be the Select statement
 		//cout << "processQuery:: declaration statement is -> " << queryStmts[counter] << endl;
-		if (!processDeclarationStmt(queryStmts[counter])){
+		if (!processDeclarationStmt(trim(queryStmts[counter]))){
 			cout << "process declaration stmt failed" << endl;
 			return false;
 		}
@@ -801,8 +816,8 @@ int main(){
 	QueryValidator qv(qm, pkb);
 
 	string input;
-	//input = "\nSelect BOOLEAN such that Follows(3, 4)";
-	//qv.processQuery(input);
+	//input = "\n \n \n Select BOOLEAN such that Follows(3, 4)";
+	//cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
 	while (cin != "0"){
