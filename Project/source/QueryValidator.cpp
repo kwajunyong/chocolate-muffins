@@ -30,12 +30,22 @@ std::vector<std::string> split(const std::string &inputString, char delimiter) {
 //end of splitting string functions
 
 bool QueryValidator::replaceSubstring(string& inputString, const string& replaceTarget, const string& replaceValue){
-	size_t startPosition = inputString.find(replaceTarget);
+	/*size_t startPosition = inputString.find(replaceTarget);
     if(startPosition == string::npos)
         return false;
 	inputString.replace(startPosition, replaceTarget.length(), replaceValue);
 	replaceSubstring(inputString, replaceTarget, replaceValue);
-    return true;
+    return true;*/
+
+	int loc = -1;
+	int size = replaceTarget.size();
+
+	while((loc = inputString.find(replaceTarget, loc+1)) != std::string::npos){
+		inputString.replace(loc, size, replaceValue); //Single space in quotes
+		loc = loc - size;
+	}
+
+	return true;
 }
 
 bool QueryValidator::is_number(const string& s)
@@ -83,10 +93,12 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
+	firstParaType.push_back("_");
 
 	secondParaType.push_back("integer");
 	secondParaType.push_back("string");
 	secondParaType.push_back("variable");
+	secondParaType.push_back("_");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -253,7 +265,8 @@ std::string QueryValidator::preprocessInput(string input){
 	replaceSubstring(processedInput, " ;", ";");
 	replaceSubstring(processedInput, "; ", ";");
 	replaceSubstring(processedInput, "\n", "");
-	//cout << "processed input: " << processedInput << endl;
+	replaceSubstring(processedInput, "  ", " ");
+	cout << "processed input: " << processedInput << endl;
 	return processedInput;
 }
 
@@ -298,7 +311,9 @@ string QueryValidator::getRawVariableType(string variableName){
 	}
 
 	//if variable not declared, it will be either an integer or string input by user
-	if (is_number(variableName))
+	if (variableName == "_")
+		return "_";
+	else if (is_number(variableName))
 		return "integer";
 	else
 		return "string";
@@ -364,6 +379,7 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 	}*/
 		
 	if (rawVariableType == "_"){
+		//cout << "var type is: _" << endl;
 		return VT_UNDERSCORE;
 	}else if (strcmpi(rawVariableType.c_str(), "assignment") == 0){
 		return VT_ASSIGNMENT;
@@ -785,7 +801,8 @@ int main(){
 	QueryValidator qv(qm, pkb);
 
 	string input;
-
+	//input = "\nSelect BOOLEAN such that Follows(3, 4)";
+	//qv.processQuery(input);
 	getline(cin, input);
 	//cout << "input: " << input << endl;
 	while (cin != "0"){
