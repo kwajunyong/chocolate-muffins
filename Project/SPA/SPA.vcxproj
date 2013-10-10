@@ -26,6 +26,7 @@
     <ClInclude Include="..\source\Calls.h" />
     <ClInclude Include="..\source\CallStarEngine.h" />
     <ClInclude Include="..\source\CommonUtility.h" />
+    <ClInclude Include="..\source\ConstTable.h" />
     <ClInclude Include="..\source\Definition.h" />
     <ClInclude Include="..\source\DesignExtractor.h" />
     <ClInclude Include="..\source\EnumType.h" />
@@ -71,6 +72,7 @@
     <ClCompile Include="..\source\Calls.cpp" />
     <ClCompile Include="..\source\CallStarEngine.cpp" />
     <ClCompile Include="..\source\CommonUtility.cpp" />
+    <ClCompile Include="..\source\ConstTable.cpp" />
     <ClCompile Include="..\source\DesignExtractor.cpp" />
     <ClCompile Include="..\source\ExpressionPattern.cpp" />
     <ClCompile Include="..\source\Follows.cpp" />
