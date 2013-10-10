@@ -14,8 +14,7 @@ public:
 	Calls(void);
 	~Calls(void);
 
-	bool addCalls(string procedure1, string procedure2);
-	bool addCalls(int stmtNum, string procedure);
+	bool addCalls(string procedure1, string procedure2, int stmtNum);
 	bool isCalls(string procedure1, string procedure2, bool transitive);
 
 	vector<string> getCalls(string procedure, bool transitive);
