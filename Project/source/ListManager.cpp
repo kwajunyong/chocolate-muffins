@@ -6,6 +6,25 @@ ListManager::ListManager(QueryManager *qm) {
 	parent = qm;
 }
 
+void ListManager::clear() {
+		
+   
+   vector<vector<list<string>*>*>::iterator mainListIter;
+   vector<list<string>*>::iterator mainListVectorIter;
+   for (mainListIter = mainList.begin(); mainListIter != mainList.end(); mainListIter++) {
+
+	   for (mainListVectorIter = (*mainListIter)->begin(); mainListVectorIter != (*mainListIter)->end(); mainListVectorIter++) {
+		   delete (*mainListVectorIter);
+	   }
+
+	   delete (*mainListIter);
+   }
+   mainList.clear();
+   
+   variableList.clear();
+
+}
+
 void ListManager::getValueListMapInteger(string &variableName, FastSearchInteger &tempResult) {
 
 	int firstList, secondList;
@@ -375,7 +394,7 @@ void ListManager::updateList(string variableName, const vector<string> &listValu
 
 		// check if listvalue is empty
 		vector<list<string>*> *valueList = mainList.at(firstList);
-		sortVariable(valueList, secondList, variableName);
+		//sortVariable(valueList, secondList, variableName);
 		deleteList(valueList, listValue, true, secondList);
 
 	} else {
@@ -427,38 +446,33 @@ void ListManager::createANewList(const string &variableName1, const string &vari
 }
 
 // delete list can be fine tuned / optimized if necessary. 
-// DELETE LIST ASSUME THE VARIABLE IS SORTED!!!!
+// DELETE LIST ASSUME THE listValue IS SORTED!!!!
 
 void ListManager::deleteList(vector<list<string>*>* valueList, const vector<string> &listValue, bool keepList, int index ) {
+	
 	vector<list<string>*> newList;// temporary list;
-	vector<list<string>*>::iterator iterFound;
+	vector<list<string>*>::iterator iter;
+	vector<string>::const_iterator iterFound;
 	string value;
+	
 	if (keepList) { // the list value contains the value we want to keep. 
 		vector<string>::const_iterator iterListValue;
+		iter = valueList->begin();
+		while(iter != valueList->end()) {
+			string value = getValueAt((*iter), index);
 
-		for (iterListValue = listValue.begin(); iterListValue != listValue.end(); iterListValue++) {
-			iterFound = bLookup(valueList, (*iterListValue), index);
+			iterFound = CommonUtility::binaryLookup(listValue, value);
 
-			if (iterFound != valueList->end()) {
-				do {
-					newList.push_back((*iterFound));
-					iterFound++;
-
-					if (iterFound == valueList->end()) 
-						break;
-
-					value = getValueAt((*iterFound), index);
-
-					if (value.compare(*iterListValue) != 0)
-						break;
-
-				} while (true);
+			if (iterFound == listValue.end()) {
+				                                              				
+        		delete (*iter);
+				iter =valueList->erase(iter);							
+			} else {
+				iter++;
 			}
 		}
 
-		clearVariableList(*valueList);
-		// copy from the temp list to the original list. Let's hope it's fast. 
-		valueList->assign(newList.begin(), newList.end()); 
+		
 	}
 }
 

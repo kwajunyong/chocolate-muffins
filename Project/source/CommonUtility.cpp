@@ -84,3 +84,14 @@ void CommonUtility::convertIntVectorToString(const vector<int>& from, vector<str
 		resultList.push_back(NumberToString(*mapIterator));
 	}
 }
+
+vector<string>::const_iterator CommonUtility::binaryLookup(const vector<string>& from, string &element) {
+	vector<string>::const_iterator iter;
+	// this is not binary lookup. 
+	// must ensure binary lookup find the first element. 
+	for (iter = from.begin(); iter != from.end(); iter++) {
+		if (iter->compare(element) ==0)
+			return iter;		
+	}
+	return iter;
+}

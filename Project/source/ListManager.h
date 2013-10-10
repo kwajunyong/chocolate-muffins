@@ -41,7 +41,7 @@ public:
 	 void getValueListMapInteger(string &variableName, FastSearchInteger & fsi); 
 	 void getValueListMapString(string &variableName, FastSearchString &fsi); 
 	
-
+	 void clear();
 private:	
 
 	int compare(const string &value1, const string &value2, const string &variableType);

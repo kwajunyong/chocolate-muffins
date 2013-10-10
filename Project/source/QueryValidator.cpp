@@ -29,13 +29,35 @@ std::vector<std::string> split(const std::string &inputString, char delimiter) {
 }
 //end of splitting string functions
 
+std::string trim(const std::string& input, const std::string& whitespace = " ")
+{
+    const auto posStart = input.find_first_not_of(whitespace);
+    if (posStart == std::string::npos)
+        return ""; // no content
+
+    const auto posEnd = input.find_last_not_of(whitespace);
+    const auto range = posEnd - posStart + 1;
+
+    return input.substr(posStart, range);
+}
+
 bool QueryValidator::replaceSubstring(string& inputString, const string& replaceTarget, const string& replaceValue){
-	size_t startPosition = inputString.find(replaceTarget);
+	/*size_t startPosition = inputString.find(replaceTarget);
     if(startPosition == string::npos)
         return false;
 	inputString.replace(startPosition, replaceTarget.length(), replaceValue);
 	replaceSubstring(inputString, replaceTarget, replaceValue);
-    return true;
+    return true;*/
+
+	int loc = -1;
+	int size = replaceTarget.size();
+
+	while((loc = inputString.find(replaceTarget, loc+1)) != std::string::npos){
+		inputString.replace(loc, size, replaceValue); //Single space in quotes
+		loc = loc - size;
+	}
+
+	return true;
 }
 
 bool QueryValidator::is_number(const string& s)
@@ -83,10 +105,12 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
+	firstParaType.push_back("_");
 
 	secondParaType.push_back("integer");
 	secondParaType.push_back("string");
 	secondParaType.push_back("variable");
+	secondParaType.push_back("_");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -253,6 +277,7 @@ std::string QueryValidator::preprocessInput(string input){
 	replaceSubstring(processedInput, " ;", ";");
 	replaceSubstring(processedInput, "; ", ";");
 	replaceSubstring(processedInput, "\n", "");
+	replaceSubstring(processedInput, "  ", " ");
 	//cout << "processed input: " << processedInput << endl;
 	return processedInput;
 }
@@ -298,7 +323,9 @@ string QueryValidator::getRawVariableType(string variableName){
 	}
 
 	//if variable not declared, it will be either an integer or string input by user
-	if (is_number(variableName))
+	if (variableName == "_")
+		return "_";
+	else if (is_number(variableName))
 		return "integer";
 	else
 		return "string";
@@ -364,6 +391,7 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 	}*/
 		
 	if (rawVariableType == "_"){
+		//cout << "var type is: _" << endl;
 		return VT_UNDERSCORE;
 	}else if (strcmpi(rawVariableType.c_str(), "assignment") == 0){
 		return VT_ASSIGNMENT;
@@ -661,6 +689,8 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 	bool connectClauseDetected = false;
 	bool patternClauseDetected = false;
 
+	//cout << "processSelectStmt:: " << selectStmt << endl;
+
 	queryManager -> addResultExpression(returnResult);
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
@@ -739,6 +769,7 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	//last statement must be Select statement since declarations should all be done before Select statement
 	string selectStmt = queryStmts[queryStmts.size()-1]; 
+	selectStmt = trim(selectStmt);
 	
 	//cout << "processQuery:: select statement is -> " << selectStmt << endl;
 
@@ -749,7 +780,7 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	for (vector<string>::size_type counter = 0; counter < queryStmts.size() -1; counter++){ //omit last statement, which should be the Select statement
 		//cout << "processQuery:: declaration statement is -> " << queryStmts[counter] << endl;
-		if (!processDeclarationStmt(queryStmts[counter])){
+		if (!processDeclarationStmt(trim(queryStmts[counter]))){
 			cout << "process declaration stmt failed" << endl;
 			return false;
 		}
@@ -785,7 +816,8 @@ int main(){
 	QueryValidator qv(qm, pkb);
 
 	string input;
-
+	//input = "\n \n \n Select BOOLEAN such that Follows(3, 4)";
+	//cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
 	while (cin != "0"){
