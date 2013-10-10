@@ -6,6 +6,7 @@
 #include "ASTExpressionBuilder.h"
 #include "VarTable.h"
 #include "ProcTable.h"
+#include "ConstTable.h"
 #include "Follows.h"
 #include "Parent.h"
 #include "Modifies.h"
@@ -31,6 +32,9 @@ public:
 
 	ProcTable* getProcTable();
 	void setProcTable(ProcTable* procTable);
+
+	ConstTable* getConstTable();
+	void setConstTable(ConstTable* constTable);
 
 	Follows* getFollows();
 	void setFollows(Follows* follows);
@@ -60,7 +64,8 @@ private:
 	
 	VarTable* _varTable;
 	ProcTable* _procTable;
-	
+	ConstTable* _constTable;
+
 	Follows* _follows;
 	Parent* _parent;
 	

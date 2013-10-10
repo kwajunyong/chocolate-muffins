@@ -71,6 +71,16 @@ void PKB::setProcTable(ProcTable* procTable)
 	_procTable = procTable;
 }
 
+ConstTable* PKB::getConstTable()
+{
+	return _constTable;
+}
+
+void PKB::setConstTable(ConstTable* constTable)
+{
+	_constTable = constTable;
+}
+
 Follows* PKB::getFollows()
 {
 	return _follows;

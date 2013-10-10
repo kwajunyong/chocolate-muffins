@@ -16,6 +16,7 @@ PKB* Parser::parse(std::string fileName)
 	_ast = new AST();
 	_varTable = new VarTable();
 	_procTable = new ProcTable();
+	_constTable = new ConstTable();
 
 	getToken();
 
@@ -27,6 +28,7 @@ PKB* Parser::parse(std::string fileName)
 	_pkb->setAST(_ast);
 	_pkb->setVarTable(_varTable);
 	_pkb->setProcTable(_procTable);
+	_pkb->setConstTable(_constTable);
 
 	checkRedundantToken();
 
@@ -330,11 +332,11 @@ std::list<std::string> Parser::getExpressionTokens()
 	std::list<std::string> tokens;
 
 	while (!isKeyword(";")) {
-		if (isKeyword("(") || isKeyword(")")) {
-			tokens.push_back(_token);
-		} else if (isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
+		if (isKeyword("(") || isKeyword(")") || isKeyword("+") || isKeyword("-") || isKeyword("*") || isKeyword("/")) {
 			tokens.push_back(_token);
 		} else if (isDigits()) {
+			_constTable->addConstant(std::stoi(_token));
+
 			tokens.push_back(_token);
 		} else if (isName()) {
 			_varTable->addVariable(_token);

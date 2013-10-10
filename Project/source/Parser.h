@@ -32,6 +32,7 @@ private:
 	AST* _ast;
 	VarTable* _varTable;
 	ProcTable* _procTable;
+	ConstTable* _constTable;
 
 	ASTNode* program();
 	ASTNode* procedure();
