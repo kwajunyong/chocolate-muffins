@@ -7,9 +7,7 @@ void TestAST::setUp()
 {
 	ast = new AST();
 
-	ASTNode* rootNode = buildTree();
-
-	ast->setRootNode(rootNode);
+	generateAST();
 }
 
 void TestAST::tearDown()
@@ -23,6 +21,15 @@ void TestAST::testGetStatementNode()
 	CPPUNIT_ASSERT(":assign:1" == node->print());
 
 	node = ast->getStatementNode(2);
+	CPPUNIT_ASSERT(":call:2" == node->print());
+
+	node = ast->getStatementNode(3);
+	CPPUNIT_ASSERT(":while:3" == node->print());
+
+	node = ast->getStatementNode(4);
+	CPPUNIT_ASSERT(":if:4" == node->print());
+
+	node = ast->getStatementNode(9);
 	CPPUNIT_ASSERT(node == NULL);
 }
 
@@ -32,24 +39,52 @@ void TestAST::testGetStatementType()
 	CPPUNIT_ASSERT_EQUAL(ASSIGN, type);
 
 	type = ast->getStatementType(2);
+	CPPUNIT_ASSERT_EQUAL(CALL, type);
+
+	type = ast->getStatementType(3);
+	CPPUNIT_ASSERT_EQUAL(WHILE, type);
+
+	type = ast->getStatementType(4);
+	CPPUNIT_ASSERT_EQUAL(IF, type);
+
+	type = ast->getStatementType(9);
 	CPPUNIT_ASSERT_EQUAL(NONE, type);
 }
 
 void TestAST::testGetStatementNodes()
 {
-	std::vector<std::string> expect;
-	expect.push_back(":assign:1");
-
+	std::vector<std::string> expected;
 	std::vector<std::string> actual;
+
+	expected.clear();
+	expected.push_back(":assign:1");
+	expected.push_back(":assign:8");
+
+	actual.clear();
 	std::vector<ASTNode*> nodes = ast->getStatementNodes(ASSIGN);
 	
 	for (int i=0; i<nodes.size(); i++) {
 		actual.push_back(nodes[i]->print());
 	}
 
-	CPPUNIT_ASSERT(expect == actual);
+	CPPUNIT_ASSERT(expected == actual);
 
-	expect.empty();
+	expected.empty();
+	expected.push_back(":call:2");
+	expected.push_back(":call:7");
+
+	actual.empty();
+	nodes = ast->getStatementNodes(CALL);
+	
+	for (int i=0; i<nodes.size(); i++) {
+		actual.push_back(nodes[i]->print());
+	}
+
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.empty();
+	expected.push_back(":while:3");
+	expected.push_back(":while:6");
 
 	actual.empty();
 	nodes = ast->getStatementNodes(WHILE);
@@ -58,43 +93,147 @@ void TestAST::testGetStatementNodes()
 		actual.push_back(nodes[i]->print());
 	}
 
-	CPPUNIT_ASSERT(expect == actual);
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.empty();
+	expected.push_back(":if:4");
+	expected.push_back(":if:5");
+
+	actual.empty();
+	nodes = ast->getStatementNodes(IF);
+	
+	for (int i=0; i<nodes.size(); i++) {
+		actual.push_back(nodes[i]->print());
+	}
+
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.empty();
+	expected.push_back(":assign:1");
+	expected.push_back(":call:2");
+	expected.push_back(":while:3");
+	expected.push_back(":if:4");
+	expected.push_back(":if:5");
+	expected.push_back(":while:6");
+	expected.push_back(":call:7");
+	expected.push_back(":assign:8");
+	
+	actual.empty();
+	nodes = ast->getStatementNodes(ALL);
+	
+	for (int i=0; i<nodes.size(); i++) {
+		actual.push_back(nodes[i]->print());
+	}
+
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.empty();
+	
+	actual.empty();
+	nodes = ast->getStatementNodes(NONE);
+	
+	for (int i=0; i<nodes.size(); i++) {
+		actual.push_back(nodes[i]->print());
+	}
+
+	CPPUNIT_ASSERT(expected == actual);
 }
 
 void TestAST::testGetStatementNumbers()
 {
-	std::vector<int> expect;
-	expect.push_back(1);
+	std::vector<int> expected;
+	std::vector<int> actual;
 
-	std::vector<int> actual = ast->getStatementNumbers(ASSIGN);
+	expected.clear();
+	expected.push_back(1);
+	expected.push_back(8);
+	actual = ast->getStatementNumbers(ASSIGN);
+	CPPUNIT_ASSERT(expected == actual);
 
-	CPPUNIT_ASSERT(expect == actual);
+	expected.clear();
+	expected.push_back(2);
+	expected.push_back(7);
+	actual = ast->getStatementNumbers(CALL);
+	CPPUNIT_ASSERT(expected == actual);
 
-	expect.clear();
-
+	expected.clear();
+	expected.push_back(3);
+	expected.push_back(6);
 	actual = ast->getStatementNumbers(WHILE);
-	
-	CPPUNIT_ASSERT(expect == actual);
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.clear();
+	expected.push_back(4);
+	expected.push_back(5);
+	actual = ast->getStatementNumbers(IF);
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.clear();
+	int temp[] = {1, 2, 3, 4, 5, 6, 7, 8};
+	expected.assign(temp, temp + 8);
+	actual = ast->getStatementNumbers(ALL);
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.clear();
+	actual = ast->getStatementNumbers(NONE);
+	CPPUNIT_ASSERT(expected == actual);
 }
 
-ASTNode* TestAST::buildTree()
+void TestAST::testGetContainerStatementNumbers()
 {
-	ASTNode* assignNode = new ASTNode("", ASSIGN, 1);
-	ASTNode* plusNode = new ASTNode("", PLUS, 0);
-	ASTNode* minusNode = new ASTNode("", MINUS, 0);
-	ASTNode* varNodeA = new ASTNode("a", VARIABLE, 0);
-	ASTNode* varNodeB = new ASTNode("b", VARIABLE, 0);
-	ASTNode* varNodeC = new ASTNode("c", VARIABLE, 0);
-	ASTNode* constantNode = new ASTNode("1", CONSTANT, 0);
+	std::vector<int> expected;
+	std::vector<int> actual;
 
-	assignNode->joinChild(varNodeA);
-	varNodeA->joinNext(minusNode);
-	minusNode->joinChild(plusNode);
-	plusNode->joinChild(varNodeB);
-	varNodeB->joinNext(varNodeC);
-	plusNode->joinNext(constantNode);
+	expected.clear();
+	expected.push_back(3);
+	expected.push_back(6);
+	actual = ast->getStatementNumbers(WHILE, "a");
+	CPPUNIT_ASSERT(expected == actual);
 
-	ast->addStatementNodeToList(assignNode);
+	expected.clear();
+	actual = ast->getStatementNumbers(WHILE, "b");
+	CPPUNIT_ASSERT(expected == actual);
 
-	return assignNode;
+	expected.clear();
+	expected.push_back(4);
+	expected.push_back(5);
+	actual = ast->getStatementNumbers(IF, "b");
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.clear();
+	actual = ast->getStatementNumbers(IF, "a");
+	CPPUNIT_ASSERT(expected == actual);
+
+	expected.clear();
+	actual = ast->getStatementNumbers(ASSIGN, "a");
+	CPPUNIT_ASSERT(expected == actual);
+}
+
+void TestAST::generateAST()
+{
+	ASTNode* node;
+
+	ast->storeStatementNode(new ASTNode("", ASSIGN, 1));
+	
+	ast->storeStatementNode(new ASTNode("", CALL, 2));
+
+	node = new ASTNode("", WHILE, 3);
+	node->joinChild(new ASTNode("a", VARIABLE, 0));
+	ast->storeStatementNode(node);
+	
+	node = new ASTNode("", IF, 4);
+	node->joinChild(new ASTNode("b", VARIABLE, 0));
+	ast->storeStatementNode(node);
+
+	node = new ASTNode("", IF, 5);
+	node->joinChild(new ASTNode("b", VARIABLE, 0));
+	ast->storeStatementNode(node);
+
+	node = new ASTNode("", WHILE, 6);
+	node->joinChild(new ASTNode("a", VARIABLE, 0));
+	ast->storeStatementNode(node);
+
+	ast->storeStatementNode(new ASTNode("", CALL, 7));
+
+	ast->storeStatementNode(new ASTNode("", ASSIGN, 8));
 }

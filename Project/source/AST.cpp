@@ -18,20 +18,26 @@ void AST::setRootNode(ASTNode* root)
 	_root = root;
 }
 
-bool AST::addStatementNodeToList(ASTNode* node)
+bool AST::storeStatementNode(ASTNode* node)
 {
 	switch (node->getType()) {
 		case ASSIGN:
 			_assignStmt.push_back(node->getStatementNumber());
-			break;
-		case WHILE:
-			_whileStmt.push_back(node->getStatementNumber());
-			break;
-		case IF:
-			_ifStmt.push_back(node->getStatementNumber());
+			
 			break;
 		case CALL:
 			_callStmt.push_back(node->getStatementNumber());
+			
+			break;
+		case WHILE:
+			_whileStmt.push_back(node->getStatementNumber());
+			_varWhileMap[node->getChild()->getName()].push_back(node->getStatementNumber());
+
+			break;
+		case IF:
+			_ifStmt.push_back(node->getStatementNumber());
+			_varIfMap[node->getChild()->getName()].push_back(node->getStatementNumber());
+
 			break;
 		default:
 			return false;
@@ -72,6 +78,18 @@ std::vector<int> AST::getStatementNumbers(ASTType type)
 			return _callStmt;
 		case ALL:
 			return _stmt;
+		default:
+			return std::vector<int>();
+	}
+}
+
+std::vector<int> AST::getStatementNumbers(ASTType type, std::string controlVariable)
+{	
+	switch (type) {
+		case WHILE:
+			return _varWhileMap[controlVariable];
+		case IF:
+			return _varIfMap[controlVariable];
 		default:
 			return std::vector<int>();
 	}
