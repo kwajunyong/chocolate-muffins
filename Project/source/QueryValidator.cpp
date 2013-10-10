@@ -106,8 +106,9 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
 	firstParaType.push_back("_");
+	firstParaType.push_back("prog_line");
 
-	secondParaType.push_back("integer");
+	//secondParaType.push_back("integer");
 	secondParaType.push_back("string");
 	secondParaType.push_back("variable");
 	secondParaType.push_back("_");
@@ -126,15 +127,18 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("if");
 	firstParaType.push_back("while");
 	firstParaType.push_back("integer");
-	firstParaType.push_back("string");
+	//firstParaType.push_back("string");
+	firstParaType.push_back("_");
 
 	secondParaType.push_back("integer");
-	secondParaType.push_back("string");
+	//secondParaType.push_back("string");
 	secondParaType.push_back("assign");
 	secondParaType.push_back("if");
 	secondParaType.push_back("while");
 	secondParaType.push_back("call");
 	secondParaType.push_back("stmt");
+	secondParaType.push_back("prog_line");
+	secondParaType.push_back("_");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -151,16 +155,21 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("while");
 	firstParaType.push_back("assign");
 	firstParaType.push_back("stmt");
+	firstParaType.push_back("prog_line");
 	firstParaType.push_back("integer");
-	firstParaType.push_back("string");
+	//firstParaType.push_back("string");
+	firstParaType.push_back("_");
+	firstParaType.push_back("call");
 
 	secondParaType.push_back("integer");
-	secondParaType.push_back("string");
+	//secondParaType.push_back("string");
 	secondParaType.push_back("assign");
 	secondParaType.push_back("if");
 	secondParaType.push_back("while");
 	secondParaType.push_back("call");
 	secondParaType.push_back("stmt");
+	secondParaType.push_back("prog_line");
+	secondParaType.push_back("_");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -174,12 +183,14 @@ void QueryValidator::initQueryTypeTable(){
 	secondParaType.clear();
 
 	firstParaType.push_back("procedure");
-	firstParaType.push_back("integer");
+	//firstParaType.push_back("integer");
 	firstParaType.push_back("string");
+	firstParaType.push_back("_");
 
-	secondParaType.push_back("integer");
+	//secondParaType.push_back("integer");
 	secondParaType.push_back("string");
 	secondParaType.push_back("procedure");
+	secondParaType.push_back("_");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -196,12 +207,20 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("prog_line");
 	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
-	firstParaType.push_back("string");
+	firstParaType.push_back("call");
+	firstParaType.push_back("while");
+	firstParaType.push_back("if");
+	firstParaType.push_back("constant");
+	firstParaType.push_back("prog_line");
 
-	secondParaType.push_back("integer");
-	secondParaType.push_back("string");
 	secondParaType.push_back("prog_line");
 	secondParaType.push_back("stmt");
+	secondParaType.push_back("integer");
+	secondParaType.push_back("call");
+	secondParaType.push_back("while");
+	secondParaType.push_back("if");
+	secondParaType.push_back("constant");
+	secondParaType.push_back("prog_line");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
 
@@ -216,10 +235,10 @@ void QueryValidator::initQueryTypeTable(){
 
 	firstParaType.push_back("assign");
 	firstParaType.push_back("integer");
-	firstParaType.push_back("string");
+	//firstParaType.push_back("string");
 
 	secondParaType.push_back("integer");
-	secondParaType.push_back("string");
+	//secondParaType.push_back("string");
 	secondParaType.push_back("assign");
 
 	paraTypePair = make_pair(firstParaType, secondParaType);
