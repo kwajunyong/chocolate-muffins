@@ -87,7 +87,7 @@ void DesignExtractor::extractStatementNodes(ASTNode* node)
 {
 	if (isStatement(node)) {
 		//std::cout << node->print() << std::endl;
-		_ast->addStatementNodeToList(node);
+		_ast->storeStatementNode(node);
 	}
 }
 
@@ -138,8 +138,8 @@ void DesignExtractor::extractCalls(ASTNode* node, std::string procedure)
 	if (node->getType() == CALL) {
 		validateCall(node);
 			
-		//std::cout << "Calls(" << procedure << ", " << node->getName() << ")" << std::endl;
-		_calls->addCalls(procedure, node->getName());
+		//std::cout << "Calls(" << procedure << ", " << node->getName() << ", "  << node->getStatementNumber() << ")" << std::endl;
+		_calls->addCalls(procedure, node->getName(), node->getStatementNumber());
 
 		_callNodes.push_back(node);
 	}
