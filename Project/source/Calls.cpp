@@ -11,6 +11,12 @@ bool Calls::addCalls(string procedure1, string procedure2)
 	return true;
 }
 
+bool Calls::addCalls(int stmtNum, string procedure)
+{
+	callStmt[procedure].push_back(stmtNum);
+	return true;
+}
+
 bool Calls::isCalls(string procedure1, string procedure2, bool transitive)
 {
 	if(transitive)
@@ -106,6 +112,18 @@ vector<string> Calls::getCalled(string procedure, bool transitive)
 		{
 			answers = called[procedure];
 		}
+	}
+
+	return answers;
+}
+
+vector<int> Calls::getCallsStmt(string procedure)
+{
+	vector<int> answers;
+
+	if(callStmt.size() > 0)
+	{
+		answers = callStmt[procedure];
 	}
 
 	return answers;

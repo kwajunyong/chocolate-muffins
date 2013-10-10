@@ -15,14 +15,17 @@ public:
 	~Calls(void);
 
 	bool addCalls(string procedure1, string procedure2);
+	bool addCalls(int stmtNum, string procedure);
 	bool isCalls(string procedure1, string procedure2, bool transitive);
 
 	vector<string> getCalls(string procedure, bool transitive);
 	vector<string> getCalled(string procedure, bool transitive);
+	vector<int> getCallsStmt(string procedure);
 
 private:
 	map<string, vector<string>> calls;
 	map<string, vector<string>> called;
+	map<string, vector<int>> callStmt;
 
 	bool compute(string procedure1, string procedure2);
 
