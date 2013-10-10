@@ -37,9 +37,9 @@ procedure Fifth {
 	l = m;
 	l = m + n;
 	l = m + n - 1;
-	l = m + n * 1;
-	l = (m + n) * 1;
-	l = ((((((m + n))) * 1)));
+	l = m + n * 2;
+	l = (m + n) * 4;
+	l = ((((((m + n))) * 8)));
 }
 
 procedure Sixth {

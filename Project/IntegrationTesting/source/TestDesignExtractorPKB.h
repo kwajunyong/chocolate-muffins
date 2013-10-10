@@ -46,7 +46,9 @@ private:
 	Next* next;
 	int numOfStmt;
 
-	std::vector<std::string> expectedStmt();
+	std::vector<std::string> expectedStmtNodes();
+	std::map<std::string, std::vector<int>> expectedWhileMap();
+	std::map<std::string, std::vector<int>> expectedIfMap();
 	Follows expectedFollows();
 	Parent expectedParent();
 	Modifies expectedModifies();

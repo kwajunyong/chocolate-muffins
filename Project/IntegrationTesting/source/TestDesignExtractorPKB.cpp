@@ -32,7 +32,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestDesignExtractorPKB);
 
 void TestDesignExtractorPKB::testStmtNodes()
 {
-	std::vector<std::string> expectedNodes = expectedStmt();
+	std::vector<std::string> expectedNodes = expectedStmtNodes();
 
 	std::vector<ASTNode*> tempNodes = ast->getStatementNodes(ALL);
 
@@ -56,31 +56,33 @@ void TestDesignExtractorPKB::testStmtNodes()
 
 	int tempAssign[] = {4, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 26, 27, 31, 32, 34, 35};
 	std::vector<int> expectedAssign(tempAssign, tempAssign + 19);
-
 	std::vector<int> actualAssign = ast->getStatementNumbers(ASSIGN);
-
 	CPPUNIT_ASSERT(expectedAssign == actualAssign);
 
 	int tempWhile[] = {1, 2, 12, 28};
 	std::vector<int> expectedWhile(tempWhile, tempWhile + 4);
-
 	std::vector<int> actualWhile = ast->getStatementNumbers(WHILE);
-
     CPPUNIT_ASSERT(expectedWhile == actualWhile);
 
 	int tempIf[] = {3, 8, 21, 22, 25, 29, 30, 33};
 	std::vector<int> expectedIf(tempIf, tempIf + 8);
-
 	std::vector<int> actualIf = ast->getStatementNumbers(IF);
-
 	CPPUNIT_ASSERT(expectedIf == actualIf);
 
 	int tempCall[] = {5, 6, 7, 11};
 	std::vector<int> expectedCall(tempCall, tempCall + 4);
-
 	std::vector<int> actualCall = ast->getStatementNumbers(CALL);
-
 	CPPUNIT_ASSERT(expectedCall == actualCall);
+
+	std::map<std::string, std::vector<int>> expectedVarWhile = expectedWhileMap(); 
+	std::map<std::string, std::vector<int>> expectedVarIf = expectedIfMap(); 
+
+	std::vector<std::string> variables = varTable->getAllNames();
+
+	for (size_t i = 0; i < variables.size(); i++) {
+		CPPUNIT_ASSERT(expectedVarWhile[variables[i]] == ast->getStatementNumbers(WHILE, variables[i]));
+		CPPUNIT_ASSERT(expectedVarIf[variables[i]] == ast->getStatementNumbers(IF, variables[i]));
+	}
 }
 
 void TestDesignExtractorPKB::testFollows()
@@ -145,7 +147,7 @@ void TestDesignExtractorPKB::testNext()
 	}
 }
 
-std::vector<std::string> TestDesignExtractorPKB::expectedStmt()
+std::vector<std::string> TestDesignExtractorPKB::expectedStmtNodes()
 {
 	std::vector<std::string> expected;
 
@@ -184,6 +186,34 @@ std::vector<std::string> TestDesignExtractorPKB::expectedStmt()
 	expected.push_back(":if:33");
 	expected.push_back(":assign:34");
 	expected.push_back(":assign:35");
+
+	return expected;
+}
+
+std::map<std::string, std::vector<int>> TestDesignExtractorPKB::expectedWhileMap()
+{
+	std::map<std::string, std::vector<int>> expected;
+
+	expected["a"].push_back(1);
+	expected["b"].push_back(2);
+	expected["i"].push_back(12);
+	expected["o"].push_back(28);
+
+	return expected;
+}
+
+std::map<std::string, std::vector<int>> TestDesignExtractorPKB::expectedIfMap()
+{
+	std::map<std::string, std::vector<int>> expected;
+
+	expected["c"].push_back(3);
+	expected["f"].push_back(8);
+	expected["p"].push_back(21);
+	expected["q"].push_back(22);
+	expected["q"].push_back(25);
+	expected["p"].push_back(29);
+	expected["q"].push_back(30);
+	expected["q"].push_back(33);
 
 	return expected;
 }
@@ -447,10 +477,10 @@ Calls TestDesignExtractorPKB::expectedCalls()
 {
 	Calls expected;
 
-	expected.addCalls("First", "Fourth");
-	expected.addCalls("First", "Fifth");
-	expected.addCalls("Second", "First");
-	expected.addCalls("Third", "First");
+	expected.addCalls("First", "Fourth", 5);
+	expected.addCalls("First", "Fifth", 6);
+	expected.addCalls("Second", "First", 7);
+	expected.addCalls("Third", "First", 11);
 
 	return expected;
 }

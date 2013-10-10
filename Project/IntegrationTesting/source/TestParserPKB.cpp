@@ -16,6 +16,7 @@ void TestParserPKB::setUp()
 	traverser = pkb->getASTTraverser();
 	varTable = pkb->getVarTable();
 	procTable = pkb->getProcTable();
+	constTable = pkb->getConstTable();
 	numOfStmt = pkb->getNumOfStmt();
 }
 
@@ -50,6 +51,16 @@ void TestParserPKB::testProcTable()
 	expected.assign(temp, temp + 6);
 
 	CPPUNIT_ASSERT(expected == procTable->getAllNames());
+}
+
+void TestParserPKB::testConstTable()
+{
+	std::vector<int> expected;
+
+	int temp[] = {1, 2, 4, 8};
+	expected.assign(temp, temp + 4);
+
+	CPPUNIT_ASSERT(expected == constTable->getAllValues());
 }
 
 void TestParserPKB::testStmtNum()
@@ -129,21 +140,21 @@ std::vector<std::string> TestParserPKB::expectedAST()
 	expected.push_back("          m:variable");
 	expected.push_back("          :times");
 	expected.push_back("            n:variable");
-	expected.push_back("            1:constant");
+	expected.push_back("            2:constant");
 	expected.push_back("      :assign:19");
 	expected.push_back("        l:variable");
 	expected.push_back("        :times");
 	expected.push_back("          :plus");
 	expected.push_back("            m:variable");
 	expected.push_back("            n:variable");
-	expected.push_back("          1:constant");
+	expected.push_back("          4:constant");
 	expected.push_back("      :assign:20");
 	expected.push_back("        l:variable");
 	expected.push_back("        :times");
 	expected.push_back("          :plus");
 	expected.push_back("            m:variable");
 	expected.push_back("            n:variable");
-	expected.push_back("          1:constant");
+	expected.push_back("          8:constant");
 	expected.push_back("  Sixth:procedure");
 	expected.push_back("    :stmtLst");
 	expected.push_back("      :if:21");
