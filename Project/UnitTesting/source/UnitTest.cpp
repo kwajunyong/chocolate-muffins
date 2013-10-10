@@ -17,11 +17,12 @@ int main(int argc, char* argv[])
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestASTTraverser").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestVarTable").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestProcTable").makeTest());
+	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestConstTable").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestFollows").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestParent").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestModifies").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestUses").makeTest());
-	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestCalls").makeTest());
+	//unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestCalls").makeTest());
 	//unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestNext").makeTest());
 	//unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestAffects").makeTest());
 	unitSuite->addTest(CppUnit::TestFactoryRegistry::getRegistry("TestParser").makeTest());

@@ -57,9 +57,6 @@
     <ClCompile Include="source\TestASTTraverser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\TestCalls.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\TestAST.h">
@@ -99,9 +96,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\TestASTTraverser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TestCalls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
