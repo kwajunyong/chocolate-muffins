@@ -37,18 +37,20 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 
 	static int a = 0;
 	if (qv->processQuery(query)) {
-		//qm->execute();
-		//results = qm->outputResult();
-		//qm->resetEverything();
+		if (a ==14) {
+			cout << "Four";
+		}
+		a++;
+		qm->execute();
+		results = qm->outputResult();
+		qm->resetEverything();
 
 	} else {
 		a++;
 		qv->processQuery(query);
 	}
 
-			if (a == 30)  {
-		   a = 31;
-		}
+		
 
 	//cin >> a;
 

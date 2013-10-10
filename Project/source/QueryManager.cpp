@@ -27,7 +27,7 @@ void QueryManager::updateRelationship(const string &variable, 	  const vector<st
 
 void QueryManager::execute() { // multithreading 
 
-	if (!qt.isEmpty()) {
+	while (!qt.isEmpty()) {
 		QueryClass *qc = qt.pop();
 		qc->run();
 
@@ -177,6 +177,7 @@ void QueryManager::resetEverything() {
 	}	
 	resultList.clear();
 	qt.clear();
+	listManager->clear();
 }
 
 void QueryManager::addResultExpression(string variableName) {
@@ -196,18 +197,12 @@ list<string> QueryManager::outputResult() {
 		} else 
 			returnList.push_back("true");
 	} else {
-		ASTParameterValue &astParameterv = getASTParameterValue(resultList.begin()->first);
-		ASTParameter &astParam = astParameterv.getASTParameter();
+		string variableName = resultList.begin()->first;
 
-		if (astParam.getParameterType() != VT_PROCEDURE && astParam.getParameterType() != VT_VARIABLELIST) {
-			convertVector(astParameterv.getValueListInteger(), returnList);
-			
-		} else {
-			convertVector(astParameterv.getValueList(), returnList);
-		}
+		convertVector(listManager->getValueListString(variableName), returnList);
+		
 	}
 	return returnList;
-
 }
 
 

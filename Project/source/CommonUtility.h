@@ -25,5 +25,5 @@ public:
 	static void convertToMap(const vector<string>& resultList, map<string, bool> &mapList);
 
 	static void convertIntVectorToString(const vector<int>& from, vector<string>& resultList);
-
+	static vector<string>::const_iterator binaryLookup(const vector<string> &vector, string &element);
 };
