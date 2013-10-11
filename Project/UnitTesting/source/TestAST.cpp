@@ -21,7 +21,7 @@ void TestAST::testGetStatementNode()
 	CPPUNIT_ASSERT(":assign:1" == node->print());
 
 	node = ast->getStatementNode(2);
-	CPPUNIT_ASSERT(":call:2" == node->print());
+	CPPUNIT_ASSERT("Second:call:2" == node->print());
 
 	node = ast->getStatementNode(3);
 	CPPUNIT_ASSERT(":while:3" == node->print());
@@ -51,6 +51,20 @@ void TestAST::testGetStatementType()
 	CPPUNIT_ASSERT_EQUAL(NONE, type);
 }
 
+void TestAST::testGetCalledProcedure()
+{
+	std::string procedure;
+
+	procedure = ast->getCalledProcedure(2);
+	CPPUNIT_ASSERT("Second" == procedure);
+
+	procedure = ast->getCalledProcedure(7);
+	CPPUNIT_ASSERT("Seventh" == procedure);
+
+	procedure = ast->getCalledProcedure(1);
+	CPPUNIT_ASSERT("" == procedure);
+}
+
 void TestAST::testGetStatementNodes()
 {
 	std::vector<std::string> expected;
@@ -70,8 +84,8 @@ void TestAST::testGetStatementNodes()
 	CPPUNIT_ASSERT(expected == actual);
 
 	expected.empty();
-	expected.push_back(":call:2");
-	expected.push_back(":call:7");
+	expected.push_back("Second:call:2");
+	expected.push_back("Seventh:call:7");
 
 	actual.empty();
 	nodes = ast->getStatementNodes(CALL);
@@ -110,12 +124,12 @@ void TestAST::testGetStatementNodes()
 
 	expected.empty();
 	expected.push_back(":assign:1");
-	expected.push_back(":call:2");
+	expected.push_back("Second:call:2");
 	expected.push_back(":while:3");
 	expected.push_back(":if:4");
 	expected.push_back(":if:5");
 	expected.push_back(":while:6");
-	expected.push_back(":call:7");
+	expected.push_back("Seventh:call:7");
 	expected.push_back(":assign:8");
 	
 	actual.empty();
@@ -215,7 +229,7 @@ void TestAST::generateAST()
 
 	ast->storeStatementNode(new ASTNode("", ASSIGN, 1));
 	
-	ast->storeStatementNode(new ASTNode("", CALL, 2));
+	ast->storeStatementNode(new ASTNode("Second", CALL, 2));
 
 	node = new ASTNode("", WHILE, 3);
 	node->joinChild(new ASTNode("a", VARIABLE, 0));
@@ -233,7 +247,7 @@ void TestAST::generateAST()
 	node->joinChild(new ASTNode("a", VARIABLE, 0));
 	ast->storeStatementNode(node);
 
-	ast->storeStatementNode(new ASTNode("", CALL, 7));
+	ast->storeStatementNode(new ASTNode("Seventh", CALL, 7));
 
 	ast->storeStatementNode(new ASTNode("", ASSIGN, 8));
 }

@@ -18,6 +18,8 @@ public:
 	ASTNode* getStatementNode(int stmtNum);
 	ASTType getStatementType(int stmtNum);
 
+	std::string getCalledProcedure(int stmtNum);
+
 	std::vector<ASTNode*> getStatementNodes(ASTType type);
 	std::vector<int> getStatementNumbers(ASTType type);
 	std::vector<int> getStatementNumbers(ASTType type, std::string controlVariable);

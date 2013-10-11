@@ -65,6 +65,17 @@ ASTType AST::getStatementType(int stmtNum)
 	return (node != NULL) ? node->getType() : NONE;
 }
 
+std::string AST::getCalledProcedure(int stmtNum)
+{
+	ASTNode* node = getStatementNode(stmtNum);
+
+	if (node->getType() == CALL) {
+		return node->getName();
+	} else {
+		return "";
+	}
+}
+
 std::vector<int> AST::getStatementNumbers(ASTType type)
 {	
 	switch (type) {
