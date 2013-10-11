@@ -178,42 +178,42 @@ vector<int> Next::computePrevious(int stmtNum)
 	return answers;
 }
 
-int main()
-{
-	Next n;
-
-	n.addNext(1, 2);
-	n.addNext(2, 3);
-	n.addNext(3, 4);
-	n.addNext(3, 7);
-	n.addNext(4, 5);
-	n.addNext(5, 6);
-	n.addNext(6, 3);
-	n.addNext(7, 8);
-	n.addNext(7, 9);
-	n.addNext(8, 10);
-	n.addNext(9, 10);
-	n.addNext(10, 11);
-	n.addNext(11, 12);
-
-	//if(n.isNext(1, 12, true))
-	//{
-	//	cout << "true" << endl;
-	//}
-	//else
-	//{
-	//	cout << "false" << endl;
-	//}
-
-	//vector<int> querys = n.getNext(3, true); //Select n such that Next*(1,n)
-	vector<int> querys = n.getPrevious(8, true);
-
-	for(int i = 0; i < querys.size(); i++)
-	{
-		int x = querys[i];
-		cout << x << endl;
-	}
-
-	system("Pause");
-	return 0;
-}
+//int main()
+//{
+//	Next n;
+//
+//	n.addNext(1, 2);
+//	n.addNext(2, 3);
+//	n.addNext(3, 4);
+//	n.addNext(3, 7);
+//	n.addNext(4, 5);
+//	n.addNext(5, 6);
+//	n.addNext(6, 3);
+//	n.addNext(7, 8);
+//	n.addNext(7, 9);
+//	n.addNext(8, 10);
+//	n.addNext(9, 10);
+//	n.addNext(10, 11);
+//	n.addNext(11, 12);
+//
+//	//if(n.isNext(1, 12, true))
+//	//{
+//	//	cout << "true" << endl;
+//	//}
+//	//else
+//	//{
+//	//	cout << "false" << endl;
+//	//}
+//
+//	//vector<int> querys = n.getNext(3, true); //Select n such that Next*(1,n)
+//	vector<int> querys = n.getPrevious(8, true);
+//
+//	for(int i = 0; i < querys.size(); i++)
+//	{
+//		int x = querys[i];
+//		cout << x << endl;
+//	}
+//
+//	system("Pause");
+//	return 0;
+//}
