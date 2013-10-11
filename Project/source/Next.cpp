@@ -27,6 +27,7 @@ bool Next::isNext(int stmtNum1, int stmtNum2, bool transitive)
 {
 	if(transitive)
 	{
+		visited.clear();
 		if(compute(stmtNum1, stmtNum2))
 			return true;
 	}
@@ -48,30 +49,11 @@ bool Next::isNext(int stmtNum1, int stmtNum2, bool transitive)
 vector<int> Next::getNext(int stmtNum, bool transitive)
 {
 	vector<int> answers;
-	vector<vector<int>> temp;
 
 	if(transitive)
 	{
-		answers = next[stmtNum];
-
-		for(int i = 0; i < answers.size(); i++)
-		{
-			if(answers.size() > 0)
-			{
-				temp.push_back(getNext(answers[i], true));
-			}
-		}
-
-		for(int i = 0; i < temp.size(); i++)
-		{
-			for(int j = 0; j < temp[i].size(); j++)
-			{
-				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
-				{
-					answers.push_back(temp[i][j]);
-				}
-			}
-		}
+		visited.clear();
+		answers = computeNext(stmtNum);
 	}
 	else
 	{
@@ -91,26 +73,8 @@ vector<int> Next::getPrevious(int stmtNum, bool transitive)
 
 	if(transitive)
 	{
-		answers = previous[stmtNum];
-
-		for(int i = 0; i < answers.size(); i++)
-		{
-			if(answers.size() > 0)
-			{
-				temp.push_back(getPrevious(answers[i], true));
-			}
-		}
-
-		for(int i = 0; i < temp.size(); i++)
-		{
-			for(int j = 0; j < temp[i].size(); j++)
-			{
-				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
-				{
-					answers.push_back(temp[i][j]);
-				}
-			}
-		}
+		visited.clear();
+		answers = computePrevious(stmtNum);
 	}
 	else
 	{
@@ -148,42 +112,108 @@ bool Next::compute(int stmtNum1, int stmtNum2)
 	return check;
 }
 
-//int main()
-//{
-//	Next n;
-//
-//	n.addNext(1, 2);
-//	n.addNext(2, 3);
-//	n.addNext(3, 4);
-//	n.addNext(3, 7);
-//	n.addNext(4, 5);
-//	n.addNext(5, 6);
-//	n.addNext(6, 3);
-//	n.addNext(7, 8);
-//	n.addNext(7, 9);
-//	n.addNext(8, 10);
-//	n.addNext(9, 10);
-//	n.addNext(10, 11);
-//	n.addNext(11, 12);
-//
-//	if(n.isNext(1, 12, true))
-//	{
-//		cout << "true" << endl;
-//	}
-//	else
-//	{
-//		cout << "false" << endl;
-//	}
-//
-//	//vector<int> querys = n.getNext(1, false); //Select n such that Next*(1,n)
-//	//vector<int> querys = n.getNexted(1, true);
-//
-//	/*for(int i = 0; i < querys.size(); i++)
-//	{
-//		int x = querys[i];
-//		cout << x << endl;
-//	}*/
-//
-//	system("Pause");
-//	return 0;
-//}
+vector<int> Next::computeNext(int stmtNum)
+{
+	vector<int> answers;
+	vector<vector<int>> temp;
+
+	answers = next[stmtNum];
+
+	if(find(visited.begin(), visited.end(), stmtNum) == visited.end())
+	{
+		visited.push_back(stmtNum);
+
+		for(int i = 0; i < answers.size(); i++)
+		{
+			if(answers.size() > 0)
+			{
+				temp.push_back(computeNext(answers[i]));
+			}
+		}
+
+		for(int i = 0; i < temp.size(); i++)
+		{
+			for(int j = 0; j < temp[i].size(); j++)
+			{
+				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				{
+					answers.push_back(temp[i][j]);
+				}
+			}
+		}
+	}
+	return answers;
+}
+
+vector<int> Next::computePrevious(int stmtNum)
+{
+	vector<int> answers;
+	vector<vector<int>> temp;
+
+	answers = previous[stmtNum];
+
+	if(find(visited.begin(), visited.end(), stmtNum) == visited.end())
+	{
+		visited.push_back(stmtNum);
+
+		for(int i = 0; i < answers.size(); i++)
+		{
+			if(answers.size() > 0)
+			{
+				temp.push_back(computePrevious(answers[i]));
+			}
+		}
+
+		for(int i = 0; i < temp.size(); i++)
+		{
+			for(int j = 0; j < temp[i].size(); j++)
+			{
+				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				{
+					answers.push_back(temp[i][j]);
+				}
+			}
+		}
+	}
+	return answers;
+}
+
+int main()
+{
+	Next n;
+
+	n.addNext(1, 2);
+	n.addNext(2, 3);
+	n.addNext(3, 4);
+	n.addNext(3, 7);
+	n.addNext(4, 5);
+	n.addNext(5, 6);
+	n.addNext(6, 3);
+	n.addNext(7, 8);
+	n.addNext(7, 9);
+	n.addNext(8, 10);
+	n.addNext(9, 10);
+	n.addNext(10, 11);
+	n.addNext(11, 12);
+
+	//if(n.isNext(1, 12, true))
+	//{
+	//	cout << "true" << endl;
+	//}
+	//else
+	//{
+	//	cout << "false" << endl;
+	//}
+
+	//vector<int> querys = n.getNext(3, true); //Select n such that Next*(1,n)
+	vector<int> querys = n.getPrevious(8, true);
+
+	for(int i = 0; i < querys.size(); i++)
+	{
+		int x = querys[i];
+		cout << x << endl;
+	}
+
+	system("Pause");
+	return 0;
+}

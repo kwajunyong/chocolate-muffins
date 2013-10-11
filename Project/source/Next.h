@@ -25,4 +25,6 @@ private:
 	map<int, vector<int>> previous;
 
 	bool compute(int stmtNum1, int stmtNum2);
+	vector<int> computeNext(int stmtNum);
+	vector<int> computePrevious(int stmtNum);
 };
