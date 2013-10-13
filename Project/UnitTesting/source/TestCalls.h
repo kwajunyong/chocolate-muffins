@@ -14,6 +14,7 @@ public:
 
 	void testGetCalls();
 	void testGetCalled();
+	void testGetCallsStmt();
 private:
 	Calls c;
 };
