@@ -129,6 +129,8 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("integer");
 	//firstParaType.push_back("string");
 	firstParaType.push_back("_");
+	firstParaType.push_back("stmt");
+	firstParaType.push_back("prog_line");
 
 	secondParaType.push_back("integer");
 	//secondParaType.push_back("string");
@@ -813,13 +815,13 @@ bool QueryValidator::processQuery(string inputQuery){
 
 	return processSelectStmt(selectStmt);
 
-	cout << query << endl;
+	/*cout << query << endl;
 	cout << inputQuery.find("select", 0) << endl;
 	cout << queryStmts.size() << endl;
-	return true;
+	return true;*/
 }
 
-int main(){
+int main1(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
@@ -841,8 +843,8 @@ int main(){
 	QueryValidator qv(qm, pkb);
 
 	string input;
-	//input = "\n \n \n Select BOOLEAN such that Follows(3, 4)";
-	//cout << qv.processQuery(input) << endl;
+	input = "stmt s; \n Select s such that Parent(s, 3) ";
+	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
 	while (cin != "0"){
