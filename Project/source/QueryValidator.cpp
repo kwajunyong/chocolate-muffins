@@ -436,6 +436,8 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 		return VT_VARIABLELIST;
 	}else if (strcmpi(rawVariableType.c_str(), "call") == 0){
 		return VT_CALL;
+	}else if (strcmpi(rawVariableType.c_str(), "prog_line") == 0){
+		return VT_PROG_LINE;
 	}else //if (unkVarType == "program" || unkVarType == "constant" || unkVarType == "program"){
 		return VT_CONSTANTSTRING;
 	//}
@@ -554,20 +556,22 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
 			else if (firstPara.find("_") != string::npos)
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
+			else if (firstPara.find("\"") != string::npos){
+				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
+			}else{
 				cout << "incorrect parameter type for pattern clauses" << endl;
 				return false;
 			}
 
 			if (secondPara == "_")
-				qc -> addParam(splitResults[0], VT_UNDERSCORE);
+				qc -> addParam(splitResults[1], VT_UNDERSCORE);
 			else if (secondPara.find("_") != string::npos)
-				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (secondPara.find("\"") != string::npos)
-				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
+				qc -> addParam(splitResults[1], VT_EXPRESSION_UNDERSCORE);
+			else if (secondPara.find("\"") != string::npos){
+				replaceSubstring(splitResults[1], "\"", "");
+				qc -> addParam(splitResults[1], VT_CONSTANTSTRING);
+			}else{
 				cout << "incorrect parameter type for pattern clauses" << endl;
 				return false;
 			}
@@ -586,9 +590,10 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
 			else if (firstPara.find("_") != string::npos)
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
+			else if (firstPara.find("\"") != string::npos){
+				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
+			}else{
 				cout << "incorrect parameter type for pattern clauses" << endl;
 				return false;
 			}
@@ -613,9 +618,10 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
 			else if (firstPara.find("_") != string::npos)
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos)
+			else if (firstPara.find("\"") != string::npos){
+				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
-			else{
+			}else{
 				cout << "incorrect parameter type for pattern clauses" << endl;
 				return false;
 			}
