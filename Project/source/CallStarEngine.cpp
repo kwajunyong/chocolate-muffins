@@ -25,23 +25,17 @@ void CallStarEngine::run() {
 		return;
 	}
 
-
-	if (astParam1->getParameterType() == VT_CONSTANTSTRING ) {
-		first[astParam1->getVariableName()] = true;
-	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+	if (astParam1->getParameterType() == VT_UNDERSCORE) 
 		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
-	}else{
-		first = myQM->getValueListMap(astParam1->getVariableName());
-	}
+	else
+		loadVariable(0, first);
 
-	if (astParam2->getParameterType() == VT_CONSTANTSTRING ) {
-		second[astParam1->getVariableName()] = true;
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	if (astParam2->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
-	}else{
-		second = myQM->getValueListMap(astParam2->getVariableName());
-	}
+	}else
+		loadVariable(1, second);
 
+	
 	FastSearchString finalListOne;
 	FastSearchString finalListTwo; 
 
@@ -88,7 +82,7 @@ void CallStarEngine::run() {
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
 	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 

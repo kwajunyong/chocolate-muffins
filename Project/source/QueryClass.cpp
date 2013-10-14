@@ -1,9 +1,28 @@
 #include "QueryClass.h"
 #include "PKB.h"
 #include "CommonUtility.h"
+#include "QueryManager.h"
+
 //QueryClass *QueryClass::instantiate() {
 //
 //}
+
+// DON'T HANDLE UNDERSCORE
+void QueryClass::loadVariable(int paramIndex, FastSearchString &varList) {
+	if (parameterList.at(paramIndex)->getParameterType() == VT_CONSTANTSTRING) 
+		varList[parameterList.at(paramIndex)->getVariableName()] = true;
+	else
+		varList = myQM->getValueListMap(parameterList.at(paramIndex)->getVariableName());	
+}
+
+// DON'T HANDLE UNDERSCORE
+void QueryClass::loadVariable(int paramIndex, FastSearchInteger &varList) {
+
+	if (parameterList.at(paramIndex)->getParameterType() == VT_CONSTANTSTRING) 
+		varList[atoi(parameterList.at(paramIndex)->getVariableName().c_str())] = true;
+	else
+		varList = myQM->getValueListIntegerMap(parameterList.at(paramIndex)->getVariableName());
+}
 
 bool QueryClass::keepRelationship() {
 
@@ -20,6 +39,7 @@ QueryClass::QueryClass(QUERYTYPE queryType, QueryManager* qm, PKB *pkb) {
 	myQueryType = queryType;
 	myQM = qm;	
 	pkbManager = pkb;
+	failed = false;
 }
 
 void QueryClass::run() {

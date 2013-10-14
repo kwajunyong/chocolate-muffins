@@ -24,6 +24,9 @@ public:
 	vector<ASTParameter*> &getParameterList();
 	
 	bool hasResult();
+	void loadVariable(int paramIndex, FastSearchString &varList);
+	void loadVariable(int paramIndex, FastSearchInteger &varList);
+
 	
 protected:
 	

@@ -86,6 +86,8 @@ vector<string> QueryManager::getValueList(string variableName)  {
 		return astParamValue.getValueList();
 	} else
 		return listManager->getValueListString(variableName);
+
+	
 }
 
 
@@ -178,6 +180,7 @@ void QueryManager::resetEverything() {
 	resultList.clear();
 	qt.clear();
 	listManager->clear();
+	failed = false;
 }
 
 void QueryManager::addResultExpression(string variableName) {
@@ -212,12 +215,14 @@ list<string> QueryManager::outputResult() {
 	}
 
 	ASTParameterValue asp = getASTParameterValue(variableName); 
-	if (asp.hasNotInitialized()) 		
+	if (asp.hasNotInitialized()) 	{	
+		asp.initialize(pkbLibrary);
 		if (getVariableType(variableName).compare("string") == 0) {
 			convertVector(asp.getValueList(), returnList);
 		} else {
 			convertVector(asp.getValueListInteger (), returnList);
 		}
+	}
 	else
 		convertVector(listManager->getValueListString(variableName), returnList);
 
