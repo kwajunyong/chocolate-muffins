@@ -211,7 +211,7 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("call");
 	firstParaType.push_back("while");
 	firstParaType.push_back("if");
-	firstParaType.push_back("constant");
+	firstParaType.push_back("assign");
 	firstParaType.push_back("prog_line");
 	firstParaType.push_back("_");
 
@@ -220,7 +220,7 @@ void QueryValidator::initQueryTypeTable(){
 	secondParaType.push_back("call");
 	secondParaType.push_back("while");
 	secondParaType.push_back("if");
-	secondParaType.push_back("constant");
+	secondParaType.push_back("assign");
 	secondParaType.push_back("prog_line");
 	secondParaType.push_back("_");
 
@@ -420,7 +420,7 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 	if (rawVariableType == "_"){
 		//cout << "var type is: _" << endl;
 		return VT_UNDERSCORE;
-	}else if (strcmpi(rawVariableType.c_str(), "assignment") == 0){
+	}else if (strcmpi(rawVariableType.c_str(), "assign") == 0){
 		return VT_ASSIGNMENT;
 	}else if (strcmpi(rawVariableType.c_str(), "while") == 0){
 		return VT_WHILE;
@@ -828,7 +828,7 @@ int main1(){
 
 	try {
 		//pkb = parser.parse("ComboTest2.txt");
-		pkb = parser.parse("source1Modifies.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -843,7 +843,8 @@ int main1(){
 	QueryValidator qv(qm, pkb);
 
 	string input;
-	input = "stmt s; \n Select s such that Parent(s, 3) ";
+	//input = "stmt s; \n Select s such that Parent(s, 3) ";
+	input = "assign a, a1;Select a such that Follows(a, a1)";
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
