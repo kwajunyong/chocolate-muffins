@@ -628,6 +628,8 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 			cout << "invalid pattern type" << endl;
 			return false;
 		}
+
+		queryManager -> addQueryClass(qc);
 	}
 
 	return true;
@@ -774,8 +776,8 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 		}
 	}
 
-	/*for (vector<string>::size_type counter = 0; counter < queryList.size(); counter++){
-		cout << "processsSelectStmt:: query no. " << counter << " -> " << queryList[counter] << endl;
+	/*for (vector<string>::size_type counter = 0; counter < patternList.size(); counter++){
+		cout << "processsSelectStmt:: pattern no. " << counter << " -> " << patternList[counter] << endl;
 	}*/
 
 	return (processPatternClauses(patternList) && processQueryClauses(queryList));
@@ -844,7 +846,8 @@ int main1(){
 
 	string input;
 	//input = "stmt s; \n Select s such that Parent(s, 3) ";
-	input = "assign a, a1;Select a such that Follows(a, a1)";
+	//input = "assign a, a1;Select a such that Follows(a, a1)";
+	input = "assign a;Select a pattern a(\"z\",_)";
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
