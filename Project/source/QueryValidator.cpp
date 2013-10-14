@@ -539,7 +539,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 		patternType = getRawVariableType(variablePattern);
 		splitResults = split(parameters, ',');
 
-		QueryClass *qc = new ExpressionPattern(queryManager, pkb);
+		QueryClass *qc; //= new ExpressionPattern(queryManager, pkb);
 
 		if (strcmpi(patternType.c_str(), "assign") == 0){
 			if (splitResults.size() != 2){
@@ -547,6 +547,8 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				return false;
 			}
 			
+			qc = new ExpressionPattern(queryManager, pkb);
+
 			firstPara = splitResults[0];
 			secondPara = splitResults[1];
 
@@ -585,6 +587,8 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				return false;
 			}
 
+			qc = new WhilePattern(queryManager, pkb);
+
 			firstPara = splitResults[0];
 			secondPara = splitResults[1];
 
@@ -613,6 +617,8 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				cout << "incorrect number of parameters" << endl;
 				return false;
 			}
+
+			qc = new IfPattern(queryManager, pkb);
 
 			firstPara = splitResults[0];
 			secondPara = splitResults[1];
@@ -837,7 +843,7 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main1(){
+int main(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
