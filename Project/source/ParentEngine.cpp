@@ -41,7 +41,7 @@ void ParentEngine::run() {
 	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), second);
 	}	else {
-		second = myQM->getValueListIntegerMap(astParam1->getVariableName());
+		second = myQM->getValueListIntegerMap(astParam2->getVariableName());
 	}
 
 
@@ -92,7 +92,7 @@ void ParentEngine::run() {
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
 	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 

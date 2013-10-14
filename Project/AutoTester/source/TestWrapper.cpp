@@ -36,8 +36,9 @@ void TestWrapper::parse(std::string filename) {
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 
 	static int a = 0;
+	int stopat = 30;
 	if (qv->processQuery(query)) {
-		if (a ==16) {
+		if (a ==stopat ) {
 			cout << "Four";
 		}
 		a++;
@@ -46,7 +47,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 		qm->resetEverything();
 
 	} else {
-		a++;
+		if (a >= stopat)
+			cout << "haha";
+			a++;
 		qv->processQuery(query);
 	}
 

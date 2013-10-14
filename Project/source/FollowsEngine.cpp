@@ -27,7 +27,7 @@ void FollowsEngine::run() {
 	
 
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
-		first.push_back(atoi(astParam2->getVariableName().c_str()));
+		first.push_back(atoi(astParam1->getVariableName().c_str()));
 	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		first = myQM->getAllStatementList();
 	}else{
@@ -58,7 +58,7 @@ void FollowsEngine::run() {
 
 	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-		vector<int> &followerList = pkbManager->getFollows()->getFollows((*iter), false);
+		vector<int> &followerList = pkbManager->getFollows()->getFollowedBy((*iter), false);
 		exist = false;
 
 		for (iterFollowerList = followerList.begin(); iterFollowerList  != followerList.end(); iterFollowerList++) { // for each variable returned check against the variable list
@@ -92,7 +92,7 @@ void FollowsEngine::run() {
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
 	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 	

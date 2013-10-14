@@ -16,7 +16,8 @@ void BinaryRelationEngine::addParam(const string &parameterName, VARIABLETYPE pa
 	
 	attributePair.push_back(attribute);
 }
-void BinaryRelationEngine::run() {
+void BinaryRelationEngine::run() {	
+	// handle call differently
 	
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
@@ -27,7 +28,7 @@ void BinaryRelationEngine::run() {
 		   ||astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 			   first.push_back(astParam1->getVariableName());
 	} else  if (astParam1->getParameterType() == VT_CONSTANT) {	
-		//first = pkbManager->
+		CommonUtility::convertIntVectorToString(pkbManager->getConstTable()->getAllValues(), first);
 	} else if (astParam1->getParameterType() == VT_CALL) {
 		// call 
 		//callList = pkbManager->getCalls()->
@@ -43,7 +44,7 @@ void BinaryRelationEngine::run() {
 		   ||astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 			   second.push_back(astParam1->getVariableName());
 	} else  if (astParam1->getParameterType() == VT_CONSTANT) {	
-		//first = pkbManager->
+		CommonUtility::convertIntVectorToString(pkbManager->getConstTable()->getAllValues(), second);
 	} else if (astParam1->getParameterType() == VT_CALL) {
 		// call 
 	} else if (astParam1->getParameterType() == VT_STATEMENTLIST) {
@@ -58,8 +59,10 @@ void BinaryRelationEngine::run() {
 
 	vector<string>::iterator iterFirst, iterSecond;
 	vector<pair<string, string>> relationship;
+
 	bool keepRelation = keepRelationship();
 	bool exist;
+
 	for (iterFirst = first.begin(); iterFirst != first.end(); iterFirst++){
 		exist = false;
 		for (iterSecond = second.begin(); iterSecond != second.end(); iterSecond++) {
@@ -67,7 +70,6 @@ void BinaryRelationEngine::run() {
 			if (iterFirst->compare(*iterSecond) == 0 )   {
 				if (keepRelation) 
 					relationship.push_back(VectorRelation(*iterFirst, *iterSecond));					
-
 				exist = true;
 				if (!keepRelation && astParam2->updateAble()) 
 					secondList[*iterSecond] = true;
@@ -94,6 +96,9 @@ void BinaryRelationEngine::run() {
 		CommonUtility::convertVector(secondList, result);
 		myQM->updateRelationship(astParam2->getVariableName(), result);
 	}
+
+	failed = (firstList.size() == 0 && secondList.size() == 0 && relationship.size() == 0);
+	
 
 
 }

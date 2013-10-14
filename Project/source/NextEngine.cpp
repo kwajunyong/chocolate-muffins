@@ -77,19 +77,7 @@ void NextEngine::run() {
 	}
 
 	
-	if (astParam1->updateAble()) {
-		vector<int> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
-		myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
-
-	} 
 	
-	if (astParam2->updateAble()) { 
-		vector<int> finalList; 
-		CommonUtility::convertVector(finalListTwo, finalList);
-		myQM->updateVectorInteger(astParam2->getVariableName(), finalList);
-		
-	}
 
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
@@ -99,7 +87,7 @@ void NextEngine::run() {
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
 	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
+		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 	
