@@ -74,7 +74,7 @@ void ASTParameterValue::initialize(PKB *pkb) {
 		valueListInteger = pkb->getAST()->getStatementNumbers(ASTType::CALL); // get all statement number
 	} else if (parameter.getParameterType() == VT_VARIABLELIST) {
 		valueList = pkb->getVarTable()->getAllNames();
-	} else if (parameter.getParameterType() == VARIABLETYPE::VT_STATEMENTLIST) {
+	} else if (parameter.getParameterType() == VARIABLETYPE::VT_PROG_LINE) {
 		valueListInteger = pkb->getAST()->getStatementNumbers(ASTType::ALL); // get all statement number
 	
 	}else {

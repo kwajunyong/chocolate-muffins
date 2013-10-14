@@ -36,7 +36,7 @@ void TestWrapper::parse(std::string filename) {
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 
 	static int a = 0;
-	int stopat = 30;
+	int stopat = 35;
 	if (qv->processQuery(query)) {
 		if (a ==stopat ) {
 			cout << "Four";

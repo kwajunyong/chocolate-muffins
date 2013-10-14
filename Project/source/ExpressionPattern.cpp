@@ -44,7 +44,7 @@ void ExpressionPattern::run() {
 
 			if (astParam3->getParameterType() == VT_EXPRESSION_UNDERSCORE)
 				matched = matcher->matchSubTree(node, builder->build(astParam3->getVariableName()));
-			else
+			else if (astParam3->getParameterType() != VT_UNDERSCORE)			
 				matched = matcher->matchTree(node, builder->build(astParam3->getVariableName()));
 		}
 
