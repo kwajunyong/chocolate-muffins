@@ -26,9 +26,10 @@ void ParentEngine::run() {
 	}
 
 
+
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 		first[atoi(astParam1->getVariableName().c_str())] = true;
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), first);
 	}else{
 		first = myQM->getValueListIntegerMap(astParam1->getVariableName());

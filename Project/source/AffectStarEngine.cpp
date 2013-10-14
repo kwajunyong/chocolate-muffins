@@ -32,7 +32,7 @@ void AffectStarEngine::run() {
 
 		first.push_back(atoi(astParam2->getVariableName().c_str()));
 
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		first = myQM->getAllList(ASTType::ASSIGN);
 	}else{
 		first = myQM->getValueListInteger(astParam1->getVariableName());

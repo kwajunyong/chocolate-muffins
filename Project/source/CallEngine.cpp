@@ -7,103 +7,93 @@ CallEngine::CallEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_USES, qm, pkb
 
 }
 void CallEngine::run() {
-	// pre check is here
+	
 
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
 
-	if (astParam2->getParameterType() == VT_UNDERSCORE && astParam1->getParameterType() == VT_UNDERSCORE)  {
-		// check uses
-		return; 
+	FastSearchString second;
+	FastSearchString first;
+
+	// there is no need to check if both is underscore
+	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
+		/*if (pkbManager->getFollows()->IsThereFollow) 
+		failed = false;
+		else
+		failed true;*/
+
+		return;
 	}
 
-	vector<string> second;
-	if (astParam2->getParameterType() == VT_CONSTANTSTRING) 
-	{
-		second.push_back(astParam2->getVariableName());
+
+	if (astParam1->getParameterType() == VT_CONSTANTSTRING ) {
+		first[astParam1->getVariableName()] = true;
+	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
+	}else{
+		first = myQM->getValueListMap(astParam1->getVariableName());
+	}
+
+	if (astParam2->getParameterType() == VT_CONSTANTSTRING ) {
+		second[astParam1->getVariableName()] = true;
 	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
-		second = myQM->getAllVariable();
-	}
-	else {
-		second = myQM->getValueList(astParam2->getVariableName());
-	}
-
-	bool keepRelation = keepRelationship();
-	vector<pair<string, string>> relationship;
-	// Procedure VS Variable 
-
-	vector<string> procedureList;
-
-	if (astParam1->getParameterType() == VT_PROCEDURE) {
-		procedureList = myQM->getValueList(astParam1->getVariableName());
-	} else if (astParam1->getParameterType() == VT_CONSTANTSTRING) {
-		procedureList.push_back(astParam1->getVariableName());
+		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
+	}else{
+		second = myQM->getValueListMap(astParam2->getVariableName());
 	}
 
+	FastSearchString finalListOne;
+	FastSearchString finalListTwo; 
 
+	FastSearchString ::iterator iter;
+	vector<string>::const_iterator iterParentList;
+	FastSearchString::iterator iterSecond;
 
-	map<string, int> finalProcedureList;
-	map<string, int> finalVariableList; 
+	bool exist;
+	bool keepRelationship = astParam1->updateAble() && astParam2->updateAble() ;
 
-	vector<string>::const_iterator iter;
-	vector<string>::const_iterator iterProcedureResult;
-	vector<string>::const_iterator iterProcedure;
+	vector<pair<string, string>> resultList;
 
-	// will use map instead of vector in the late release 
-	// if procedureList more than variable list 
-	// then use procedure to match against variable
-	// and vice versa. 
+	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-	// later release
-	// will mvoe 
-	bool exist = false;
-
-
-	for (iter = second.begin();  iter != second.end(); iter++) {
-
-		vector<string> procedureListResult = pkbManager->getCalls()->getCalled(*iter, false);
-
+		vector<string> &childList = pkbManager->getCalls()->getCalls(iter->first, false);
 		exist = false;
-		for (iterProcedureResult = procedureListResult.begin(); iterProcedureResult  != procedureListResult.end(); iterProcedureResult++) {
-			for (iterProcedure = procedureList.begin(); iterProcedure  != procedureList.end(); iterProcedure++) {
-				if ((*iterProcedure).compare(*iterProcedureResult) == 0) {
-					exist = true;
 
-					if (!astParam1->updateAble()) // no point keeping something that doesn't need to be updated
-						break;
+		for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+			iterSecond = second.find(*iterParentList);
 
-					if (keepRelation) 
-						relationship.push_back(pair<string, string>((*iterProcedure), (*iter)));
+			if (iterSecond != second.end()) {
+				exist = true;
 
-					finalProcedureList[*iterProcedureResult] = 1;
-				}
+				if (keepRelationship)
+					resultList.push_back(pair<string, string>(iter->first, iterSecond->first));					
+				else if (astParam2->updateAble()) 
+					finalListTwo[iterSecond->first] = true;
+				else if (!astParam1->updateAble()) {
+					return; // both are not updatable. 
+				}								
 			}
-
-			if (exist && astParam2->updateAble()) 
-				finalVariableList[*iter] = 1;
-
 		}
+		if (exist && !keepRelationship && astParam1->updateAble()) 
+			finalListOne[iter->first] = true;
+
 	}
 
-	if (!keepRelation && astParam1->updateAble()) {
-		vector<string> finalList; 
-		CommonUtility::convertVector(finalProcedureList, finalList);
 
+	if (keepRelationship) {
+		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+	} else if (astParam1->updateAble()) {
+		vector<string> finalList; 
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateRelationship(astParam1->getVariableName(), finalList);
-	} 	else if (!keepRelation && astParam2->updateAble()) {
+	} else if (astParam2->updateAble()) {
 		vector<string> finalList; 
-		CommonUtility::convertVector(finalVariableList, finalList);
-
+		CommonUtility::convertVector(finalListOne, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
-	} else if (keepRelation) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
-
 	}
 
-
-	failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0);
-
+	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 
 
 

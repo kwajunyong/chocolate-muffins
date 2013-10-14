@@ -28,7 +28,7 @@ void FollowsEngine::run() {
 
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
 		first.push_back(atoi(astParam2->getVariableName().c_str()));
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		first = myQM->getAllStatementList();
 	}else{
 		first = myQM->getValueListInteger(astParam1->getVariableName());
