@@ -554,9 +554,11 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			if (firstPara == "_")
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
+			else if (firstPara.find("_") != string::npos){
+				replaceSubstring(splitResults[0], "_\"", "");
+				replaceSubstring(splitResults[0], "\"_", "");
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos){
+			}else if (firstPara.find("\"") != string::npos){
 				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
 			}else{
@@ -566,9 +568,11 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			if (secondPara == "_")
 				qc -> addParam(splitResults[1], VT_UNDERSCORE);
-			else if (secondPara.find("_") != string::npos)
+			else if (secondPara.find("_") != string::npos){
+				replaceSubstring(splitResults[1], "_\"", "");
+				replaceSubstring(splitResults[1], "\"_", "");
 				qc -> addParam(splitResults[1], VT_EXPRESSION_UNDERSCORE);
-			else if (secondPara.find("\"") != string::npos){
+			}else if (secondPara.find("\"") != string::npos){
 				replaceSubstring(splitResults[1], "\"", "");
 				qc -> addParam(splitResults[1], VT_CONSTANTSTRING);
 			}else{
@@ -588,9 +592,11 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			if (firstPara == "_")
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
+			else if (firstPara.find("_") != string::npos){
+				replaceSubstring(splitResults[0], "_\"", "");
+				replaceSubstring(splitResults[0], "\"_", "");
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos){
+			}else if (firstPara.find("\"") != string::npos){
 				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
 			}else{
@@ -616,9 +622,11 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			if (firstPara == "_")
 				qc -> addParam(splitResults[0], VT_UNDERSCORE);
-			else if (firstPara.find("_") != string::npos)
+			else if (firstPara.find("_") != string::npos){
+				replaceSubstring(splitResults[0], "_\"", "");
+				replaceSubstring(splitResults[0], "\"_", "");
 				qc -> addParam(splitResults[0], VT_EXPRESSION_UNDERSCORE);
-			else if (firstPara.find("\"") != string::npos){
+			}else if (firstPara.find("\"") != string::npos){
 				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
 			}else{
