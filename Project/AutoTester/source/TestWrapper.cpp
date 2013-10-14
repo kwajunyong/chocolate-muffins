@@ -37,7 +37,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 
 	static int a = 0;
 	if (qv->processQuery(query)) {
-		if (a ==14) {
+		if (a ==16) {
 			cout << "Four";
 		}
 		a++;

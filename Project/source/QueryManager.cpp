@@ -1,7 +1,7 @@
 #include "QueryManager.h"
 
 void QueryManager::updateRelationship(const string &variable1, const string &variable2, 
-	  const vector<pair<string, string>> &relationship) {		
+	const vector<pair<string, string>> &relationship) {		
 
 		listManager->updateList(variable1, variable2, relationship);
 
@@ -10,19 +10,19 @@ void QueryManager::updateRelationship(const string &variable1, const string &var
 string QueryManager::getVariableType(const string &variableName) {
 
 	ASTParameterValue &asp = getASTParameterValue(variableName);		  	
-	  if (asp.getASTParameter().getParameterType() == VT_WHILE || 
-		  asp.getASTParameter().getParameterType() == VT_ASSIGNMENT || 
-		  asp.getASTParameter().getParameterType() == VT_IF || 
-		  asp.getASTParameter().getParameterType() == VT_STATEMENTLIST || 
-		  asp.getASTParameter().getParameterType() == VT_CALL)
-		  return "integer";
-	  else
-		  return "string";
+	if (asp.getASTParameter().getParameterType() == VT_WHILE || 
+		asp.getASTParameter().getParameterType() == VT_ASSIGNMENT || 
+		asp.getASTParameter().getParameterType() == VT_IF || 
+		asp.getASTParameter().getParameterType() == VT_STATEMENTLIST || 
+		asp.getASTParameter().getParameterType() == VT_CALL)
+		return "integer";
+	else
+		return "string";
 
 }
 
 void QueryManager::updateRelationship(const string &variable, 	  const vector<string> &relationship) {		
-		listManager->updateList(variable, relationship);
+	listManager->updateList(variable, relationship);
 }
 
 void QueryManager::execute() { // multithreading 
@@ -83,7 +83,7 @@ vector<string> QueryManager::getValueList(string variableName)  {
 	// instead of just returning vector
 	if (astParamValue.hasNotInitialized()) {
 		astParamValue.initialize(pkbLibrary);
-	return astParamValue.getValueList();
+		return astParamValue.getValueList();
 	} else
 		return listManager->getValueListString(variableName);
 }
@@ -192,18 +192,39 @@ list<string> QueryManager::outputResult() {
 
 	list<string> returnList;
 	if (resultList.size() == 0 )  {
+		if (failed)
+			returnList.push_back("false");
+		else 
+			returnList.push_back("true");
+		return returnList;
+
+	} 
+	string variableName = resultList.begin()->first;
+
+	if (variableName.compare("BOOLEAN") == 0) { //HACK  {
 		if (failed){
 			returnList.push_back("false");
 		} else 
 			returnList.push_back("true");
-	} else {
-		string variableName = resultList.begin()->first;
-
-		convertVector(listManager->getValueListString(variableName), returnList);
-		
+		return returnList;
+	}  else if (failed) {
+		return returnList;
 	}
+
+	ASTParameterValue asp = getASTParameterValue(variableName); 
+	if (asp.hasNotInitialized()) 		
+		if (getVariableType(variableName).compare("string") == 0) {
+			convertVector(asp.getValueList(), returnList);
+		} else {
+			convertVector(asp.getValueListInteger (), returnList);
+		}
+	else
+		convertVector(listManager->getValueListString(variableName), returnList);
+
+
 	return returnList;
-}
+} // has re
+
 
 
 void QueryManager::convertVector(const vector<int> &from, list<string>& to) {

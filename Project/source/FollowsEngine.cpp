@@ -58,7 +58,7 @@ void FollowsEngine::run() {
 
 	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-		vector<int> &followerList = pkbManager->getFollows()->getFollowedBy((*iter), false);
+		vector<int> &followerList = pkbManager->getFollows()->getFollows((*iter), false);
 		exist = false;
 
 		for (iterFollowerList = followerList.begin(); iterFollowerList  != followerList.end(); iterFollowerList++) { // for each variable returned check against the variable list
@@ -68,31 +68,22 @@ void FollowsEngine::run() {
 					
 					if (keepRelationship)
 						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(*iter), CommonUtility::NumberToString(*iterSecond)));					
-					finalListTwo[*iterFollowerList] = 1;
-					break;
+					else if (astParam2->updateAble()) 
+						finalListTwo[*iterFollowerList] = 1;
+					else if (!astParam1->updateAble()) {
+						return; // both are not updatable. 
+					}
+					
+					break; // follow only returns a result. 
 				}
 			}
-			if (exist) 
+			if (exist && !keepRelationship && astParam1->updateAble()) 
 				finalListOne[*iter] = 1;
 			
 		}
 	}
 
-	
-	if (astParam1->updateAble()) {
-		vector<int> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
-		myQM->updateVectorInteger (astParam1->getVariableName(), finalList);
-
-	} 
-	
-	if (astParam2->updateAble()) { 
-		vector<int> finalList; 
-		CommonUtility::convertVector(finalListTwo, finalList);
-		myQM->updateVectorInteger(astParam2->getVariableName(), finalList);
 		
-	}
-
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
 	} else if (astParam1->updateAble()) {
@@ -105,7 +96,6 @@ void FollowsEngine::run() {
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
 	
-
-	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0);
+	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 }
 
