@@ -74,8 +74,10 @@ void ASTParameterValue::initialize(PKB *pkb) {
 		valueListInteger = pkb->getAST()->getStatementNumbers(ASTType::CALL); // get all statement number
 	} else if (parameter.getParameterType() == VT_VARIABLELIST) {
 		valueList = pkb->getVarTable()->getAllNames();
-	}
-	else {
+	} else if (parameter.getParameterType() == VARIABLETYPE::VT_STATEMENTLIST) {
+		valueListInteger = pkb->getAST()->getStatementNumbers(ASTType::ALL); // get all statement number
+	
+	}else {
 		throw new exception("Unable to load parameter type");
 	}
 
