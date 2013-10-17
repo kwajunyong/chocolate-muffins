@@ -122,9 +122,9 @@ ProcTable* TestUses::buildProcTable()
 {
 	ProcTable* procTable = new ProcTable();
 
-	procTable->addProcedure("Alpha");
-	procTable->addProcedure("Bravo");
-	procTable->addProcedure("Charlie");
+	procTable->addProcedure("Alpha", 1, 1);
+	procTable->addProcedure("Bravo", 2, 3);
+	procTable->addProcedure("Charlie", 4, 6);
 
 	return procTable;
 }

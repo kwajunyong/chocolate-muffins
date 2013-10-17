@@ -36,5 +36,6 @@ private:
 	ConstTable* constTable;
 	int numOfStmt;
 
+	ProcTable expectedProcTable();
 	std::vector<std::string> expectedAST();
 };

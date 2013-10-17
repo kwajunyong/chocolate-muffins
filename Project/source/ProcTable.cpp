@@ -6,12 +6,13 @@ ProcTable::ProcTable(void)
 ProcTable::~ProcTable(void)
 {}
 
-bool ProcTable::addProcedure(std::string procedure)
+bool ProcTable::addProcedure(std::string procedure, int fromStmtNum, int toStmtNum)
 {
 	bool success = false;
 
 	if (getIndex(procedure) < 0) {
-		_procTable.push_back(procedure);
+		_procNames.push_back(procedure);
+		_stmtRanges.push_back(std::make_pair(fromStmtNum, toStmtNum));
 
 		success = true;
 	}
@@ -21,8 +22,8 @@ bool ProcTable::addProcedure(std::string procedure)
 
 int ProcTable::getIndex(std::string procedure)
 {
-	for (size_t i=0; i<_procTable.size(); i++) {
-		if (procedure == _procTable[i]) {
+	for (size_t i=0; i<_procNames.size(); i++) {
+		if (procedure == _procNames[i]) {
 			return i;
 		}
 	}
@@ -32,19 +33,34 @@ int ProcTable::getIndex(std::string procedure)
 
 std::string ProcTable::getName(int index)
 {
-	if (index < 0 || index >= _procTable.size()) {
+	if (index < 0 || index >= _procNames.size()) {
 		throw std::out_of_range("Procedure index out of bound");
 	}
 
-	return _procTable[index];
+	return _procNames[index];
+}
+
+std::string ProcTable::getProcedure(int stmtNum)
+{
+	for (size_t i=0; i<_stmtRanges.size(); i++) {
+		if (inRange(stmtNum, _stmtRanges[i])) {
+			return _procNames[i];
+		}
+	}
+
+	throw std::out_of_range("Statement number out of bound");
 }
 
 std::vector<std::string> ProcTable::getAllNames()
 {
-	return _procTable;
+	return _procNames;
 }
 
 int ProcTable::getSize()
 {
-	return _procTable.size();
+	return _procNames.size();
+}
+
+bool ProcTable::inRange(int num, std::pair<int, int> range) {
+	return num >= range.first && num <= range.second;
 }

@@ -12,8 +12,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestProcTable);
 
 void TestProcTable::testAddProcedure()
 {
-	CPPUNIT_ASSERT_EQUAL(true, procTable.addProcedure("a"));
-	CPPUNIT_ASSERT_EQUAL(false, procTable.addProcedure("a"));
+	CPPUNIT_ASSERT_EQUAL(true, procTable.addProcedure("a", 1, 2));
+	CPPUNIT_ASSERT_EQUAL(false, procTable.addProcedure("a", 1, 2));
+	CPPUNIT_ASSERT_EQUAL(false, procTable.addProcedure("a", 3, 4));
 }
 
 void TestProcTable::testGetIndex()
@@ -41,6 +42,19 @@ void TestProcTable::testGetName()
 	CPPUNIT_ASSERT_THROW(procTable.getName(4), std::out_of_range);
 }
 
+void TestProcTable::testGetProcedure()
+{
+	generateProcedures();
+
+	CPPUNIT_ASSERT("Alpha" == procTable.getProcedure(1));
+	CPPUNIT_ASSERT("Bravo" == procTable.getProcedure(3));
+	CPPUNIT_ASSERT("Charlie" == procTable.getProcedure(5));
+	CPPUNIT_ASSERT("Delta" == procTable.getProcedure(9));
+	
+	CPPUNIT_ASSERT_THROW(procTable.getProcedure(0), std::out_of_range);
+	CPPUNIT_ASSERT_THROW(procTable.getProcedure(11), std::out_of_range);
+}
+
 void TestProcTable::testGetAllNames()
 {
 	generateProcedures();
@@ -61,8 +75,8 @@ void TestProcTable::testGetSize()
 
 void TestProcTable::generateProcedures()
 {
-	procTable.addProcedure("Alpha");
-	procTable.addProcedure("Bravo");
-	procTable.addProcedure("Charlie");
-	procTable.addProcedure("Delta");
+	procTable.addProcedure("Alpha", 1, 1);
+	procTable.addProcedure("Bravo", 2, 3);
+	procTable.addProcedure("Charlie", 4, 6);
+	procTable.addProcedure("Delta", 7, 10);
 }

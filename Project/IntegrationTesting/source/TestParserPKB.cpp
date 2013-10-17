@@ -7,7 +7,7 @@ void TestParserPKB::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("..\\source\\Simple\\Integration.txt");
+		pkb = parser.parse("Simple\\Integration.txt");
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
 	}
@@ -45,12 +45,13 @@ void TestParserPKB::testVarTable()
 
 void TestParserPKB::testProcTable()
 {
-	std::vector<std::string> expected;
+	ProcTable expected = expectedProcTable();
 
-	std::string temp[] = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth"};
-	expected.assign(temp, temp + 6);
+	CPPUNIT_ASSERT(expected.getAllNames() == procTable->getAllNames());
 
-	CPPUNIT_ASSERT(expected == procTable->getAllNames());
+	for (int i = 1; i <= numOfStmt; i++) {
+		CPPUNIT_ASSERT_EQUAL(expected.getProcedure(i), procTable->getProcedure(i));
+	}
 }
 
 void TestParserPKB::testConstTable()
@@ -66,6 +67,20 @@ void TestParserPKB::testConstTable()
 void TestParserPKB::testStmtNum()
 {
 	CPPUNIT_ASSERT_EQUAL(35, numOfStmt);
+}
+
+ProcTable TestParserPKB::expectedProcTable()
+{
+	ProcTable expected;
+
+	expected.addProcedure("First", 1, 6);
+	expected.addProcedure("Second", 7, 7);
+	expected.addProcedure("Third", 8, 11);
+	expected.addProcedure("Fourth", 12, 14);
+	expected.addProcedure("Fifth", 15, 20);
+	expected.addProcedure("Sixth", 21, 35);
+
+	return expected;
 }
 
 std::vector<std::string> TestParserPKB::expectedAST()

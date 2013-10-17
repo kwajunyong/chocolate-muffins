@@ -104,18 +104,24 @@ ASTNode* Parser::procedure()
 {
 	matchKeyword("procedure");
 
-	if (_procTable->addProcedure(_token) == false) {
+	if (_procTable->getIndex(_token) > -1) {
 		throw ParseException(_stmtNum, _token, "Duplicate procedure names");
 	}
 
-	ASTNode* procNode = new ASTNode(_token, PROCEDURE, 0);
+	std::string procedure = _token;
+
+	ASTNode* procNode = new ASTNode(procedure, PROCEDURE, 0);
 	matchName();
 
 	matchKeyword("{");
-	
+	int fromStmtNum = _stmtNum + 1;
+
 	ASTNode* stmtListNode = statementList();
 	
 	matchKeyword("}");
+	int toStmtNum = _stmtNum;
+
+	_procTable->addProcedure(procedure, fromStmtNum, toStmtNum);
 
 	procNode->joinChild(stmtListNode);
 

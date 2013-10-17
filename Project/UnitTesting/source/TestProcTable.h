@@ -23,6 +23,7 @@ public:
 	void testAddProcedure();
 	void testGetIndex();
 	void testGetName();
+	void testGetProcedure();
 	void testGetAllNames();
 	void testGetSize();
 
