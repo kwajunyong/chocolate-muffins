@@ -7,7 +7,7 @@ void TestParserPKB::setUp()
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("Simple\\Integration.txt");
+		pkb = parser.parse("..\\source\\Simple\\Integration.txt");
 	} catch (ParseException pe) {
 		std::cout <<pe.what() << endl;
 	}

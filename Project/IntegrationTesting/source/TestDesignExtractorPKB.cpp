@@ -501,8 +501,8 @@ Next TestDesignExtractorPKB::expectedNext()
 	expected.addNext(8, 10);
 	expected.addNext(9, 11);
 	expected.addNext(10, 11);
-	expected.addNext(12, 14);
 	expected.addNext(12, 13);
+	expected.addNext(12, 14);
 	expected.addNext(13, 12);
 	expected.addNext(15, 16);
 	expected.addNext(16, 17);
