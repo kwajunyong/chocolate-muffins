@@ -7,6 +7,10 @@ Next::Next(void) {}
 Next::~Next(void) {}
 
 vector<int> visited;
+vector<int> path;
+vector<vector<int>> paths;
+bool same;
+bool startBigger;
 
 bool Next::addNext(int stmtNum1, int stmtNum2)
 {
@@ -178,6 +182,111 @@ vector<int> Next::computePrevious(int stmtNum)
 	return answers;
 }
 
+vector<vector<int>> Next::getPaths(int start, int end)
+{
+	init();
+	if(start == end)
+		same = true;
+	if(start > end)
+		startBigger = true;
+	DFS(start, end);
+	/*for(int i = 0; i < paths.size(); i++)
+	{
+		for(int j = 0; j < paths[i].size(); j++)
+		{
+			cout << "Path " << i << "is " << paths[i][j] << endl;
+		}
+	}*/
+	return paths;
+}
+
+void Next::init()
+{
+	visited.clear();
+	path.clear();
+	paths.clear();
+	reachedEnd = false;
+	same = false;
+	startBigger = false;
+}
+
+void Next::DFS(int stmtNum, int end)
+{
+	if(same && visited.size() == 0)
+	{
+		visited.push_back(-1);
+	}
+	else
+	{
+		visited.push_back(stmtNum);
+	}
+	
+	for(int i = 0; i < next[stmtNum].size(); i++)
+	{
+		int v = next[stmtNum][i];
+		if(v > end)
+		{
+			if(!same)
+			{
+				if(!startBigger)
+				{
+					if(path.size() > 0)
+					{
+						path.pop_back();
+					}
+					break;
+				}
+			}
+		}
+		if(find(visited.begin(), visited.end(), v) == visited.end()) // v not visited yet
+		{
+			path.push_back(v);
+			//cout << v << endl;
+			if(v == end)
+			{
+				reachedEnd = true;
+				path.pop_back();
+				paths.push_back(path);
+				//path.clear();
+				break;
+			}
+			DFS(v, end);
+
+			if(reachedEnd)
+			{
+				visited.pop_back();
+				//added here
+				if(path.size() > 0)
+					path.pop_back();
+			}
+			else// here
+			{
+				//if(visited.back() != v)
+				if(path.size() > 0 && path.back() == v)
+						path.pop_back();
+			}
+		}
+		else
+		{
+			if(!reachedEnd)
+			{
+				if(next[v].size() > 1)
+				{
+					/*path.push_back(v);
+					int x = next[v][1];
+					path.push_back(x);
+					DFS(x, end);*/
+					paths.push_back(path);
+				}
+				else
+				{
+					path.pop_back();
+				}
+			}
+		}// here
+	}
+}
+
 //int main()
 //{
 //	Next n;
@@ -196,23 +305,25 @@ vector<int> Next::computePrevious(int stmtNum)
 //	n.addNext(10, 11);
 //	n.addNext(11, 12);
 //
-//	//if(n.isNext(1, 12, true))
-//	//{
-//	//	cout << "true" << endl;
-//	//}
-//	//else
-//	//{
-//	//	cout << "false" << endl;
-//	//}
+//	n.getPaths(3,12);
 //
-//	//vector<int> querys = n.getNext(3, true); //Select n such that Next*(1,n)
-//	vector<int> querys = n.getPrevious(8, true);
+//	/*if(n.isNext(3, 3, true))
+//	{
+//		cout << "true" << endl;
+//	}
+//	else
+//	{
+//		cout << "false" << endl;
+//	}*/
 //
-//	for(int i = 0; i < querys.size(); i++)
+//	//vector<int> querys = n.getNext(4, true); //Select n such that Next*(1,n)
+//	//vector<int> querys = n.getPrevious(3, true);
+//
+//	/*for(int i = 0; i < querys.size(); i++)
 //	{
 //		int x = querys[i];
 //		cout << x << endl;
-//	}
+//	}*/
 //
 //	system("Pause");
 //	return 0;
