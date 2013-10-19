@@ -26,6 +26,9 @@ public:
 
 	bool isAffects(int assignment1, int assignment2);
 
+	vector<int> getAffects(int assignment);
+	vector<int> getAffected(int assignment);
+
 private:
 	PKB* pkb;
 	AST* ast;
