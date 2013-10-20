@@ -93,6 +93,37 @@ bool Affects::isAffects(int assignment1, int assignment2)
 	return false;
 }
 
+bool Affects::isAffectsStar(int assignment1, int assignment2)
+{
+	visited.clear();
+	return compute(assignment1, assignment2);
+}
+
+bool Affects::compute(int assignment1, int assignment2)
+{
+	vector<int> querys = getAffects(assignment1);
+	bool check = false;
+
+	if(assignment1 != assignment2)
+		visited.push_back(assignment1);
+
+	for(int i = 0; i < querys.size(); i++)
+	{
+		if(querys[i] == assignment2)
+			return true;
+		else
+		{
+			if(find(visited.begin(), visited.end(), querys[i]) == visited.end())
+			{
+				check = compute(querys[i], assignment2);
+				if(check)
+					break;
+			}
+		}
+	}
+	return check;
+}
+
 //bool Affects::compute(int start, int end, string var)
 //{
 //	visited.push_back(start);
@@ -227,6 +258,84 @@ vector<int> Affects::getAffected(int assignment)
 	return results;
 }
 
+vector<int> Affects::getAffectsStar(int assignment)
+{
+	visited.clear();
+	return computeAffects(assignment);
+}
+
+vector<int> Affects::computeAffects(int assignment)
+{
+	vector<int> answers;
+	vector<vector<int>> temp;
+
+	answers = getAffects(assignment);
+
+	if(find(visited.begin(), visited.end(), assignment) == visited.end())
+	{
+		visited.push_back(assignment);
+
+		for(int i = 0; i < answers.size(); i++)
+		{
+			if(answers.size() > 0)
+			{
+				temp.push_back(computeAffects(answers[i]));
+			}
+		}
+
+		for(int i = 0; i < temp.size(); i++)
+		{
+			for(int j = 0; j < temp[i].size(); j++)
+			{
+				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				{
+					answers.push_back(temp[i][j]);
+				}
+			}
+		}
+	}
+	return answers;
+}
+
+vector<int> Affects::getAffectedStar(int assignment)
+{
+	visited.clear();
+	return computeAffected(assignment);
+}
+
+vector<int> Affects::computeAffected(int assignment)
+{
+	vector<int> answers;
+	vector<vector<int>> temp;
+
+	answers = getAffected(assignment);
+
+	if(find(visited.begin(), visited.end(), assignment) == visited.end())
+	{
+		visited.push_back(assignment);
+
+		for(int i = 0; i < answers.size(); i++)
+		{
+			if(answers.size() > 0)
+			{
+				temp.push_back(computeAffected(answers[i]));
+			}
+		}
+
+		for(int i = 0; i < temp.size(); i++)
+		{
+			for(int j = 0; j < temp[i].size(); j++)
+			{
+				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				{
+					answers.push_back(temp[i][j]);
+				}
+			}
+		}
+	}
+	return answers;
+}
+
 //int main()
 //{
 //	Parser p;
@@ -235,8 +344,8 @@ vector<int> Affects::getAffected(int assignment)
 //
 //	try
 //	{
-//		//pkb = p.parse("CS3201Assignment1Source.txt");
-//		pkb = p.parse("Test.txt");
+//		pkb = p.parse("CS3201Assignment1Source.txt");
+//		//pkb = p.parse("Test.txt");
 //		//pkb = p.parse("Integration.txt");
 //		d.extract(pkb);
 //	} catch (ParseException pe) {
@@ -363,8 +472,56 @@ vector<int> Affects::getAffected(int assignment)
 //	//	cout << "Affects(9,11) = false" << endl;
 //	/*End of Test.txt */
 //
-//	vector<int> querys = a.getAffects(4);
+//	//vector<int> querys = a.getAffects(4);
 //	//vector<int> querys = a.getAffected(15);
+//
+//	/*for(int i = 0; i < querys.size(); i++)
+//	{
+//		cout << querys[i] << endl;
+//	}*/
+//
+//	// Affects*
+//	// Start of CS3102Assignment1Query.txt
+//	// Should return true
+//	if(a.isAffectsStar(1, 2))
+//		cout << "Affects*(1,2) = true" << endl;
+//	else
+//		cout << "Affects*(1,2) = false" << endl;
+//
+//	if(a.isAffectsStar(1, 3))
+//		cout << "Affects*(1,3) = true" << endl;
+//	else
+//		cout << "Affects*(1,3) = false" << endl;
+//
+//	if(a.isAffectsStar(1, 5))
+//		cout << "Affects*(1,5) = true" << endl;
+//	else
+//		cout << "Affects*(1,5) = false" << endl;
+//
+//	if(a.isAffectsStar(11, 11))
+//		cout << "Affects*(11,11) = true" << endl;
+//	else
+//		cout << "Affects*(11,11) = false" << endl;
+//
+//	if(a.isAffectsStar(11, 13))
+//		cout << "Affects*(11,13) = true" << endl;
+//	else
+//		cout << "Affects*(11,13) = false" << endl;
+//
+//	if(a.isAffectsStar(21, 22))
+//		cout << "Affects*(21,22) = true" << endl;
+//	else
+//		cout << "Affects*(21,22) = false" << endl;
+//
+//	// Should return false
+//	if(a.isAffectsStar(1, 7))
+//		cout << "Affects*(1,7) = true" << endl;
+//	else
+//		cout << "Affects*(1,7) = false" << endl;
+//	// End of CS3201AssignmentQuery.txt
+//
+//	//vector<int> querys = a.getAffectsStar(28);
+//	vector<int> querys = a.getAffectedStar(28);
 //
 //	for(int i = 0; i < querys.size(); i++)
 //	{

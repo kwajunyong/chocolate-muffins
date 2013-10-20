@@ -25,9 +25,13 @@ public:
 	~Affects(void);
 
 	bool isAffects(int assignment1, int assignment2);
+	bool isAffectsStar(int assignment1, int assignment2);
 
 	vector<int> getAffects(int assignment);
 	vector<int> getAffected(int assignment);
+
+	vector<int> getAffectsStar(int assignment);
+	vector<int> getAffectedStar(int assignment);
 
 private:
 	PKB* pkb;
@@ -43,5 +47,9 @@ private:
 	vector<int> visited;
 
 	bool checkElse;
-	bool compute(int start, int end, string var);
+	//bool compute(int start, int end, string var);
+	bool compute(int assignment1, int assignment2);
+
+	vector<int> computeAffects(int assignment);
+	vector<int> computeAffected(int assignment);
 }
