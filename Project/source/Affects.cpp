@@ -1,16 +1,15 @@
 #include "Affects.h"
 
-;using namespace std;
+using namespace std;
 
-Affects::Affects(PKB* p)
+Affects::Affects(AST* ast, Modifies* modifies, Uses* uses, Next* next, ProcTable* procTable, int stmtNum)
 {
-	pkb = p;
-	ast = pkb->getAST();
-	modifies = pkb->getModifies();
-	uses = pkb->getUses();
-	next = pkb->getNext();
-	procTable = pkb->getProcTable();
-	checkElse = false;
+	this->ast = ast;
+	this->modifies = modifies;
+	this->uses = uses;
+	this->next = next;
+	this->procTable = procTable;
+	numOfStmt = stmtNum;
 }
 
 Affects::~Affects(void) {}
@@ -223,7 +222,7 @@ bool Affects::compute(int assignment1, int assignment2)
 vector<int> Affects::getAffects(int assignment)
 {
 	vector<int> results;
-	int end = pkb->getNumOfStmt();
+	int end = numOfStmt;
 
 	vector<string> variables = modifies->getModifiedVar(assignment);
 	string var = variables[0];
@@ -242,7 +241,7 @@ vector<int> Affects::getAffected(int assignment)
 {
 	vector<int> results;
 
-	int end = pkb->getNumOfStmt();
+	int end = numOfStmt;
 
 	vector<string> variables = modifies->getModifiedVar(assignment);
 	string var = variables[0];
@@ -341,6 +340,12 @@ vector<int> Affects::computeAffected(int assignment)
 //	Parser p;
 //	DesignExtractor d;
 //	PKB* pkb;
+//	AST* ast;
+//	Modifies* modifies;
+//	Uses* uses;
+//	Next* next;
+//	ProcTable* procTable;
+//	int numOfStmt = 0;
 //
 //	try
 //	{
@@ -354,7 +359,7 @@ vector<int> Affects::computeAffected(int assignment)
 //		return 0;
 //	}
 //
-//	Affects a(pkb);
+//	Affects a(ast, modifies, uses, next, procTable, numOfStmt);
 //
 //	/* Start CS3201Assignment1Source.txt */
 //	// Should return true
@@ -472,7 +477,7 @@ vector<int> Affects::computeAffected(int assignment)
 //	//	cout << "Affects(9,11) = false" << endl;
 //	/*End of Test.txt */
 //
-//	//vector<int> querys = a.getAffects(4);
+//	//vector<int> querys = a.getAffects(22);
 //	//vector<int> querys = a.getAffected(15);
 //
 //	/*for(int i = 0; i < querys.size(); i++)
@@ -520,7 +525,7 @@ vector<int> Affects::computeAffected(int assignment)
 //		cout << "Affects*(1,7) = false" << endl;
 //	// End of CS3201AssignmentQuery.txt
 //
-//	//vector<int> querys = a.getAffectsStar(28);
+//	//vector<int> querys = a.getAffectsStar(22);
 //	vector<int> querys = a.getAffectedStar(28);
 //
 //	for(int i = 0; i < querys.size(); i++)
