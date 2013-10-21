@@ -457,22 +457,21 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 		replaceSubstring(firstPara, "\"", "");
 		replaceSubstring(secondPara, "\"", "");
 
-		QueryClass *qc;
 
 		if (strcmpi(entityType.c_str(), "queryAssignment") == 0){
 			vector<string> splitResult;
 
-			qc = new BinaryRelationEngine(queryManager, pkb);
+			BinaryRelationEngine *BRE = new BinaryRelationEngine(queryManager, pkb);
 
 			if (firstPara.find(".") != string::npos){
 				splitResult = split(firstPara, '.');
 				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
-				qc -> addParam(header, getVariableType(getRawVariableType(header)), extension);
+				BRE -> addParam(header, getVariableType(getRawVariableType(header)), extension);
 			}else{
 				//cout << "without . : " << firstPara << " - " << firstParaRawType << endl;
-				qc -> addParam(firstPara, getVariableType(firstParaRawType));
+				BRE -> addParam(firstPara, getVariableType(firstParaRawType));
 			}
 
 			if (secondPara.find(".") != string::npos){
@@ -480,12 +479,16 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
-				qc -> addParam(header, getVariableType(getRawVariableType(header)), extension);
+				BRE -> addParam(header, getVariableType(getRawVariableType(header)), extension);
 			}else{
 				//cout << "without . : " << secondPara << " - " << secondParaRawType << endl;
-				qc -> addParam(secondPara, getVariableType(secondParaRawType));
+				BRE -> addParam(secondPara, getVariableType(secondParaRawType));
 			}
+
+			queryManager -> addQueryClass(BRE);
 		}else{//all non-extended clauses
+			QueryClass *qc;
+
 			if (strcmpi(entityType.c_str(), "Modifies") == 0){
 				qc = new ModifiesEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Uses") == 0){
@@ -522,8 +525,9 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 
 			qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			qc -> addParam(secondPara, getVariableType(secondParaRawType));
+
+			queryManager -> addQueryClass(qc);
 		}
-		queryManager -> addQueryClass(qc);
 	}
 
 	return true;
