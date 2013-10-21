@@ -14,6 +14,7 @@
 #include "FollowsEngine.h"
 #include "FollowsStarEngine.h"
 #include "NextEngine.h"
+#include "NextStarEngine.h"
 #include "ParentEngine.h"
 #include "ParentStarEngine.h"
 #include "UsesEngine.h"
@@ -21,6 +22,11 @@
 #include "BinaryRelationEngine.h"
 #include "IfPattern.h"
 #include "WhilePattern.h"
+#include "CallEngine.h"
+#include "CallStarEngine.h"
+#include "AffectEngine.h"
+#include "AffectStarEngine.h"
+
 
 //testing
 #include "Parser.h"

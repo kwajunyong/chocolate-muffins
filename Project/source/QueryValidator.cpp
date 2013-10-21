@@ -466,32 +466,39 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 
 			if (firstPara.find(".") != string::npos){
 				splitResult = split(firstPara, '.');
-				cout << splitResult[0] << ": " << splitResult[1] << endl;
+				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
 				qc -> addParam(header, getVariableType(getRawVariableType(header)), extension);
 			}else{
+				//cout << "without . : " << firstPara << " - " << firstParaRawType << endl;
 				qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			}
 
+			queryManager -> addQueryClass(qc);
+
 			if (secondPara.find(".") != string::npos){
 				splitResult = split(secondPara, '.');
-				cout << splitResult[0] << ": " << splitResult[1] << endl;
+				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
 				qc -> addParam(header, getVariableType(getRawVariableType(header)), extension);
 			}else{
+				//cout << "without . : " << secondPara << " - " << secondParaRawType << endl;
 				qc -> addParam(secondPara, getVariableType(secondParaRawType));
 			}
+
+			queryManager -> addQueryClass(qc);
 		}else{//all non-extended clauses
 			if (strcmpi(entityType.c_str(), "Modifies") == 0){
 				qc = new ModifiesEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Uses") == 0){
 				qc = new UsesEngine(queryManager, pkb);		
 			}else if (strcmpi(entityType.c_str(), "Calls") == 0){
-				//QueryClass qc(QT_CALLS, queryManager, pkb);		
+				//QueryClass qc(QT_CALLS, queryManager, pkb);
+				qc = new CallEngine(queryManager, pkb);	
 			}else if (strcmpi(entityType.c_str(), "Calls*") == 0){
-				
+				qc = new CallStarEngine(queryManager, pkb);					
 			}else if (strcmpi(entityType.c_str(), "Parent") == 0){
 				qc = new ParentEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Parent*") == 0){
@@ -503,11 +510,11 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 			}else if (strcmpi(entityType.c_str(), "Next") == 0){	
 				qc = new NextEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Next*") == 0){
-				
+				qc = new NextStarEngine(queryManager, pkb);
 			}else if (strcmpi(entityType.c_str(), "Affects") == 0){
-				//QueryClass qc(QT_AFFECT, queryManager, pkb);		
+				qc = new AffectEngine(queryManager, pkb);		
 			}else{ //"Affects*"
-				
+				qc = new AffectStarEngine(queryManager, pkb);
 			}
 
 			/*cout << "first para: " << firstPara << endl;
@@ -519,9 +526,8 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 
 			qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			qc -> addParam(secondPara, getVariableType(secondParaRawType));
+			queryManager -> addQueryClass(qc);
 		}
-		
-		queryManager -> addQueryClass(qc);
 	}
 
 	return true;
@@ -867,7 +873,8 @@ int main(){
 	string input;
 	//input = "stmt s; \n Select s such that Parent(s, 3) ";
 	//input = "assign a, a1;Select a such that Follows(a, a1)";
-	input = "assign a;Select a pattern a(\"z\",_)";
+	//input = "assign a;Select a pattern a(\"z\",_)";
+	input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
