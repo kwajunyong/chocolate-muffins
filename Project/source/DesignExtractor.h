@@ -30,6 +30,7 @@ private:
 
 	Calls* _calls;
 	Next* _next;
+	Affects* _affects;
 
 	int _numOfStmt;
 	//Stats* _stats;
@@ -40,6 +41,7 @@ private:
 
 	void updateStatements(ASTNode* node, std::vector<int> &statements);
 	void updateProcedure(ASTNode* node, std::string &procedure);
+	void updateLevel(ASTNode* node, int &level);
 
 	void extractStatementNodes(ASTNode* node);
 
@@ -54,7 +56,7 @@ private:
 
 	void extractNext(ASTNode* node);
 
-	//void extractStats(ASTNode* node);
+	//void extractStats(ASTNode* node, std::vector<int> statements, std::string procedure);
 
 	void traverseCalls();
 	void traverseCalls(std::string procedure, std::vector<int> &visited, std::vector<std::pair<std::string, std::string>> &calls);

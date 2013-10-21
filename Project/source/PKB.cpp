@@ -19,8 +19,10 @@ PKB::PKB(void)
 	
 	_calls = NULL;
 	_next = NULL;
+	_affects = NULL;
 
 	_numOfStmt = 0;
+	//_stats = NULL;
 }
 
 PKB::~PKB(void)
@@ -141,6 +143,16 @@ void PKB::setNext(Next* next)
 	_next = next;
 }
 
+Affects* PKB::getAffects()
+{
+	return _affects;
+}
+
+void PKB::setAffects(Affects* affects)
+{
+	_affects = affects;
+}
+
 int PKB::getNumOfStmt()
 {
 	return _numOfStmt;
@@ -150,3 +162,13 @@ void PKB::setNumOfStmt(int numOfStmt)
 {
 	_numOfStmt = numOfStmt;
 }
+
+//Stats* PKB::getStats()
+//{
+//	return _stats;
+//}
+//
+//void PKB::setStats(Stats* stats)
+//{
+//	_stats = stats;
+//}

@@ -13,6 +13,8 @@
 #include "Uses.h"
 #include "Calls.h"
 #include "Next.h"
+#include "Affects.h"
+//#include "Stats.h"
 
 class PKB
 {
@@ -54,8 +56,15 @@ public:
 	Next* getNext();
 	void setNext(Next* next);
 
+	Affects* getAffects();
+	void setAffects(Affects* affects);
+
 	int getNumOfStmt();
 	void setNumOfStmt(int numOfStmt);
+
+	//Stats* getStats();
+	//void setStats(Stats* stats);
+
 private:
 	AST* _ast;
 	ASTTraverser* _traverser;
@@ -75,5 +84,9 @@ private:
 	Calls* _calls;
 	Next* _next;
 
+	Affects* _affects;
+
 	int _numOfStmt;
+
+	//Stats* _stats;
 };
