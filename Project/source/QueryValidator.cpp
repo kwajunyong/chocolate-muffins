@@ -475,8 +475,6 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			}
 
-			queryManager -> addQueryClass(qc);
-
 			if (secondPara.find(".") != string::npos){
 				splitResult = split(secondPara, '.');
 				//cout << splitResult[0] << ": " << splitResult[1] << endl;
@@ -487,8 +485,6 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				//cout << "without . : " << secondPara << " - " << secondParaRawType << endl;
 				qc -> addParam(secondPara, getVariableType(secondParaRawType));
 			}
-
-			queryManager -> addQueryClass(qc);
 		}else{//all non-extended clauses
 			if (strcmpi(entityType.c_str(), "Modifies") == 0){
 				qc = new ModifiesEngine(queryManager, pkb);
@@ -526,8 +522,8 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 
 			qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			qc -> addParam(secondPara, getVariableType(secondParaRawType));
-			queryManager -> addQueryClass(qc);
 		}
+		queryManager -> addQueryClass(qc);
 	}
 
 	return true;
