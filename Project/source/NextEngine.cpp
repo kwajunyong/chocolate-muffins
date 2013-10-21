@@ -7,48 +7,50 @@ NextEngine::NextEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm,
 }
 void NextEngine::run() {
 	
+
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
 
-	vector<int> second;
-	vector<int> first;
+	FastSearchInteger second;
+	FastSearchInteger first;
 
 	// there is no need to check if both is underscore
 	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
 		/*if (pkbManager->getFollows()->IsThereFollow) 
-			failed = false;
+		failed = false;
 		else
-			failed true;*/
+		failed true;*/
 
 		return;
 	}
-	
+
+
 
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
-		first.push_back(atoi(astParam2->getVariableName().c_str()));
+		first[atoi(astParam1->getVariableName().c_str())] = true;
 	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
-		first = myQM->getAllStatementList();
+		CommonUtility::convertToMap(myQM->getAllStatementList(), first);
 	}else{
-		first = myQM->getValueListInteger(astParam1->getVariableName());
+		first = myQM->getValueListIntegerMap(astParam1->getVariableName());
 	}
 
-	
+
 	if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
-		second.push_back(atoi(astParam2->getVariableName().c_str()));
+		second[atoi(astParam2->getVariableName().c_str())] = true;
 	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
-		second = myQM->getAllStatementList();
+		CommonUtility::convertToMap(myQM->getAllStatementList(), second);
 	}	else {
-		second = myQM->getValueListInteger(astParam2->getVariableName());
+		second = myQM->getValueListIntegerMap(astParam2->getVariableName());
 	}
 
 
-	map<int, int> finalListOne;
-	map<int, int> finalListTwo; 
+	FastSearchString finalListOne;
+	FastSearchString finalListTwo; 
 
-	vector<int>::const_iterator iter;
-	vector<int>::const_iterator iterNextList;
-	vector<int>::const_iterator iterSecond;
+	FastSearchInteger::iterator iter;
+	vector<int>::const_iterator iterParentList;
+	FastSearchInteger::iterator iterSecond;
 
 	bool exist;
 	bool keepRelationship = astParam1->updateAble() && astParam2->updateAble() ;
@@ -57,27 +59,30 @@ void NextEngine::run() {
 
 	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-		vector<int> &followerList = pkbManager->getNext()->getNext((*iter), false);
+		vector<int> &childList = pkbManager->getNext()->getNext(iter->first, false);
 		exist = false;
 
-		for (iterNextList = followerList.begin(); iterNextList  != followerList.end(); iterNextList++) { // for each variable returned check against the variable list
-			for (iterSecond = second.begin(); iterSecond  != second.end(); iterSecond++) {
-				if (*iterNextList == *iterSecond) {
-					exist = true;
-					
-					if (keepRelationship)
-						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(*iter), CommonUtility::NumberToString(*iterSecond)));					
-					finalListTwo[*iterNextList] = 1;
-				}
+		for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+			iterSecond = second.find(*iterParentList);
+
+			if (iterSecond != second.end()) {
+				exist = true;
+
+				if (keepRelationship)
+					resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
+				else if (astParam2->updateAble()) 
+					finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
+				else if (!astParam1->updateAble()) {
+					return; // both are not updatable. 
+				}								
 			}
-			if (exist) 
-				finalListOne[*iter] = 1;
-			
 		}
+		if (exist && !keepRelationship && astParam1->updateAble()) 
+			finalListOne[CommonUtility::NumberToString(iter->first)] = true;
+
+
 	}
 
-	
-	
 
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
@@ -90,12 +95,7 @@ void NextEngine::run() {
 		CommonUtility::convertVector(finalListTwo, finalList);
 		myQM->updateRelationship(astParam2->getVariableName(), finalList);
 	}
-	
 
-	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0);
+	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
+
 }
-
-
-
-
-
