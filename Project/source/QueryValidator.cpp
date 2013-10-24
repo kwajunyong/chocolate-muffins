@@ -739,14 +739,24 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 bool QueryValidator::processSelectStmt(string selectStmt){
 	vector<string> tokens = split(selectStmt, ' ');
 	vector<string> queryList, patternList;
-	string returnResult = tokens[1];
 	bool suchClauseDetected = false;
 	bool connectClauseDetected = false;
 	bool patternClauseDetected = false;
 
-	//cout << "processSelectStmt:: " << selectStmt << endl;
+	string returnResult = tokens[1];
 
-	queryManager -> addResultExpression(returnResult);
+	cout << "processSelectStmt:: " << selectStmt << endl;
+	cout << "processSelectStmt:: before return results -> " << returnResult << endl;
+
+	replaceSubstring(returnResult, "<", "");
+	replaceSubstring(returnResult, ">", "");
+	cout << "processSelectStmt:: after return results -> " << returnResult << endl;
+	vector<string> returnResults = split(returnResult, ',');
+	
+	for (vector<string>::size_type counter = 0; counter < returnResults.size(); counter++){
+		cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
+		queryManager -> addResultExpression(returnResults[counter]);
+	}
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
 		//cout << tokens[counter] << endl;
@@ -849,14 +859,14 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main(){
+int main1(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
 
 	try {
-		//pkb = parser.parse("ComboTest2.txt");
-		pkb = parser.parse("Test.txt");
+		pkb = parser.parse("ComboTest2.txt");
+		//pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -874,7 +884,9 @@ int main(){
 	//input = "stmt s; \n Select s such that Parent(s, 3) ";
 	//input = "assign a, a1;Select a such that Follows(a, a1)";
 	//input = "assign a;Select a pattern a(\"z\",_)";
-	input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
+	//input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
+	//input = "Select BOOLEAN such that Calls*(\"eight\", \"Six\")";
+	input = "procedure p, q; Select <q, p> such that Calls(p, q)";
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
