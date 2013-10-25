@@ -74,7 +74,9 @@ void ParentStarEngine::run() {
 					finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
 				else if (!astParam1->updateAble()) {
 					return; // both are not updatable. 
-				}								
+				} else {
+					break;
+				}
 			}
 		}
 		if (exist && !keepRelationship && astParam1->updateAble()) 

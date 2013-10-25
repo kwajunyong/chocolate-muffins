@@ -14,7 +14,10 @@ string QueryManager::getVariableType(const string &variableName) {
 		asp.getASTParameter().getParameterType() == VT_ASSIGNMENT || 
 		asp.getASTParameter().getParameterType() == VT_IF || 
 		asp.getASTParameter().getParameterType() == VT_STATEMENTLIST || 
-		asp.getASTParameter().getParameterType() == VT_CALL)
+		asp.getASTParameter().getParameterType() == VT_CALL||
+		asp.getASTParameter().getParameterType() == VT_PROG_LINE ||
+		asp.getASTParameter().getParameterType() == VT_CONSTANT 
+		)
 		return "integer";
 	else
 		return "string";
@@ -219,9 +222,9 @@ list<string> QueryManager::outputResult() {
 		asp.initialize(pkbLibrary);
 		if (getVariableType(variableName).compare("string") == 0) {
 			convertVector(asp.getValueList(), returnList);
-		} else {
+		} else 
 			convertVector(asp.getValueListInteger (), returnList);
-		}
+		
 	}
 	else
 		convertVector(listManager->getValueListString(variableName), returnList);

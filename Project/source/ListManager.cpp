@@ -6,22 +6,96 @@ ListManager::ListManager(QueryManager *qm) {
 	parent = qm;
 }
 
+void ListManager::prepareResultList(list<string> &resultList, vector<string> &variableResultList) {
+
+	map<int, vector<int>> variableGroup;
+
+	vector<string>::iterator iterVariable;
+
+	map<int, vector<int>>::iterator iterMap;
+	vector<string> leftOver;
+
+	int first, second; 
+	// find the location;
+	for (iterVariable = variableResultList.begin(); iterVariable != variableResultList.end(); iterVariable++) {
+		findVariable(*iterVariable, first, second);
+
+		if (first == -1)  {
+			leftOver.push_back(*iterVariable);
+			continue;
+		}
+
+		iterMap = variableGroup.find(first);
+		if (iterMap != variableGroup.end()) {
+			iterMap->second.push_back(second);
+		} else {
+			vector<int> newVector;
+			newVector.push_back(second);
+			variableGroup[first] = newVector;
+		}	
+	}  
+
+	// pickup the good 
+	map<int, map<string, bool>> resultGroupList;
+	map<int, map<string, bool>>::iterator iterResult;
+	vector<int>::iterator iterVarIndex;
+	map<string, bool> *tempMap;
+
+	vector<list<string>*>* tempResultList;
+	vector<list<string>*>::iterator iterTempResultList;
+
+	list<string>::iterator iterLastList;
+	for (iterMap = variableGroup.begin(); iterMap != variableGroup.end(); iterMap++) {
+		iterResult = resultGroupList.find(iterMap->first);
+
+		// prepare the slot
+		if (iterResult != resultGroupList.end()) {
+			tempMap = &iterResult->second;
+		} else {
+			map<string, bool> newMap;
+			resultGroupList[iterMap->first] = newMap;
+			tempMap = &resultGroupList[iterMap->first];
+		}
+
+		// get from the variable
+
+		tempResultList = mainList.at(iterMap->first);
+		for (iterTempResultList = tempResultList->begin(); iterTempResultList != tempResultList->end(); iterTempResultList++) {
+			string temp;
+			
+			for (iterVarIndex = iterMap->second.begin(); iterVarIndex!= iterMap->second.end(); iterVarIndex++) {			
+				iterLastList = (*iterTempResultList)->begin();
+				advance(iterLastList, *iterVarIndex);
+				temp.append(*iterLastList);
+				temp.push_back(' ');
+			}
+			tempMap->insert(pair<string, bool>(temp, true));
+		}
+	}
+
+	// package done
+
+	// format result
+
+
+}
+
 void ListManager::clear() {
-		
-   
-   vector<vector<list<string>*>*>::iterator mainListIter;
-   vector<list<string>*>::iterator mainListVectorIter;
-   for (mainListIter = mainList.begin(); mainListIter != mainList.end(); mainListIter++) {
 
-	   for (mainListVectorIter = (*mainListIter)->begin(); mainListVectorIter != (*mainListIter)->end(); mainListVectorIter++) {
-		   delete (*mainListVectorIter);
-	   }
 
-	   delete (*mainListIter);
-   }
-   mainList.clear();
-   
-   variableList.clear();
+	vector<vector<list<string>*>*>::iterator mainListIter;
+	vector<list<string>*>::iterator mainListVectorIter;
+	for (mainListIter = mainList.begin(); mainListIter != mainList.end(); mainListIter++) {
+
+		for (mainListVectorIter = (*mainListIter)->begin(); mainListVectorIter != (*mainListIter)->end(); mainListVectorIter++) {
+			delete (*mainListVectorIter);
+		}
+
+		delete (*mainListIter);
+	}
+	mainList.clear();
+
+	variableList.clear();
 
 }
 
@@ -449,12 +523,12 @@ void ListManager::createANewList(const string &variableName1, const string &vari
 // DELETE LIST ASSUME THE listValue IS SORTED!!!!
 
 void ListManager::deleteList(vector<list<string>*>* valueList, const vector<string> &listValue, bool keepList, int index ) {
-	
+
 	vector<list<string>*> newList;// temporary list;
 	vector<list<string>*>::iterator iter;
 	vector<string>::const_iterator iterFound;
 	string value;
-	
+
 	if (keepList) { // the list value contains the value we want to keep. 
 		vector<string>::const_iterator iterListValue;
 		iter = valueList->begin();
@@ -464,15 +538,15 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 			iterFound = CommonUtility::binaryLookup(listValue, value);
 
 			if (iterFound == listValue.end()) {
-				                                              				
-        		delete (*iter);
+
+				delete (*iter);
 				iter =valueList->erase(iter);							
 			} else {
 				iter++;
 			}
 		}
 
-		
+
 	}
 }
 

@@ -15,7 +15,7 @@ public:
 
 	QueryClass(QUERYTYPE queryType, QueryManager* qm, PKB *pkb);
 	void addParam(const string &parameterName, VARIABLETYPE parameterType);
-	void addParam(const string &parameterName, VARIABLETYPE parameterType, const string &attribute);
+	virtual void addParam(const string &parameterName, VARIABLETYPE parameterType, const string &attribute);
 
 	bool keepRelationship();
 

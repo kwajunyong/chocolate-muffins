@@ -23,7 +23,7 @@ public:
 	void addParam(const string &parameterName, VARIABLETYPE parameterType, const string &attribute);
 	void addParam(const string &parameterName, VARIABLETYPE parameterType);
 	void run();
-
+	void handleCall(vector<string> &first, vector<string> &second); 
 private:
 	vector<string> attributePair;
 

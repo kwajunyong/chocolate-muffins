@@ -9,8 +9,8 @@ void ExpressionPattern::run() {
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
-	
-	
+
+
 	vector<ASTNode*> nodes = pkbManager->getAST()->getStatementNodes(ASSIGN);
 
 	ASTNode* node;
@@ -33,10 +33,18 @@ void ExpressionPattern::run() {
 	for (int i=0; i<nodes.size(); i++) {
 		matched = true;
 
-		node = nodes[i]->getChild();				// Get first child
+		number = nodes[i]->getStatementNumber();
+		iterFound = firstList.find(number);
+		if (iterFound == firstList.end()) {
+			matched =false;
+		}
 
-		if (astParam2->getParameterType() != VT_UNDERSCORE)
-			matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+		if (matched) {
+			node = nodes[i]->getChild();				// Get first child
+
+			if (astParam2->getParameterType() != VT_UNDERSCORE)
+				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+		}
 
 
 		if (matched) {
@@ -49,14 +57,10 @@ void ExpressionPattern::run() {
 		}
 
 		if (matched) {
-			number = nodes[i]->getStatementNumber();
-			iterFound = firstList.find(number );
-
-			if (iterFound != firstList.end())
-				result.push_back(CommonUtility::NumberToString(number));			
+			result.push_back(CommonUtility::NumberToString(number));			
 		}
 	}
-	
+
 
 	failed = result.size() == 0;
 

@@ -76,7 +76,8 @@ void ASTParameterValue::initialize(PKB *pkb) {
 		valueList = pkb->getVarTable()->getAllNames();
 	} else if (parameter.getParameterType() == VARIABLETYPE::VT_PROG_LINE) {
 		valueListInteger = pkb->getAST()->getStatementNumbers(ASTType::ALL); // get all statement number
-	
+	} else if (parameter.getParameterType() == VARIABLETYPE::VT_CONSTANT) {
+		valueListInteger = pkb->getConstTable()->getAllValues();	
 	}else {
 		throw new exception("Unable to load parameter type");
 	}

@@ -42,6 +42,8 @@ public:
 	 void getValueListMapString(string &variableName, FastSearchString &fsi); 
 	
 	 void clear();
+
+	 void prepareResultList(list<string> &resultList, vector<string> &variableList);
 private:	
 
 	int compare(const string &value1, const string &value2, const string &variableType);

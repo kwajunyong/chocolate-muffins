@@ -25,17 +25,26 @@ void CallStarEngine::run() {
 		return;
 	}
 
+	// A call cannnot call itself
+	if (astParam1->getParameterType() == astParam2->getParameterType() 
+		&& astParam1->getVariableName().compare(astParam2->getVariableName()) == 0) {
+			failed = true;
+			return;
+	}
+
+
 	if (astParam1->getParameterType() == VT_UNDERSCORE) 
 		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
 	else
 		loadVariable(0, first);
 
+
 	if (astParam2->getParameterType() == VT_UNDERSCORE) {
-		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), first);
+		CommonUtility::convertToMap(pkbManager->getProcTable()->getAllNames(), second);
 	}else
 		loadVariable(1, second);
 
-	
+
 	FastSearchString finalListOne;
 	FastSearchString finalListTwo; 
 
@@ -48,29 +57,56 @@ void CallStarEngine::run() {
 
 	vector<pair<string, string>> resultList;
 
-	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
+	if (first.size() < second.size()) {
+		for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
+			vector<string> &childList = pkbManager->getCalls()->getCalls(iter->first, true);
+			exist = false;
 
-		vector<string> &childList = pkbManager->getCalls()->getCalls(iter->first, true);
-		exist = false;
+			for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+				iterSecond = second.find(*iterParentList);
 
-		for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
-			iterSecond = second.find(*iterParentList);
+				if (iterSecond != second.end()) {
+					exist = true;
 
-			if (iterSecond != second.end()) {
-				exist = true;
-
-				if (keepRelationship)
-					resultList.push_back(pair<string, string>(iter->first, iterSecond->first));					
-				else if (astParam2->updateAble()) 
-					finalListTwo[iterSecond->first] = true;
-				else if (!astParam1->updateAble()) {
-					return; // both are not updatable. 
-				}								
+					if (keepRelationship)
+						resultList.push_back(pair<string, string>(iter->first, iterSecond->first));					
+					else if (astParam2->updateAble()) 
+						finalListTwo[iterSecond->first] = true;
+					else if (!astParam1->updateAble()) {
+						return; // both are not updatable. 
+					}								
+				}
 			}
-		}
-		if (exist && !keepRelationship && astParam1->updateAble()) 
-			finalListOne[iter->first] = true;
+			if (exist && !keepRelationship && astParam1->updateAble()) 
+				finalListOne[iter->first] = true;
 
+		}
+	} else {
+
+		for (iter = second.begin();  iter != second.end(); iter++) { // for every statement find the modified value
+			vector<string> &childList = pkbManager->getCalls()->getCalled(iter->first, true);
+			exist = false;
+
+			for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+
+				iterSecond = first.find(*iterParentList);
+
+				if (iterSecond != first.end()) {
+					exist = true;
+
+					if (keepRelationship)
+						resultList.push_back(pair<string, string>(iterSecond->first, iter->first));					
+					else if (astParam1->updateAble()) 
+						finalListOne[iterSecond->first] = true;
+					else if (!astParam2->updateAble()) 
+						return; // both are not updatable. 
+												
+				}
+			}
+			if (exist && !keepRelationship && astParam2->updateAble()) 
+				finalListTwo[iter->first] = true;
+
+		}
 	}
 
 
