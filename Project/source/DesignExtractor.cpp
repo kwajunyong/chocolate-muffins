@@ -155,41 +155,26 @@ void DesignExtractor::extractNext(ASTNode* node)
 {
 	if (isStatement(node)) {
 		// Last child - Assign/Call/While
-		if ((node->getType() == ASSIGN || node->getType() == CALL || node->getType() == WHILE) && isLastChild(node)) {
-			// End of while
-			if (node->getParent()->getParent()->getType() == WHILE) {
-				//std::cout << "Next(" << node->getStatementNumber() << ", " << node->getParent()->getParent()->getStatementNumber() << ")" << std::endl;
-				_next->addNext(node->getStatementNumber(), node->getParent()->getParent()->getStatementNumber());
+		if (node->getType() != IF && isLastChild(node)) {
+			ASTNode* parent = node->getParent()->getParent();
+
+			while (isStatement(parent)) {
+				if (parent->getType() == IF && parent->getNext() != NULL) {
+					//std::cout << "Next(" << node->getStatementNumber() << ", " << parent->getNext()->getStatementNumber() << ")" << std::endl;
+					_next->addNext(node->getStatementNumber(), parent->getNext()->getStatementNumber());
+					break;
+				}
+				
+				if (parent->getType() == WHILE) {
+					//std::cout << "Next(" << node->getStatementNumber() << ", " << parent->getStatementNumber() << ")" << std::endl;
+					_next->addNext(node->getStatementNumber(), parent->getStatementNumber());
+					break;
+				}
+
+				parent = parent->getParent()->getParent();
 			}
-
-			// End of if
-			if (node->getParent()->getParent()->getType() == IF && !isLastChild(node->getParent()->getParent())) {
-				//std::cout << "Next(" << node->getStatementNumber() << ", " << node->getParent()->getParent()->getNext()->getStatementNumber() << ")" << std::endl;
-				_next->addNext(node->getStatementNumber(), node->getParent()->getParent()->getNext()->getStatementNumber());
-			} 
 		}
-
-		// Last child - If
-		if (node->getType() == IF && isLastChild(node)) {
-			std::vector<int> results = processIfNode(node);
 		
-			// End of while
-			if (node->getParent()->getParent()->getType() == WHILE) {
-				for (size_t i=0; i<results.size(); i++) {
-					//std::cout << "Next(" << results[i] << ", " << node->getParent()->getParent()->getStatementNumber() << ")" << std::endl;
-					_next->addNext(results[i], node->getParent()->getParent()->getStatementNumber());
-				}
-			}
-
-			// End of if
-			if (node->getParent()->getParent()->getType() == IF && !isLastChild(node->getParent()->getParent())) {
-				for (size_t i=0; i<results.size(); i++) {
-					//std::cout << "Next(" << results[i] << ", " << node->getParent()->getParent()->getNext()->getStatementNumber() << ")" << std::endl;
-					_next->addNext(results[i], node->getParent()->getParent()->getNext()->getStatementNumber());
-				}
-			}
-		}
-
 		// Parent
 		if (node->getType() == IF || node->getType() == WHILE) {
 			ASTNode* stmtListNode = node->getChild()->getNext();
@@ -233,11 +218,11 @@ std::vector<int> DesignExtractor::processIfNode(ASTNode* node)
 void DesignExtractor::process(ASTNode* node, std::vector<int> &results)
 {
 	while (node != NULL) {
-		if (isStatement(node) && node->getType() != IF && node->getNext() == NULL) {
+		if (isLastChild(node) && isStatement(node) && node->getType() != IF) {
 			results.push_back(node->getStatementNumber());
 		}
 
-		if (node->getChild() != NULL && node->getType() != ASSIGN && node->getType() != CALL && node->getType() != WHILE) {
+		if (isLastChild(node) && node->getType() == IF) {
 			process(node->getChild(), results);
 		}
 
