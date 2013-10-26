@@ -747,16 +747,16 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 
 	string returnResult = tokens[1];
 
-	cout << "processSelectStmt:: " << selectStmt << endl;
-	cout << "processSelectStmt:: before return results -> " << returnResult << endl;
+	//cout << "processSelectStmt:: " << selectStmt << endl;
+	//cout << "processSelectStmt:: before return results -> " << returnResult << endl;
 
 	replaceSubstring(returnResult, "<", "");
 	replaceSubstring(returnResult, ">", "");
-	cout << "processSelectStmt:: after return results -> " << returnResult << endl;
+	//cout << "processSelectStmt:: after return results -> " << returnResult << endl;
 	vector<string> returnResults = split(returnResult, ',');
 	
 	for (vector<string>::size_type counter = 0; counter < returnResults.size(); counter++){
-		cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
+		//cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
 		queryManager -> addResultExpression(returnResults[counter]);
 	}
 
@@ -861,7 +861,7 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main(){
+int main1(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
