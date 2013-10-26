@@ -438,7 +438,9 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 		return VT_CALL;
 	}else if (strcmpi(rawVariableType.c_str(), "prog_line") == 0){
 		return VT_PROG_LINE;
-	}else //if (unkVarType == "program" || unkVarType == "constant" || unkVarType == "program"){
+	}else if (strcmpi(rawVariableType.c_str(), "prog_line") == 0){
+		return VT_CONSTANT;
+	}else //if (unkVarType == "program"){
 		return VT_CONSTANTSTRING;
 	//}
 }
@@ -859,14 +861,14 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main1(){
+int main(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("ComboTest2.txt");
-		//pkb = parser.parse("Test.txt");
+		//pkb = parser.parse("ComboTest2.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -887,6 +889,7 @@ int main1(){
 	//input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
 	//input = "Select BOOLEAN such that Calls*(\"eight\", \"Six\")";
 	input = "procedure p, q; Select <q, p> such that Calls(p, q)";
+	
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
