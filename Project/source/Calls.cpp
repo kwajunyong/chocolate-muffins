@@ -6,6 +6,14 @@ Calls::~Calls(void) {}
 
 bool Calls::addCalls(string procedure1, string procedure2, int stmtNum)
 {
+	for(int i = 0; i < calls[procedure1].size(); i++)
+	{
+		if(calls[procedure1][i] == procedure2)
+		{
+			return false;
+		}
+	}
+
 	calls[procedure1].push_back(procedure2);
 	called[procedure2].push_back(procedure1);
 	callStmt[procedure1].push_back(stmtNum);
