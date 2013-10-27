@@ -74,6 +74,8 @@ private:
    void mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
 	int index1, int index2, const vector<pair<string, string>> &relationshipValue);
    void clearVariableList(vector<list<string>*> &varList);
+   void recursivePrepare(vector<map<string, bool>> &resultGroupList, int index, 
+	      map<pair<int, int>, int> &positionList, vector<string> stringList, list<string> &resultList);
 
    QueryManager *parent;
 };

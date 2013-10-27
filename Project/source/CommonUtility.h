@@ -23,7 +23,10 @@ public:
 	static void convertToMap(const vector<int>& resultList, map<int, int> &mapList);
 	static void convertToMap(const vector<int>& resultList, map<int, bool> &mapList);
 	static void convertToMap(const vector<string>& resultList, map<string, bool> &mapList);
+	static void convertIntMapToStringMap(const map<int, bool> &mapList, map<string, bool> &resultList);
 
 	static void convertIntVectorToString(const vector<int>& from, vector<string>& resultList);
 	static vector<string>::const_iterator binaryLookup(const vector<string> &vector, string &element);
+
+	static void split(const std::string &inputString, char delimiter, std::vector<std::string> &tokens);
 };

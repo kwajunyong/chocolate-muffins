@@ -94,7 +94,7 @@ vector<string> QueryManager::getValueList(string variableName)  {
 }
 
 
-const vector<string> &QueryManager::getAllVariable() {
+vector<string> QueryManager::getAllVariable() {
 	return pkbLibrary->getVarTable()->getAllNames();
 }
 vector<int> QueryManager::getValueListInteger(string variableName)  {    	
@@ -180,6 +180,8 @@ void QueryManager::resetEverything() {
 	for (iter = expressionValueList.begin(); iter != expressionValueList.end(); iter++) {
 		iter->second.reset();
 	}	
+	expressionValueList.clear();
+	
 	resultList.clear();
 	qt.clear();
 	listManager->clear();
@@ -188,8 +190,7 @@ void QueryManager::resetEverything() {
 
 void QueryManager::addResultExpression(string variableName) {
 	// validation to make sure the variableName is there. 
-
-	resultList[variableName] = 1;
+	resultList.push_back(variableName);
 }
 
 list<string> QueryManager::outputResult() {
@@ -202,10 +203,10 @@ list<string> QueryManager::outputResult() {
 			returnList.push_back("false");
 		else 
 			returnList.push_back("true");
-		return returnList;
+	  return returnList;
+	}
 
-	} 
-	string variableName = resultList.begin()->first;
+	string variableName = resultList.front();
 
 	if (variableName.compare("BOOLEAN") == 0) { //HACK  {
 		if (failed){
@@ -217,18 +218,8 @@ list<string> QueryManager::outputResult() {
 		return returnList;
 	}
 
-	ASTParameterValue asp = getASTParameterValue(variableName); 
-	if (asp.hasNotInitialized()) 	{	
-		asp.initialize(pkbLibrary);
-		if (getVariableType(variableName).compare("string") == 0) {
-			convertVector(asp.getValueList(), returnList);
-		} else 
-			convertVector(asp.getValueListInteger (), returnList);
-		
-	}
-	else
-		convertVector(listManager->getValueListString(variableName), returnList);
-
+	
+	listManager->prepareResultList(returnList, resultList);
 
 	return returnList;
 } // has re

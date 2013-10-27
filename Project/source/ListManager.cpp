@@ -6,7 +6,23 @@ ListManager::ListManager(QueryManager *qm) {
 	parent = qm;
 }
 
-void ListManager::prepareResultList(list<string> &resultList, vector<string> &variableResultList) {
+void ListManager::prepareResultList(list<string> &payloadList, vector<string> &variableResultList) {
+
+	// okay, the idea is this
+	// first we have to hunt down the position of the ListManager's mainList
+	// store that position and used that position to populate the row 
+	// in each group
+	// let's say <a, b, c, d, e> a<1, 3> means that a is found at list 1st and 3rdElement
+	// minus -1 is means that particular variable is not used at the 
+	// executtion at all
+
+	// afat that we have to prepare the result a, b, c, d, e;
+	// however the result group list may not be in sequence a and b might  be different result
+	// hence requires cartersian product. 
+	// The cartesian product is another headache a,b,c,d,e may reflect grouping such as
+	// <1,2,1,2,3> hence we have to insert position according to the location
+	// positionMap is the map to map the resultGroupList to it's position
+	// 1,1 -> 1, 2-1 -> 2, 1-2 -> 3
 
 	map<int, vector<int>> variableGroup;
 
@@ -14,30 +30,70 @@ void ListManager::prepareResultList(list<string> &resultList, vector<string> &va
 
 	map<int, vector<int>>::iterator iterMap;
 	vector<string> leftOver;
+	vector<int> foundPos;
+
 
 	int first, second; 
-	// find the location;
+	
+	// find the location to pick up the good
+	// load the position where it finds; 
+
+	vector<int> leftOverPos;
+	map<pair<int, int>, int> positionMap;
 	for (iterVariable = variableResultList.begin(); iterVariable != variableResultList.end(); iterVariable++) {
 		findVariable(*iterVariable, first, second);
-
-		if (first == -1)  {
+			
+		if (first == -1)  {			
 			leftOver.push_back(*iterVariable);
+			foundPos.push_back(-1);
+			leftOverPos.push_back(distance(variableResultList.begin(), iterVariable));			
 			continue;
+		} else {
+			foundPos.push_back(first);
 		}
 
 		iterMap = variableGroup.find(first);
 		if (iterMap != variableGroup.end()) {
 			iterMap->second.push_back(second);
 		} else {
+
 			vector<int> newVector;
 			newVector.push_back(second);
 			variableGroup[first] = newVector;
+
 		}	
-	}  
+	}
+
+	vector<int>::iterator iterPos;
+	
+	map<int, vector<int>>::iterator iterFound;
+	map<int, int> recordMap;
+	map<int, int>::iterator iterRecordMap;
+	int foundPosition;
+	// recordMap is a map to keep track the numbering 
+
+	// load the position of the one that's found in the list manager
+	for (iterPos = foundPos.begin(); iterPos != foundPos.end(); iterPos++) {
+		if (*iterPos != -1) {
+			iterFound = variableGroup.find(*iterPos);
+			foundPosition = distance(variableGroup.begin(), iterFound);
+			iterRecordMap = recordMap.find(foundPosition);
+			if (iterRecordMap == recordMap.end()) {
+				pair<int, int> p(foundPosition, 0);
+				positionMap[p] = distance(foundPos.begin(), iterPos);
+				recordMap[foundPosition] = 0;
+			} else {
+				iterRecordMap->second =iterRecordMap->second + 1;
+				pair<int, int> p(foundPosition, iterRecordMap->second);
+				positionMap[p] = distance(foundPos.begin(), iterPos);
+			}			
+		}
+	}
+
 
 	// pickup the good 
-	map<int, map<string, bool>> resultGroupList;
-	map<int, map<string, bool>>::iterator iterResult;
+	vector<map<string, bool>> resultGroupList;
+	//map<int, map<string, bool>>::iterator iterResult;
 	vector<int>::iterator iterVarIndex;
 	map<string, bool> *tempMap;
 
@@ -46,16 +102,10 @@ void ListManager::prepareResultList(list<string> &resultList, vector<string> &va
 
 	list<string>::iterator iterLastList;
 	for (iterMap = variableGroup.begin(); iterMap != variableGroup.end(); iterMap++) {
-		iterResult = resultGroupList.find(iterMap->first);
-
-		// prepare the slot
-		if (iterResult != resultGroupList.end()) {
-			tempMap = &iterResult->second;
-		} else {
-			map<string, bool> newMap;
-			resultGroupList[iterMap->first] = newMap;
-			tempMap = &resultGroupList[iterMap->first];
-		}
+		map<string, bool> newMap;
+		resultGroupList.push_back(newMap);
+		tempMap = &resultGroupList.back();
+		
 
 		// get from the variable
 
@@ -69,16 +119,81 @@ void ListManager::prepareResultList(list<string> &resultList, vector<string> &va
 				temp.append(*iterLastList);
 				temp.push_back(' ');
 			}
+
+			if (temp.size() >0) 
+				temp.pop_back();
 			tempMap->insert(pair<string, bool>(temp, true));
 		}
 	}
 
+	vector<string>::iterator iterLeftOver; 
+	map<string, bool> tempResultMap;
+	int lastOfMap = resultGroupList.size() - 1;
+
+	for (iterLeftOver = leftOver.begin(); iterLeftOver != leftOver.end(); iterLeftOver++) {
+		lastOfMap++;
+		
+		pair<int, int> p(lastOfMap, 0);
+		positionMap[p] = leftOverPos.at(distance(leftOver.begin(), iterLeftOver));
+		
+		if (parent->getVariableType(*iterLeftOver).compare("string") == 0)  {
+			resultGroupList.push_back( parent->getValueListMap(*iterLeftOver));
+		} else {
+			tempResultMap.clear();
+			CommonUtility::convertIntMapToStringMap(parent->getValueListIntegerMap(*iterLeftOver), tempResultMap);
+			resultGroupList.push_back(tempResultMap);
+		}			
+	}
+
+
 	// package done
+	vector<string> initialString;
 
-	// format result
-
+	recursivePrepare(resultGroupList, 0, positionMap, initialString, payloadList);
+	
 
 }
+
+void ListManager::recursivePrepare(vector<map<string, bool>> &resultGroupList, int index, 
+		map<pair<int, int>, int> &positionList, vector<string> stringList, list<string> &resultList) {
+	map<string, bool> &tempList = resultGroupList.at(index);
+	map<string, bool>::iterator iterMap;
+	vector<string>::iterator iterString;
+	int curr = 0;
+	int pos = 0; 
+	for (iterMap = tempList.begin(); iterMap != tempList.end(); iterMap++) {
+		// getPosition; 
+		vector<string> splitList;
+		CommonUtility::split(iterMap->first, ' ', splitList);
+		curr = 0;
+		vector<string> newList = stringList;
+		for (iterString = splitList.begin(); iterString != splitList.end(); iterString++) {
+			pair<int, int> p (index, curr); 
+			pos = positionList.find(p)->second;
+			newList.insert(newList.begin() + pos, *iterString);
+			curr++;
+		}
+
+		if (index < resultGroupList.size() - 1) {
+			index++;
+			recursivePrepare(resultGroupList, index, 
+				positionList, newList, resultList);
+			
+		} else {
+			string temp;
+			for (iterString = newList.begin(); iterString != newList.end(); iterString++)  {
+				temp.append(*iterString);
+				temp.push_back(' ');
+			}
+
+			if (temp.size() >0) 
+				temp.pop_back();
+			resultList.push_back(temp);				
+		}
+	}
+}
+
+
 
 void ListManager::clear() {
 
@@ -319,10 +434,13 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 		string first;
 		string second;
 		string value;
+		// for each relationship value 
 		for (iterListValue = relationshipValue.begin(); 
 			iterListValue != relationshipValue.end(); iterListValue++) {
+
 				first= (*iterListValue).first;
 				second = (*iterListValue).second;
+				// find the iterFound 
 				iterFound = bLookup(valueList, first, index1);
 
 
@@ -330,8 +448,9 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 					do {
 						secondValue = getValueAt(*iterFound,index2);
 
-						if (secondValue.compare(second))					     
+						if (secondValue.compare(second)  == 0) 								
 							newList.push_back((*iterFound));
+						
 
 						iterFound++;
 						if (iterFound == valueList->end()) 
@@ -345,7 +464,8 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 				}
 		}
 		valueList->clear();
-		copy(newList.begin(), newList.end(), valueList->begin());
+		valueList->insert(valueList->begin(), newList.begin(), newList.end());
+//		copy(newList.begin(), newList.end(), valueList->begin());
 }
 
 

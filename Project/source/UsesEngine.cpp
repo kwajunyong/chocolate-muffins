@@ -7,7 +7,7 @@ UsesEngine::UsesEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_USES, qm, pkb
 
 }
 void UsesEngine::run() {
-	
+
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
@@ -64,7 +64,6 @@ void UsesEngine::handleProcedureVariable() {
 
 	vector<string>::const_iterator iter;
 	vector<string>::const_iterator iterProcedureResult;
-	vector<string>::const_iterator iterProcedure;
 
 	bool exist = false;
 
@@ -78,7 +77,7 @@ void UsesEngine::handleProcedureVariable() {
 				exist = true;
 
 				if (keepRelationship)
-					relationship.push_back(pair<string, string>(*iterProcedure,*iter));
+					relationship.push_back(pair<string, string>(*iterProcedureResult,*iter));
 				else if (astParam1->updateAble()) {
 					finalProcedureList[*iterProcedureResult] = true;
 					if (!astParam2->updateAble()) {
@@ -99,30 +98,31 @@ void UsesEngine::handleProcedureVariable() {
 				}
 
 			}
-			if (exist && !keepRelationship && astParam2->updateAble()) {
-				finalVariableList[*iter] = true;
-			}
+
 		}
-
-
-		if (keepRelationship) {
-			myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
-		}else 	if (astParam1->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalProcedureList, finalList);		
-			myQM->updateRelationship(astParam1->getVariableName(), finalList);
-
-		} else 	if (astParam2->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalVariableList, finalList);
-			myQM->updateRelationship(astParam2->getVariableName(), finalList);		
-		}
-
-		// both constant already handled above
-		failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0&& relationship.size() == 0);
-
-
+		if (exist && !keepRelationship && astParam2->updateAble()) 
+			finalVariableList[*iter] = true;
 	}
+
+
+	if (keepRelationship) {
+		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
+	}else 	if (astParam1->updateAble()) {
+		vector<string> finalList; 
+		CommonUtility::convertVector(finalProcedureList, finalList);		
+		myQM->updateRelationship(astParam1->getVariableName(), finalList);
+
+	} else 	if (astParam2->updateAble()) {
+		vector<string> finalList; 
+		CommonUtility::convertVector(finalVariableList, finalList);
+		myQM->updateRelationship(astParam2->getVariableName(), finalList);		
+	}
+
+	// both constant already handled above
+	failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0&& relationship.size() == 0);
+
+
+
 }
 
 void UsesEngine::handleStatementListVariable() {
@@ -176,7 +176,7 @@ void UsesEngine::handleStatementListVariable() {
 					if (keepRelationship)
 						relationship.push_back(pair<string, string>(CommonUtility::NumberToString(*iterStatementList),iter->first));
 					else if (astParam1->updateAble()) 
-							finalStatementList[CommonUtility::NumberToString(*iterStatementList)] = true;
+						finalStatementList[CommonUtility::NumberToString(*iterStatementList)] = true;
 					else { 
 						if (!astParam2->updateAble()) 
 							return; // we have got what we come for. 					
@@ -212,10 +212,11 @@ void UsesEngine::handleStatementListVariable() {
 					}
 				}
 			}
+			if (exist && !keepRelationship && astParam1->updateAble()) 
+				finalStatementList[CommonUtility::NumberToString(iter->first)] = true;
 		}
 
-		if (exist && !keepRelationship && astParam1->updateAble()) 
-			finalStatementList[CommonUtility::NumberToString(iter->first)] = true;
+
 
 	}
 	if (keepRelationship) {

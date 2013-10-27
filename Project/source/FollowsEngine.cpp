@@ -55,12 +55,12 @@ void FollowsEngine::run() {
 	bool keepRelationship = astParam1->updateAble() && astParam2->updateAble() ;
 
 	vector<pair<string, string>> resultList;
-
+		
 	for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
 		vector<int> &followerList = pkbManager->getFollows()->getFollowedBy((*iter), false);
 		exist = false;
-
+		
 		for (iterFollowerList = followerList.begin(); iterFollowerList  != followerList.end(); iterFollowerList++) { // for each variable returned check against the variable list
 			for (iterSecond = second.begin(); iterSecond  != second.end(); iterSecond++) {
 				if (*iterFollowerList == *iterSecond) {

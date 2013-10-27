@@ -64,7 +64,6 @@ void ModifiesEngine::handleProcedureVariable() {
 
 	vector<string>::const_iterator iter;
 	vector<string>::const_iterator iterProcedureResult;
-	vector<string>::const_iterator iterProcedure;
 
 	bool exist = false;
 
@@ -78,7 +77,7 @@ void ModifiesEngine::handleProcedureVariable() {
 				exist = true;
 
 				if (keepRelationship)
-					relationship.push_back(pair<string, string>(*iterProcedure,*iter));
+					relationship.push_back(pair<string, string>(*iterProcedureResult,*iter));
 				else if (astParam1->updateAble()) {
 					finalProcedureList[*iterProcedureResult] = true;
 					if (!astParam2->updateAble()) {
@@ -98,11 +97,12 @@ void ModifiesEngine::handleProcedureVariable() {
 
 				}
 
-			}
-			if (exist && !keepRelationship && astParam2->updateAble()) {
-				finalVariableList[*iter] = true;
-			}
+			}			
 		}
+		if (exist && !keepRelationship && astParam2->updateAble()) 
+				finalVariableList[*iter] = true;
+			
+	}
 
 
 		if (keepRelationship) {
@@ -122,7 +122,7 @@ void ModifiesEngine::handleProcedureVariable() {
 		failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0&& relationship.size() == 0);
 
 
-	}
+	
 }
 
 void ModifiesEngine::handleStatementListVariable() {

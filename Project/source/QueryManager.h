@@ -36,7 +36,7 @@ public:
 	
 	
 	const vector<int>& getAllStatementList() ;
-	const vector<string>& getAllVariable() ;
+	vector<string> getAllVariable() ;
 
 	bool variableExists(string);
 	void initializeExpression(string variableName);
@@ -73,7 +73,7 @@ public:
 private:
 	//void loadVariable(string variableName) ;
 	map<string, ASTParameterValue> expressionValueList;	
-	map<string, int> resultList;	
+	vector<string> resultList;	
 
 	PKB* pkbLibrary;
 	ASTParameterValue &getASTParameterValue(string variableName);

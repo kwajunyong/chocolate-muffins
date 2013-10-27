@@ -85,6 +85,15 @@ void CommonUtility::convertIntVectorToString(const vector<int>& from, vector<str
 	}
 }
 
+void CommonUtility::convertIntMapToStringMap(const map<int, bool> &mapList, map<string, bool> &resultList) {
+
+	map<int, bool>::const_iterator iterMap;
+
+	for (iterMap = mapList.begin(); iterMap != mapList.end(); iterMap++) {
+		resultList[CommonUtility::NumberToString(iterMap->first)] = true;
+	}
+}
+
 vector<string>::const_iterator CommonUtility::binaryLookup(const vector<string>& from, string &element) {
 	vector<string>::const_iterator iter;
 	// this is not binary lookup. 
@@ -94,4 +103,12 @@ vector<string>::const_iterator CommonUtility::binaryLookup(const vector<string>&
 			return iter;		
 	}
 	return iter;
+}
+
+void CommonUtility::split(const std::string &inputString, char delimiter, std::vector<std::string> &tokens) {
+    std::stringstream strStream(inputString);
+    std::string item;
+    while (std::getline(strStream, item, delimiter)) {
+        tokens.push_back(item);
+    }   
 }
