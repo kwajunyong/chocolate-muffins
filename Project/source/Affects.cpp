@@ -10,6 +10,7 @@ Affects::Affects(AST* ast, Modifies* modifies, Uses* uses, Next* next, ProcTable
 	this->next = next;
 	this->procTable = procTable;
 	numOfStmt = stmtNum;
+	caches.assign(numOfStmt+1, temp);
 }
 
 Affects::~Affects(void) {}
@@ -46,14 +47,11 @@ bool Affects::isAffects(int assignment1, int assignment2)
 		return false;
 	}
 
-	/*visited.clear();
-	return compute(assignment1, assignment2, var);*/
-
 	vector<vector<int>> paths = next->getPaths(assignment1, assignment2);
 	vector<bool> path;
 	path.assign(paths.size(), true);
 
-	if(paths.size() == 0)
+	if(paths.size() == 0 || paths[0].empty())
 	{
 		if(uses->isUsesStmt(assignment2, var))
 			return true;
@@ -69,9 +67,12 @@ bool Affects::isAffects(int assignment1, int assignment2)
 			{
 				if(modifies->isModifiesStmt(x, var))
 				{
-					path[i] = false;
-					if(paths.size() < 1)
-						i++;
+					if(x != assignment2)
+					{
+						path[i] = false;
+						if(paths.size() < 1)
+							i++;
+					}
 				}
 			}
 			else if(ast->getStatementType(x) == CALL)
@@ -86,7 +87,13 @@ bool Affects::isAffects(int assignment1, int assignment2)
 		}
 		if(path[i])
 		{
-			return true;
+			if(!paths[i].empty())
+			{
+				if(paths[i].back() != assignment2)
+					path[i] = false;
+				else
+					return true;
+			}
 		}
 	}
 	return false;
@@ -103,8 +110,7 @@ bool Affects::compute(int assignment1, int assignment2)
 	vector<int> querys = getAffects(assignment1);
 	bool check = false;
 
-	if(assignment1 != assignment2)
-		visited.push_back(assignment1);
+	visited.push_back(assignment1);
 
 	for(int i = 0; i < querys.size(); i++)
 	{
@@ -123,109 +129,10 @@ bool Affects::compute(int assignment1, int assignment2)
 	return check;
 }
 
-//bool Affects::compute(int start, int end, string var)
-//{
-//	visited.push_back(start);
-//	for(int i = start+1; i < end; i++)
-//	{
-//		if(find(visited.begin(), visited.end(), i) == visited.end())
-//		{
-//			int x = i-1;
-//			if(checkElse)
-//			{
-//				x = i-2;
-//				checkElse = false;
-//			}
-//			
-//			if(next->isNext(x, i, true))
-//			{
-//				visited.push_back(i);
-//				cout << i << endl;
-//				
-//				if(ast->getStatementType(i) == ASSIGN)
-//				{
-//					if(modifies->isModifiesStmt(i, var))
-//						return false;
-//				}
-//				else if(ast->getStatementType(i) == WHILE)
-//				{
-//					if(next->getNext(i, false).size() == 1)
-//					{
-//						i = i;
-//					}
-//					else
-//					{
-//						int j = next->getNext(i, false)[0];
-//						int k = next->getNext(i, false)[1];
-//						if(k > j)
-//							j = k;
-//						if(end < j)
-//						{
-//							i = i;
-//						}
-//						else
-//						{
-//							i = j-1;
-//						}
-//					}
-//				}
-//				else if(ast->getStatementType(i) == IF)
-//				{
-//					int j = next->getNext(i, false)[0];
-//					int k = next->getNext(i, false)[1];
-//					
-//					bool thenBranch = compute(j-1, end, var);
-//					checkElse = true;
-//					bool elseBranch = compute(k-1, end, var);
-//
-//					if(!thenBranch && !elseBranch)
-//					{
-//						return false;
-//					}
-//					else
-//					{
-//						return true;
-//					}
-//				}
-//				else if(ast->getStatementType(i) == CALL)
-//				{
-//					if(modifies->isModifiesStmt(i, var))
-//						return false;
-//				}
-//			}
-//			else // Next* branch
-//			{
-//				i = next->getNext(i-1, false)[0]-1;
-//			}
-//		}
-//		else // Visited branch
-//		{
-//			if(next->getNext(i-1, false).size() == 1)
-//			{
-//				i = i;
-//			}
-//			else
-//			{
-//					int j = next->getNext(i-1, false)[0];
-//					int k = next->getNext(i-1, false)[1];
-//					if(k > j)
-//					{
-//						j = k;
-//					}
-//					i = j;
-//			}
-//		}
-//	}
-//	return true;
-//}
-
 vector<int> Affects::getAffects(int assignment)
 {
 	vector<int> results;
 	int end = numOfStmt;
-
-	vector<string> variables = modifies->getModifiedVar(assignment);
-	string var = variables[0];
 	
 	for(int i = 1; i <= end; i++)
 	{
@@ -242,9 +149,6 @@ vector<int> Affects::getAffected(int assignment)
 	vector<int> results;
 
 	int end = numOfStmt;
-
-	vector<string> variables = modifies->getModifiedVar(assignment);
-	string var = variables[0];
 	
 	for(int i = end; i > 0; i--)
 	{
@@ -259,80 +163,191 @@ vector<int> Affects::getAffected(int assignment)
 
 vector<int> Affects::getAffectsStar(int assignment)
 {
+	vector<int> temp;
 	visited.clear();
-	return computeAffects(assignment);
+	results.assign(numOfStmt+1, false);
+	computeAffects(assignment);
+	buildCached();
+
+	vector<int> answers;
+	for(int i = 1; i < results.size(); i++)
+	{
+		if(results[i])
+			answers.push_back(i);
+	}
+	return answers;
 }
 
-vector<int> Affects::computeAffects(int assignment)
+void Affects::computeAffects(int assignment)
 {
 	vector<int> answers;
-	vector<vector<int>> temp;
-
-	answers = getAffects(assignment);
-
-	if(find(visited.begin(), visited.end(), assignment) == visited.end())
+	int key;
+	int value;
+	bool found = false;
+	
+	/*if(!caches.empty())
 	{
-		visited.push_back(assignment);
-
-		for(int i = 0; i < answers.size(); i++)
+		for(int i = 0; i < caches.size(); i++)
 		{
-			if(answers.size() > 0)
+			for(int j = 0; j < caches[i].size(); j++)
 			{
-				temp.push_back(computeAffects(answers[i]));
-			}
-		}
-
-		for(int i = 0; i < temp.size(); i++)
-		{
-			for(int j = 0; j < temp[i].size(); j++)
-			{
-				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				if(caches[i][j] == assignment)
 				{
-					answers.push_back(temp[i][j]);
+					key = i;
+					value = j;
+					found = true;
+					break;
 				}
+			}
+			if(found)
+				break;
+		}
+	}*/
+
+	if(!cache[assignment].empty())
+	//if(found)
+	{
+		/*for(int i = value+1; i < caches[key].size(); i++)
+		{
+			answers.push_back(caches[key][i]);
+		}*/
+
+		answers = cache[assignment];
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+			visited.push_back(assignment);
+		
+			for(int i = 0; i < answers.size(); i++)
+			{
+				results[answers[i]] = true;
+				if(find(visited.begin(), visited.end(), answers[i]) == visited.end())
+					visited.push_back(answers[i]);
+			}
+	}
+	else
+	{
+		answers = getAffects(assignment);
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+		{
+			visited.push_back(assignment);
+
+			for(int i = 0; i < answers.size(); i++)
+			{
+				results[answers[i]] = true;
+				if(answers[i] == assignment)
+					visited.push_back(assignment);
+				computeAffects(answers[i]);
 			}
 		}
 	}
-	return answers;
 }
 
 vector<int> Affects::getAffectedStar(int assignment)
 {
 	visited.clear();
-	return computeAffected(assignment);
+	results.assign(numOfStmt+1, false);
+	computeAffected(assignment);
+	buildCached();
+
+	vector<int> answers;
+	for(int i = 1; i < results.size(); i++)
+	{
+		if(results[i])
+			answers.push_back(i);
+	}
+	return answers;
 }
 
-vector<int> Affects::computeAffected(int assignment)
+void Affects::computeAffected(int assignment)
 {
 	vector<int> answers;
-	vector<vector<int>> temp;
 
-	answers = getAffected(assignment);
-
-	if(find(visited.begin(), visited.end(), assignment) == visited.end())
+	int key;
+	int value;
+	bool found = false;
+	
+	/*if(!caches.empty())
 	{
-		visited.push_back(assignment);
-
-		for(int i = 0; i < answers.size(); i++)
+		for(int i = 0; i < caches.size(); i++)
 		{
-			if(answers.size() > 0)
+			for(int j = 0; j < caches[i].size(); j++)
 			{
-				temp.push_back(computeAffected(answers[i]));
-			}
-		}
-
-		for(int i = 0; i < temp.size(); i++)
-		{
-			for(int j = 0; j < temp[i].size(); j++)
-			{
-				if(find(answers.begin(), answers.end(), temp[i][j]) == answers.end())
+				if(caches[i][j] == assignment)
 				{
-					answers.push_back(temp[i][j]);
+					key = i;
+					value = j;
+					found = true;
+					break;
 				}
+			}
+			if(found)
+				break;
+		}
+	}*/
+
+	if(!cache[assignment].empty())
+	//if(found)
+	{
+		/*for(int i = value+1; i < caches[key].size(); i++)
+		{
+			answers.push_back(caches[key][i]);
+		}*/
+
+		answers = cache[assignment];
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+			visited.push_back(assignment);
+		
+			for(int i = 0; i < answers.size(); i++)
+			{
+				results[answers[i]] = true;
+				if(find(visited.begin(), visited.end(), answers[i]) == visited.end())
+					visited.push_back(answers[i]);
+			}
+	}
+	else
+	{
+		answers = getAffected(assignment);
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+		{
+			visited.push_back(assignment);
+
+			for(int i = 0; i < answers.size(); i++)
+			{
+				results[answers[i]] = true;
+				if(answers[i] == assignment)
+					visited.push_back(assignment);
+				computeAffected(answers[i]);
 			}
 		}
 	}
-	return answers;
+}
+
+void Affects::buildCache() //vector of vector<int>
+{
+	if(find(caches.begin(), caches.end(), visited) == caches.end())
+	{
+		int x = visited[0];
+		caches[x] = visited;
+	}
+}
+
+void Affects::buildCached() // map of vector<int>
+{
+	vector<int> temp = visited;
+	for(int i = 0; i < visited.size(); i++)
+	{
+		temp.erase(temp.begin());
+		int x = visited[i];
+		if(cache[x].empty())
+		{
+			cache[x] = temp;
+		}
+	}
+}
+
+void Affects::clearCache()
+{
+	cache.clear();
+	caches.clear();
 }
 
 //int main()
@@ -340,12 +355,12 @@ vector<int> Affects::computeAffected(int assignment)
 //	Parser p;
 //	DesignExtractor d;
 //	PKB* pkb;
-//	AST* ast;
+//	/*AST* ast;
 //	Modifies* modifies;
 //	Uses* uses;
 //	Next* next;
 //	ProcTable* procTable;
-//	int numOfStmt = 0;
+//	int numOfStmt = 0;*/
 //
 //	try
 //	{
@@ -359,9 +374,10 @@ vector<int> Affects::computeAffected(int assignment)
 //		return 0;
 //	}
 //
-//	Affects a(ast, modifies, uses, next, procTable, numOfStmt);
+//	Affects a;
+//	a = pkb->getAffects();
 //
-//	/* Start CS3201Assignment1Source.txt */
+//	// Start CS3201Assignment1Source.txt
 //	// Should return true
 //	/*if(a.isAffects(1, 2))
 //		cout << "Affects(1,2) = true" << endl;
@@ -383,7 +399,7 @@ vector<int> Affects::computeAffected(int assignment)
 //	else
 //		cout << "Affects(25,27) = false" << endl;*/
 //
-//	//// Should return false
+//	// Should return false
 //	/*if(a.isAffects(1, 4))
 //		cout << "Affects(1,4) = true" << endl;
 //	else
@@ -403,92 +419,92 @@ vector<int> Affects::computeAffected(int assignment)
 //		cout << "Affects(3,11) = true" << endl;
 //	else
 //		cout << "Affects(3,11) = false" << endl;*/
-//	///*End of CS3201AssignmentSource1.txt */
-//	//
+//	//End of CS3201AssignmentSource1.txt
+//	
 //
 //
 //
-//	///* Start of Test.txt */
-//	//// Should return true
-//	//if(a.isAffects(1, 4))
-//	//	cout << "Affects(1,4) = true" << endl;
-//	//else
-//	//	cout << "Affects(1,4) = false" << endl;
+//	// Start of Test.txt 
+//	// Should return true
+//	/*if(a.isAffects(1, 4))
+//		cout << "Affects(1,4) = true" << endl;
+//	else
+//		cout << "Affects(1,4) = false" << endl;
 //
-//	//if(a.isAffects(2, 6))
-//	//	cout << "Affects(2,6) = true" << endl;
-//	//else
-//	//	cout << "Affects(2,6) = false" << endl;
+//	if(a.isAffects(2, 6))
+//		cout << "Affects(2,6) = true" << endl;
+//	else
+//		cout << "Affects(2,6) = false" << endl;
 //
-//	//if(a.isAffects(4, 8))
-//	//	cout << "Affects(4,8) = true" << endl;
-//	//else
-//	//	cout << "Affects(4,8) = false" << endl;
+//	if(a.isAffects(4, 8))
+//		cout << "Affects(4,8) = true" << endl;
+//	else
+//		cout << "Affects(4,8) = false" << endl;
 //
-//	//if(a.isAffects(4, 10))
-//	//	cout << "Affects(4,10) = true" << endl;
-//	//else
-//	//	cout << "Affects(4,10) = false" << endl;
+//	if(a.isAffects(4, 10))
+//		cout << "Affects(4,10) = true" << endl;
+//	else
+//		cout << "Affects(4,10) = false" << endl;
 //
-//	//if(a.isAffects(9, 10))
-//	//	cout << "Affects(9,10) = true" << endl;
-//	//else
-//	//	cout << "Affects(9,10) = false" << endl;
+//	if(a.isAffects(9, 10))
+//		cout << "Affects(9,10) = true" << endl;
+//	else
+//		cout << "Affects(9,10) = false" << endl;
 //
-//	//if(a.isAffects(1, 10))
-//	//	cout << "Affects(1,10) = true" << endl;
-//	//else
-//	//	cout << "Affects(1,10) = false" << endl;
+//	if(a.isAffects(1, 10))
+//		cout << "Affects(1,10) = true" << endl;
+//	else
+//		cout << "Affects(1,10) = false" << endl;
 //
-//	//if(a.isAffects(2, 10))
-//	//	cout << "Affects(2,10) = true" << endl;
-//	//else
-//	//	cout << "Affects(2,10) = false" << endl;
+//	if(a.isAffects(2, 10))
+//		cout << "Affects(2,10) = true" << endl;
+//	else
+//		cout << "Affects(2,10) = false" << endl;
 //
-//	//if(a.isAffects(1, 12))
-//	//	cout << "Affects(1,12) = true" << endl;
-//	//else
-//	//	cout << "Affects(1,12) = false" << endl;
+//	if(a.isAffects(1, 12))
+//		cout << "Affects(1,12) = true" << endl;
+//	else
+//		cout << "Affects(1,12) = false" << endl;
 //
-//	//if(a.isAffects(4, 4))
-//	//	cout << "Affects(4,4) = true" << endl;
-//	//else
-//	//	cout << "Affects(4,4) = false" << endl;
+//	if(a.isAffects(4, 4))
+//		cout << "Affects(4,4) = true" << endl;
+//	else
+//		cout << "Affects(4,4) = false" << endl;
 //
-//	//if(a.isAffects(6, 6))
-//	//	cout << "Affects(6,6) = true" << endl;
-//	//else
-//	//	cout << "Affects(6,6) = false" << endl;
+//	if(a.isAffects(6, 6))
+//		cout << "Affects(6,6) = true" << endl;
+//	else
+//		cout << "Affects(6,6) = false" << endl;
 //
-//	//if(a.isAffects(8, 10))
-//	//	cout << "Affects(8,10) = true" << endl;
-//	//else
-//	//	cout << "Affects(8,10) = false" << endl;
+//	if(a.isAffects(8, 10))
+//		cout << "Affects(8,10) = true" << endl;
+//	else
+//		cout << "Affects(8,10) = false" << endl;
 //
-//	//if(a.isAffects(4, 12))
-//	//	cout << "Affects(4,12) = true" << endl;
-//	//else
-//	//	cout << "Affects(4,12) = false" << endl;
+//	if(a.isAffects(4, 12))
+//		cout << "Affects(4,12) = true" << endl;
+//	else
+//		cout << "Affects(4,12) = false" << endl;*/
 //
-//	//// Should return False
-//	//if(a.isAffects(9, 11))
-//	//	cout << "Affects(9,11) = true" << endl;
-//	//else
-//	//	cout << "Affects(9,11) = false" << endl;
+//	// Should return False
+//	/*if(a.isAffects(9, 11))
+//		cout << "Affects(9,11) = true" << endl;
+//	else
+//		cout << "Affects(9,11) = false" << endl;*/
 //	/*End of Test.txt */
 //
-//	//vector<int> querys = a.getAffects(22);
-//	//vector<int> querys = a.getAffected(15);
+//	/*vector<int> querys = a.getAffects(22);
+//	vector<int> querys = a.getAffected(15);*/
 //
 //	/*for(int i = 0; i < querys.size(); i++)
 //	{
 //		cout << querys[i] << endl;
 //	}*/
 //
-//	// Affects*
-//	// Start of CS3102Assignment1Query.txt
-//	// Should return true
-//	if(a.isAffectsStar(1, 2))
+//	/*Affects*
+//	 Start of CS3102Assignment1Query.txt
+//	 Should return true*/
+//	/*if(a.isAffectsStar(1, 2))
 //		cout << "Affects*(1,2) = true" << endl;
 //	else
 //		cout << "Affects*(1,2) = false" << endl;
@@ -516,22 +532,22 @@ vector<int> Affects::computeAffected(int assignment)
 //	if(a.isAffectsStar(21, 22))
 //		cout << "Affects*(21,22) = true" << endl;
 //	else
-//		cout << "Affects*(21,22) = false" << endl;
+//		cout << "Affects*(21,22) = false" << endl;*/
 //
-//	// Should return false
-//	if(a.isAffectsStar(1, 7))
+//	//Should return false
+//	/*if(a.isAffectsStar(1, 7))
 //		cout << "Affects*(1,7) = true" << endl;
 //	else
-//		cout << "Affects*(1,7) = false" << endl;
-//	// End of CS3201AssignmentQuery.txt
+//		cout << "Affects*(1,7) = false" << endl;*/
+//	 //End of CS3201AssignmentQuery.txt
 //
-//	//vector<int> querys = a.getAffectsStar(22);
+//	/*vector<int> querys = a.getAffectsStar(22);
 //	vector<int> querys = a.getAffectedStar(28);
 //
 //	for(int i = 0; i < querys.size(); i++)
 //	{
 //		cout << querys[i] << endl;
-//	}
+//	}*/
 //
 //	system("Pause");
 //	return 0;

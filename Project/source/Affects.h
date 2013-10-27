@@ -15,6 +15,7 @@
 // testing
 //#include "Parser.h"
 //#include "DesignExtractor.h"
+//#include "PKB.h"
 
 using namespace std;
 
@@ -33,6 +34,8 @@ public:
 	vector<int> getAffectsStar(int assignment);
 	vector<int> getAffectedStar(int assignment);
 
+	void clearCache();
+
 private:
 	AST* ast;
 	Modifies* modifies;
@@ -44,12 +47,17 @@ private:
 
 	map<int, vector<int>> affects;
 	map<int, vector<int>> affected;
+	map<int, vector<int>> cache;
 
 	vector<int> visited;
+	vector<bool> results;
+	vector<vector<int>> caches;
+	vector<int> temp;
 
-	//bool compute(int start, int end, string var);
 	bool compute(int assignment1, int assignment2);
 
-	vector<int> computeAffects(int assignment);
-	vector<int> computeAffected(int assignment);
+	void computeAffects(int assignment);
+	void computeAffected(int assignment);
+	void buildCache();
+	void buildCached();
 };
