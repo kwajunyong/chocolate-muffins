@@ -438,7 +438,7 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 		return VT_CALL;
 	}else if (strcmpi(rawVariableType.c_str(), "prog_line") == 0){
 		return VT_PROG_LINE;
-	}else if (strcmpi(rawVariableType.c_str(), "prog_line") == 0){
+	}else if (strcmpi(rawVariableType.c_str(), "constant") == 0){
 		return VT_CONSTANT;
 	}else //if (unkVarType == "program"){
 		return VT_CONSTANTSTRING;
@@ -541,6 +541,9 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 	for (vector<string>::size_type counter = 0; counter < patternClauses.size(); counter++){
 		currentClause = patternClauses[counter];
+
+		//cout << "current clause: " << currentClause << endl;
+
 		variablePattern = currentClause.substr(0, currentClause.find("("));
 		parameters = currentClause.substr(currentClause.find("(")+1, currentClause.length() - currentClause.find("(")-2);
 
@@ -560,6 +563,9 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 			firstPara = splitResults[0];
 			secondPara = splitResults[1];
 
+			//cout << "first para: " << firstPara << endl;
+			//cout << "second para: " << secondPara << endl;
+			
 			qc -> addParam(variablePattern, VT_ASSIGNMENT);
 
 			if (firstPara == "_")
@@ -578,15 +584,16 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 
 			if (secondPara == "_")
 				qc -> addParam(splitResults[1], VT_UNDERSCORE);
-			else if (secondPara.find("_") != string::npos){
+			//else if (secondPara.find("_") != string::npos){
+			else if (secondPara.compare(0, 1, "_") == 0 && secondPara.compare(secondPara.length()-1, 1, "_") == 0){
 				replaceSubstring(splitResults[1], "_\"", "");
 				replaceSubstring(splitResults[1], "\"_", "");
 				qc -> addParam(splitResults[1], VT_EXPRESSION_UNDERSCORE);
-			}else if (secondPara.find("\"") != string::npos){
+			}else if (secondPara.find("\"") != string::npos && secondPara.find("_") == string::npos){
 				replaceSubstring(splitResults[1], "\"", "");
 				qc -> addParam(splitResults[1], VT_CONSTANTSTRING);
 			}else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
+				cout << "incorrect parameter type for ASSIGN pattern clauses" << endl;
 				return false;
 			}
 		}else if (strcmpi(patternType.c_str(), "while") == 0){
@@ -612,7 +619,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
 			}else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
+				cout << "incorrect parameter type for WHILE pattern clauses" << endl;
 				return false;
 			}
 
@@ -644,7 +651,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 				replaceSubstring(splitResults[0], "\"", "");
 				qc -> addParam(splitResults[0], VT_CONSTANTSTRING);
 			}else{
-				cout << "incorrect parameter type for pattern clauses" << endl;
+				cout << "incorrect parameter type for IF pattern clauses" << endl;
 				return false;
 			}
 
@@ -761,7 +768,7 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 	}
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
-		//cout << tokens[counter] << endl;
+		//cout << "current token: " << tokens[counter] << endl;
 
 		if (strcmpi(tokens[counter].c_str(), "such") == 0){
 			if (connectClauseDetected){
@@ -797,7 +804,16 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 			suchClauseDetected = false;
 			connectClauseDetected = false;
 		}else if (patternClauseDetected){
-			patternList.push_back(tokens[counter]);
+			string actualPattern = tokens[counter];
+			if (tokens[counter].compare(tokens[counter].length()-1, 1, ")") != 0){
+				do{
+					counter++;
+					//cout << "pattern token: " << tokens[counter] << endl;
+					actualPattern = actualPattern + " " + tokens[counter];
+				}while(counter <= tokens.size()-1 && tokens[counter].compare(tokens[counter].length()-1, 1, ")") != 0);
+			}
+			//cout << "actual pattern: " << actualPattern << endl;
+			patternList.push_back(actualPattern);
 			connectClauseDetected = false;
 			patternClauseDetected = false;
 			suchClauseDetected = false;
@@ -861,7 +877,7 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main1(){
+int main(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;
