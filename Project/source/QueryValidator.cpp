@@ -389,7 +389,7 @@ bool QueryValidator::paraTypeAllowed(vector<string> allowedParameterTypes, strin
 		if (strcmpi(allowedParameterTypes[counter].c_str(), paraType.c_str()) == 0)
 			return true;
 	}
-
+	
 	return false;
 }
 
@@ -712,7 +712,7 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 			
 			//check if the parameters in the NEXT relationship is the same variable
 			if (strcmpi(variableEntityType.c_str(), "next") == 0){
-				if (entityParaPair.first == entityParaPair.second){
+				if (entityParaPair.first == entityParaPair.second && entityParaPair.first != "_"){
 					return false;
 				}
 			}
@@ -754,21 +754,21 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 
 	string returnResult = tokens[1];
 
-	//cout << "processSelectStmt:: " << selectStmt << endl;
-	//cout << "processSelectStmt:: before return results -> " << returnResult << endl;
+	cout << "processSelectStmt:: " << selectStmt << endl;
+	cout << "processSelectStmt:: before return results -> " << returnResult << endl;
 
 	replaceSubstring(returnResult, "<", "");
 	replaceSubstring(returnResult, ">", "");
-	//cout << "processSelectStmt:: after return results -> " << returnResult << endl;
+	cout << "processSelectStmt:: after return results -> " << returnResult << endl;
 	vector<string> returnResults = split(returnResult, ',');
 	
 	for (vector<string>::size_type counter = 0; counter < returnResults.size(); counter++){
-		//cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
+		cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
 		queryManager -> addResultExpression(returnResults[counter]);
 	}
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
-		//cout << "current token: " << tokens[counter] << endl;
+		cout << "current token: " << tokens[counter] << endl;
 
 		if (strcmpi(tokens[counter].c_str(), "such") == 0){
 			if (connectClauseDetected){
@@ -883,8 +883,8 @@ int main(){
 	PKB* pkb;
 
 	try {
-		//pkb = parser.parse("ComboTest2.txt");
-		pkb = parser.parse("Test.txt");
+		pkb = parser.parse("ComboTest2.txt");
+		//pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
