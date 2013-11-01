@@ -47,17 +47,20 @@ private:
 
 	map<int, vector<int>> affects;
 	map<int, vector<int>> affected;
-	map<int, vector<int>> cache;
 
 	vector<int> visited;
 	vector<bool> results;
-	vector<vector<int>> caches;
 	vector<int> temp;
+
+	vector<vector<int>> cache;
+	vector<vector<int>> cached;
+	vector<pair<int, int>> pairs;
+	vector<pair<int, int>> paired;
+
+	pair<int, int> fix;
 
 	bool compute(int assignment1, int assignment2);
 
 	void computeAffects(int assignment);
 	void computeAffected(int assignment);
-	void buildCache();
-	void buildCached();
 };

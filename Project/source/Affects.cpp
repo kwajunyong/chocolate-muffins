@@ -10,7 +10,8 @@ Affects::Affects(AST* ast, Modifies* modifies, Uses* uses, Next* next, ProcTable
 	this->next = next;
 	this->procTable = procTable;
 	numOfStmt = stmtNum;
-	caches.assign(numOfStmt+1, temp);
+	cache.assign(numOfStmt+1, temp);
+	cached.assign(numOfStmt+1, temp);
 }
 
 Affects::~Affects(void) {}
@@ -163,11 +164,18 @@ vector<int> Affects::getAffected(int assignment)
 
 vector<int> Affects::getAffectsStar(int assignment)
 {
-	vector<int> temp;
 	visited.clear();
 	results.assign(numOfStmt+1, false);
+	//pairs.clear();
 	computeAffects(assignment);
-	//buildCached();
+	
+	for(int i = 0; i < pairs.size(); i++)
+	{
+		if(pairs[i].first != pairs[i].second)
+		{
+			cache[pairs[i].second] = cache[pairs[i].first];
+		}
+	}
 
 	vector<int> answers;
 	for(int i = 1; i < results.size(); i++)
@@ -181,51 +189,32 @@ vector<int> Affects::getAffectsStar(int assignment)
 void Affects::computeAffects(int assignment)
 {
 	vector<int> answers;
-	/*int key;
-	int value;
-	bool found = false;*/
-	
-	/*if(!caches.empty())
+	vector<int> temp;
+	bool allCached = true;
+
+	if(!cache[assignment].empty() && cache[assignment][0] != -1)
 	{
-		for(int i = 0; i < caches.size(); i++)
-		{
-			for(int j = 0; j < caches[i].size(); j++)
+		answers = cache[assignment];
+		
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+			visited.push_back(assignment);
+		
+			for(int i = 0; i < answers.size(); i++)
 			{
-				if(caches[i][j] == assignment)
-				{
-					key = i;
-					value = j;
-					found = true;
-					break;
-				}
+				results[answers[i]] = true;
 			}
-			if(found)
-				break;
-		}
-	}*/
-
-	//if(!cache[assignment].empty())
-	////if(found)
-	//{
-	//	/*for(int i = value+1; i < caches[key].size(); i++)
-	//	{
-	//		answers.push_back(caches[key][i]);
-	//	}*/
-
-	//	answers = cache[assignment];
-	//	if(find(visited.begin(), visited.end(), assignment) == visited.end())
-	//		visited.push_back(assignment);
-	//	
-	//		for(int i = 0; i < answers.size(); i++)
-	//		{
-	//			results[answers[i]] = true;
-	//			if(find(visited.begin(), visited.end(), answers[i]) == visited.end())
-	//				visited.push_back(answers[i]);
-	//		}
-	//}
-	//else
-	//{
+	}
+	else
+	{
 		answers = getAffects(assignment);
+
+		// if leaf node
+		if(answers.size() == 0)
+		{
+			if(cache[assignment].size() != 1)
+				cache[assignment].push_back(0);
+		}
+
 		if(find(visited.begin(), visited.end(), assignment) == visited.end())
 		{
 			visited.push_back(assignment);
@@ -233,20 +222,71 @@ void Affects::computeAffects(int assignment)
 			for(int i = 0; i < answers.size(); i++)
 			{
 				results[answers[i]] = true;
-				if(answers[i] == assignment)
-					visited.push_back(assignment);
 				computeAffects(answers[i]);
 			}
+			// return from recursion
+			for(int i = 0; i < answers.size(); i++)
+			{
+				if(!cache[answers[i]].empty())
+				{
+					temp = cache[answers[i]];
+					if(temp[0] != 0)
+					{
+						if(temp[0] == -1)
+						{
+							if(answers[i] == assignment)
+								temp[0] = assignment;
+							else
+								temp[0] = answers[i];
+								fix.first = temp[0];
+								fix.second = assignment;
+								if(fix.first != fix.second)
+									pairs.push_back(fix);
+						}
+						for(int j = 0; j < temp.size(); j++)
+						{
+							if(find(answers.begin(), answers.end(), temp[j]) == answers.end())
+							{
+								answers.push_back(temp[j]);
+							}
+						}
+					}
+				}
+				else
+				{
+					allCached = false;
+					break;
+				}
+			}
+			if(allCached)
+			{
+				if(answers.size() != 0)
+					cache[assignment] = answers;
+			}
 		}
-	//}
+		else
+		{
+			// Assignment affects itself
+			if(cache[assignment].size() != 1)
+				cache[assignment].push_back(-1);
+		}
+	}
 }
 
 vector<int> Affects::getAffectedStar(int assignment)
 {
 	visited.clear();
 	results.assign(numOfStmt+1, false);
+	//paired.clear();
 	computeAffected(assignment);
-	//buildCached();
+
+	for(int i = 0; i < paired.size(); i++)
+	{
+		if(paired[i].first != paired[i].second)
+		{
+			cached[paired[i].second] = cached[paired[i].first];
+		}
+	}
 
 	vector<int> answers;
 	for(int i = 1; i < results.size(); i++)
@@ -260,52 +300,32 @@ vector<int> Affects::getAffectedStar(int assignment)
 void Affects::computeAffected(int assignment)
 {
 	vector<int> answers;
+	vector<int> temp;
+	bool allCached = true;
 
-	/*int key;
-	int value;
-	bool found = false;*/
-	
-	/*if(!caches.empty())
+	if(!cached[assignment].empty() && cached[assignment][0] != -1)
 	{
-		for(int i = 0; i < caches.size(); i++)
-		{
-			for(int j = 0; j < caches[i].size(); j++)
+		answers = cached[assignment];
+
+		if(find(visited.begin(), visited.end(), assignment) == visited.end())
+			visited.push_back(assignment);
+		
+			for(int i = 0; i < answers.size(); i++)
 			{
-				if(caches[i][j] == assignment)
-				{
-					key = i;
-					value = j;
-					found = true;
-					break;
-				}
+				results[answers[i]] = true;
 			}
-			if(found)
-				break;
-		}
-	}*/
-
-	//if(!cache[assignment].empty())
-	//if(found)
-	//{
-	//	/*for(int i = value+1; i < caches[key].size(); i++)
-	//	{
-	//		answers.push_back(caches[key][i]);
-	//	}*/
-
-	//	answers = cache[assignment];
-	//	if(find(visited.begin(), visited.end(), assignment) == visited.end())
-	//		visited.push_back(assignment);
-	//	
-	//		for(int i = 0; i < answers.size(); i++)
-	//		{
-	//			results[answers[i]] = true;
-	//			if(find(visited.begin(), visited.end(), answers[i]) == visited.end())
-	//				visited.push_back(answers[i]);
-	//		}
-	//}
-	//else
-	//{
+	}
+	else
+	{
 		answers = getAffected(assignment);
+
+		// if leaf node
+		if(answers.size() == 0)
+		{
+			if(cached[assignment].size() != 1)
+				cached[assignment].push_back(0);
+		}
+
 		if(find(visited.begin(), visited.end(), assignment) == visited.end())
 		{
 			visited.push_back(assignment);
@@ -313,33 +333,53 @@ void Affects::computeAffected(int assignment)
 			for(int i = 0; i < answers.size(); i++)
 			{
 				results[answers[i]] = true;
-				if(answers[i] == assignment)
-					visited.push_back(assignment);
 				computeAffected(answers[i]);
 			}
+			// return from recursion
+			for(int i = 0; i < answers.size(); i++)
+			{
+				if(!cached[answers[i]].empty())
+				{
+					temp = cached[answers[i]];
+					if(temp[0] != 0)
+					{
+						if(temp[0] == -1)
+						{
+							if(answers[i] == assignment)
+								temp[0] = assignment;
+							else
+								temp[0] = answers[i];
+								fix.first = temp[0];
+								fix.second = assignment;
+								if(fix.first != fix.second)
+									paired.push_back(fix);
+						}
+						for(int j = 0; j < temp.size(); j++)
+						{
+							if(find(answers.begin(), answers.end(), temp[j]) == answers.end())
+							{
+								answers.push_back(temp[j]);
+							}
+						}
+					}
+				}
+				else
+				{
+					allCached = false;
+					break;
+				}
+			}
+			if(allCached)
+			{
+				if(answers.size() != 0)
+					cached[assignment] = answers;
+			}
 		}
-	//}
-}
-
-void Affects::buildCache() //vector of vector<int>
-{
-	if(find(caches.begin(), caches.end(), visited) == caches.end())
-	{
-		int x = visited[0];
-		caches[x] = visited;
-	}
-}
-
-void Affects::buildCached() // map of vector<int>
-{
-	vector<int> temp = visited;
-	for(int i = 0; i < visited.size(); i++)
-	{
-		temp.erase(temp.begin());
-		int x = visited[i];
-		if(cache[x].empty())
+		else
 		{
-			cache[x] = temp;
+			// Assignment affects itself
+			if(cached[assignment].size() != 1)
+				cached[assignment].push_back(-1);
 		}
 	}
 }
@@ -347,7 +387,8 @@ void Affects::buildCached() // map of vector<int>
 void Affects::clearCache()
 {
 	cache.clear();
-	caches.clear();
+	cached.clear();
+	pairs.clear();
 }
 
 //int main()
