@@ -48,7 +48,7 @@ bool Affects::isAffects(int assignment1, int assignment2)
 		return false;
 	}
 
-	vector<vector<int>> paths = next->getPaths(assignment1, assignment2);
+	/*vector<vector<int>> paths = next->getPaths(assignment1, assignment2);
 	vector<bool> path;
 	path.assign(paths.size(), true);
 
@@ -97,19 +97,19 @@ bool Affects::isAffects(int assignment1, int assignment2)
 			}
 		}
 	}
-	return false;
+	return false;*/
 
-	//int start = 0;
-	//seen.clear();
-	//if(next->next[assignment1].size() > 0)
-	//{
-	//	start = next->next[assignment1][0];
-	//}
-	//else
-	//{
-	//	start = assignment1;
-	//}
-	//return getPaths(start, assignment2, var);
+	int start = 0;
+	seen.clear();
+	if(next->next[assignment1].size() > 0)
+	{
+		start = next->next[assignment1][0];
+	}
+	else
+	{
+		start = assignment1;
+	}
+	return getPaths(start, assignment2, var);
 }
 
 bool Affects::isAffectsStar(int assignment1, int assignment2)
