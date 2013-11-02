@@ -114,13 +114,9 @@ void CallEngine::run() {
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
 	} else if (astParam1->updateAble()) {
-		vector<string> finalList; 
-		CommonUtility::convertVector(finalListOne, finalList);
-		myQM->updateRelationship(astParam1->getVariableName(), finalList);
+		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
 	} else if (astParam2->updateAble()) {
-		vector<string> finalList; 
-		CommonUtility::convertVector(finalListTwo, finalList);
-		myQM->updateRelationship(astParam2->getVariableName(), finalList);
+		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
 	}
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);

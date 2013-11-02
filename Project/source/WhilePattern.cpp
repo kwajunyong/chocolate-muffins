@@ -9,7 +9,7 @@ void WhilePattern::run() {
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
-		
+
 	vector<ASTNode*> nodes = pkbManager->getAST()->getStatementNodes(WHILE);
 
 	ASTNode* node;
@@ -25,26 +25,30 @@ void WhilePattern::run() {
 
 	CommonUtility::convertToMap(first, firstList);
 
-	vector<string> result;
+	FastSearchString result;
 	int number;
 
 	for (int i=0; i<nodes.size(); i++) {
 		matched = false;
 
-		node = nodes[i]->getChild();				// Get first child
+		iterFound = firstList.find(number );
 
-		if (astParam2->getParameterType() != VT_UNDERSCORE)
-			matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+		if (iterFound != firstList.end()) {
 
-		if (matched) {
-			number = nodes[i]->getStatementNumber();
-			iterFound = firstList.find(number );
 
-			if (iterFound != firstList.end())
-				result.push_back(CommonUtility::NumberToString(number));			
+			node = nodes[i]->getChild();				// Get first child
+
+			if (astParam2->getParameterType() != VT_UNDERSCORE)
+				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+
+			if (matched) {
+				number = nodes[i]->getStatementNumber();
+
+				result[CommonUtility::NumberToString(number)] = true;		
+			}
 		}
 	}
-	
+
 
 	failed = result.size() == 0;
 

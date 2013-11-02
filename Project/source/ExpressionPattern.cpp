@@ -27,7 +27,7 @@ void ExpressionPattern::run() {
 
 	CommonUtility::convertToMap(first, firstList);
 
-	vector<string> result;
+	FastSearchString result;
 	int number;
 
 	for (int i=0; i<nodes.size(); i++) {
@@ -57,7 +57,7 @@ void ExpressionPattern::run() {
 		}
 
 		if (matched) {
-			result.push_back(CommonUtility::NumberToString(number));			
+			result[CommonUtility::NumberToString(number)]  =true;			
 		}
 	}
 

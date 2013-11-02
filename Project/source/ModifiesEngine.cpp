@@ -105,14 +105,10 @@ void ModifiesEngine::handleProcedureVariable() {
 		if (keepRelationship) {
 			myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
 		}else 	if (astParam1->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalProcedureList, finalList);		
-			myQM->updateRelationship(astParam1->getVariableName(), finalList);
+			myQM->updateRelationship(astParam1->getVariableName(), finalProcedureList);
 
 		} else 	if (astParam2->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalVariableList, finalList);
-			myQM->updateRelationship(astParam2->getVariableName(), finalList);		
+			myQM->updateRelationship(astParam2->getVariableName(), finalVariableList);		
 		}
 
 		// both constant already handled above
@@ -218,14 +214,10 @@ void ModifiesEngine::handleStatementListVariable() {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
 
 	}else 	if (astParam1->updateAble()) {
-		vector<string> finalList; 
-		CommonUtility::convertVector(finalStatementList , finalList);		
-		myQM->updateRelationship(astParam1->getVariableName(), finalList);
+		myQM->updateRelationship(astParam1->getVariableName(), finalStatementList);
 
 	} else 	if (astParam2->updateAble()) {
-		vector<string> finalList; 
-		CommonUtility::convertVector(finalVariableList, finalList);
-		myQM->updateRelationship(astParam2->getVariableName(), finalList);		
+		myQM->updateRelationship(astParam2->getVariableName(), finalVariableList);		
 	}
 
 	// both constant already handled above

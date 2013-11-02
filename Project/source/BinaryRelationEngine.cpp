@@ -115,14 +115,10 @@ void BinaryRelationEngine::handleCall(vector<string> &first, vector<string> &sec
 	if (keepRelation) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
 	} else if (astParam1->updateAble()) {
-		vector<string> result ;
-		CommonUtility::convertVector(result1, result);
-		myQM->updateRelationship(astParam1->getVariableName(), result);
+		myQM->updateRelationship(astParam1->getVariableName(), result1);
 
 	} else if (astParam2->updateAble()) {
-		vector<string> result ;
-		CommonUtility::convertVector(result2, result);
-		myQM->updateRelationship(astParam2->getVariableName(), result);
+		myQM->updateRelationship(astParam2->getVariableName(), result2);
 	}
 
 	failed = (result1.size() == 0 && result2.size() == 0 && relationship.size() == 0);
@@ -197,14 +193,10 @@ void BinaryRelationEngine::run() {
 	if (keepRelation) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
 	} else if (astParam1->updateAble()) {
-		vector<string> result ;
-		CommonUtility::convertVector(firstList, result);
-		myQM->updateRelationship(astParam1->getVariableName(), result);
+		myQM->updateRelationship(astParam1->getVariableName(), firstList);
 
 	} else if (astParam2->updateAble()) {
-		vector<string> result ;
-		CommonUtility::convertVector(secondList, result);
-		myQM->updateRelationship(astParam2->getVariableName(), result);
+		myQM->updateRelationship(astParam2->getVariableName(), secondList);
 	}
 
 	failed = (firstList.size() == 0 && secondList.size() == 0 && relationship.size() == 0);

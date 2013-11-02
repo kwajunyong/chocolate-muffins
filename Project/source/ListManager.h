@@ -32,7 +32,7 @@ class ListManager {
 public:
 	ListManager(QueryManager *qm);
 	
-	void updateList(string variableName, const vector<string> &listValue);
+	void updateList(string variableName, const FastSearchString &listValue);
 	void updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
 
 	vector<int> getValueListInteger(string &variableName); 
@@ -56,23 +56,24 @@ private:
    void sortVariable(vector<list<string>*>* valueList, int varIndex, const string &variableName); // given a list sort which particular variable;
 
    void mergeSort(vector<list<string>*>* valueList, int varIndex, int start, int end, const string &variableType); 
-   void merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end, const string &variableType);
+   void merge(vector<list<string>*> *valueList, const int &varIndex, const int &start, const int &middle,  const int &end, const string &variableType);
 
    vector<vector<list<string>*>*> mainList;
    vector<vector<string>> variableList;	
-   void deleteList(vector<list<string>*> * valueList, const vector<string> &listValue, bool keepList, int index);
+   void deleteList(vector<list<string>*> * valueList, const FastSearchString &listValue, bool keepList, int index);
    
 
-   vector<list<string>*>::iterator bLookup(vector<list<string>*> * valueList, string value, int index);
+   vector<list<string>*>::iterator bLookup(vector<list<string>*> * valueList, string value, int index, const string &variableName);
 
-   void createANewList(string variableName, const vector<string> &listValue);
+   void createANewList(string variableName, const FastSearchString &listValue);
    void createANewList(const string &variableName1, const string &variableName2, const vector<pair<string, string>> &relationshipValue);
    void appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
 	    string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first);
 
-   void shortenList(vector<list<string>*> * valueList, int index1, int index2, const vector<pair<string, string>> &relationshipValue);
+   void shortenList(vector<list<string>*> * valueList, int index1, int index2, const vector<pair<string, string>> &relationshipValue,
+	    const string &variableOne);
    void mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
-	int index1, int index2, const vector<pair<string, string>> &relationshipValue);
+	int index1, int index2, const vector<pair<string, string>> &relationshipValue, const string  &variableOne, const string &variableTwo);
    void clearVariableList(vector<list<string>*> &varList);
    void recursivePrepare(vector<map<string, bool>> &resultGroupList, int index, 
 	      map<pair<int, int>, int> &positionList, vector<string> stringList, list<string> &resultList);

@@ -37,8 +37,8 @@ void FollowsStarEngine::run() {
 
 
 
-	map<int, int> finalListOne;
-	map<int, int> finalListTwo; 
+	FastSearchString finalListOne;
+	FastSearchString finalListTwo; 
 
 	FastSearchInteger::const_iterator iter;
 	vector<int>::const_iterator iterFollowerList;
@@ -63,7 +63,7 @@ void FollowsStarEngine::run() {
 					if (keepRelationship)
 						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
 					else if (astParam2->updateAble()) 
-						finalListTwo[iterSecond->first] = 1;
+						finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = 1;
 					else if (!astParam1->updateAble()) 
 						return; // both are not updatable. 
 
@@ -72,7 +72,7 @@ void FollowsStarEngine::run() {
 				}
 			}
 			if (exist && !keepRelationship && astParam1->updateAble()) 
-				finalListOne[iter->first] = 1;
+				finalListOne[CommonUtility::NumberToString(iter->first)] = 1;
 
 
 		}
@@ -89,32 +89,27 @@ void FollowsStarEngine::run() {
 					if (keepRelationship)
 						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
 					else if (astParam1->updateAble()) 
-						finalListOne[iter->first] = 1;
+						finalListOne[CommonUtility::NumberToString(iter->first)] = 1;
 					else if (!astParam2->updateAble()) 
 						return; // both are not updatable. 
 				}
 			}
 			if (exist && !keepRelationship && astParam2->updateAble()) 
-				finalListTwo[iterSecond->first] = 1;
+				finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = 1;
 		}
-
-
-		if (keepRelationship) {
-			myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-		} else if (astParam1->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalListOne, finalList);
-			myQM->updateRelationship(astParam1->getVariableName(), finalList);
-		} else if (astParam2->updateAble()) {
-			vector<string> finalList; 
-			CommonUtility::convertVector(finalListTwo, finalList);
-			myQM->updateRelationship(astParam2->getVariableName(), finalList);
-		}
-
-		failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 
 
 
 	}
+	if (keepRelationship) {
+		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+	} else if (astParam1->updateAble()) {
+		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
+	} else if (astParam2->updateAble()) {
+		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
+	}
+
+	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
+
 
 }

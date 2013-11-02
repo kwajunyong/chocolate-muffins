@@ -273,7 +273,7 @@ int ListManager::compare(const string &value1, const string &value2, const strin
 	if (variableType.compare("string") == 0) 
 		return value1.compare(value2);
 	else {
-
+		
 		int intValue1 = atoi(value1.c_str());
 		int intValue2 = atoi(value2.c_str());
 		if (intValue1 == intValue2)
@@ -283,8 +283,6 @@ int ListManager::compare(const string &value1, const string &value2, const strin
 		else
 			return -1;
 	}
-
-
 
 }
 void ListManager::updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue) {
@@ -309,7 +307,7 @@ void ListManager::updateList(string variableName1, string variableName2, const v
 	} else  if (varOneFirst == varTwoFirst) { // they both exists in the same list
 		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 
-		shortenList(mainList.at(varOneFirst), varOneSecond, varTwoSecond, relationshipValue);
+		shortenList(mainList.at(varOneFirst), varOneSecond, varTwoSecond, relationshipValue, variableName1);
 
 	} else { // they both exist in dfferent list.
 		// mergelist
@@ -318,7 +316,7 @@ void ListManager::updateList(string variableName1, string variableName2, const v
 		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 		// sort both
 		sortVariable(mainList.at(varTwoFirst), varTwoSecond, variableName2);		
-		mergeList(mainList.at(varOneFirst), mainList.at(varTwoFirst), varOneSecond, varTwoSecond, relationshipValue);
+		mergeList(mainList.at(varOneFirst), mainList.at(varTwoFirst), varOneSecond, varTwoSecond, relationshipValue, variableName1, variableName2);
 
 		// delete the second list;
 		mainList.erase(mainList.begin() + varTwoFirst);
@@ -337,7 +335,7 @@ void ListManager::updateList(string variableName1, string variableName2, const v
 
 // benchmark here
 void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<string>*> * valueList2, 
-	int index1, int index2, const vector<pair<string, string>> &relationshipValue) {
+	int index1, int index2, const vector<pair<string, string>> &relationshipValue, const string  &variableOne, const string &variableTwo) {
 
 		vector<list<string>*> newList;// temporary list;
 		vector<list<string>*>::iterator iterFoundList1, iterFoundList2;
@@ -354,13 +352,15 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 		string first;
 		string second;
 		string value;
+
+
 		for (iterListValue = relationshipValue.begin(); 
 			iterListValue != relationshipValue.end(); iterListValue++) {
 				first= (*iterListValue).first;
 				second = (*iterListValue).second;
 
-				iterFoundList1 = bLookup(valueList1, first, index1);
-				iterFoundList2 = bLookup(valueList2, second, index2);
+				iterFoundList1 = bLookup(valueList1, first, index1,variableOne);
+				iterFoundList2 = bLookup(valueList2, second, index2,variableTwo);
 
 				iterList1 = iterFoundList1;
 				iterList2 = iterFoundList2;
@@ -428,7 +428,7 @@ void ListManager::mergeList(vector<list<string>*> * valueList1, vector<list<stri
 
 
 void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int index2, 
-	const vector<pair<string, string>> &relationshipValue) {
+	const vector<pair<string, string>> &relationshipValue, const string &variableOne) {
 
 		vector<list<string>*> newList;// temporary list;
 		vector<list<string>*>::iterator iterFound;
@@ -444,7 +444,7 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 				first= (*iterListValue).first;
 				second = (*iterListValue).second;
 				// find the iterFound 
-				iterFound = bLookup(valueList, first, index1);
+				iterFound = bLookup(valueList, first, index1, variableOne);
 
 
 				if (iterFound != valueList->end()) {
@@ -477,7 +477,7 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 // ASSUME SORTED.
 
 void ListManager::appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
-	string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first) {
+	string newvariableName, const vector<pair<string, string>>  &relationshipValue, bool first) {
 
 		vector<list<string>*> newTupleList;// temporary list;
 		vector<list<string>*>::iterator iterFound;
@@ -489,6 +489,8 @@ void ListManager::appendVariable(vector<list<string>*> * valueList, vector<strin
 		string valuer;
 
 		string value;
+
+		string variableName = variable.at(index);
 		for (iterListValue = relationshipValue.begin(); iterListValue != relationshipValue.end(); iterListValue++) {
 
 			if (first) {
@@ -498,7 +500,7 @@ void ListManager::appendVariable(vector<list<string>*> * valueList, vector<strin
 				looker = (*iterListValue).second;
 				valuer = (*iterListValue).first;
 			}
-			iterFound = bLookup(valueList, looker, index);
+			iterFound = bLookup(valueList, looker, index, variableName);
 
 			if (iterFound != valueList->end()) {
 				do {
@@ -578,7 +580,7 @@ void ListManager::clearVariableList(vector<list<string>*> &varList) {
 	varList.clear();
 }
 
-void ListManager::updateList(string variableName, const vector<string> &listValue) {
+void ListManager::updateList(string variableName, const FastSearchString &listValue) {
 
 
 	// check if the varialbe exists
@@ -599,15 +601,15 @@ void ListManager::updateList(string variableName, const vector<string> &listValu
 	}
 }
 
-void ListManager::createANewList(string variableName, const vector<string> &listValue) {
+void ListManager::createANewList(string variableName, const FastSearchString &listValue) {
 
-	vector<string>::const_iterator  iterListValue;
+	FastSearchString::const_iterator  iterListValue;
 	list<string> * newVariableList ;
 	vector<list<string>*> *headerList = new vector<list<string>*>();
 
 	for (iterListValue = listValue.begin(); iterListValue != listValue.end(); iterListValue++) {
 		newVariableList = new list<string>;
-		newVariableList->push_back(*iterListValue);		
+		newVariableList->push_back(iterListValue->first);		
 		headerList->push_back(newVariableList);
 	}
 
@@ -643,13 +645,12 @@ void ListManager::createANewList(const string &variableName1, const string &vari
 }
 
 // delete list can be fine tuned / optimized if necessary. 
-// DELETE LIST ASSUME THE listValue IS SORTED!!!!
 
-void ListManager::deleteList(vector<list<string>*>* valueList, const vector<string> &listValue, bool keepList, int index ) {
+void ListManager::deleteList(vector<list<string>*>* valueList, const FastSearchString &listValue, bool keepList, int index ) {
 
 	vector<list<string>*> newList;// temporary list;
 	vector<list<string>*>::iterator iter;
-	vector<string>::const_iterator iterFound;
+	FastSearchString::const_iterator iterFound;
 	string value;
 
 	if (keepList) { // the list value contains the value we want to keep. 
@@ -658,15 +659,15 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 		while(iter != valueList->end()) {
 			string value = getValueAt((*iter), index);
 
-			iterFound = CommonUtility::binaryLookup(listValue, value);
+			iterFound = listValue.find(value);
 
 			if (iterFound == listValue.end()) {
 
 				delete (*iter);
 				iter =valueList->erase(iter);							
-			} else {
+			} else 
 				iter++;
-			}
+			
 		}
 
 
@@ -674,17 +675,53 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const vector<stri
 }
 
 
-vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valueList, string value, int index) {
+vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valueList, string value, int index, const string &variableName) {
 
 	vector<list<string>*>::iterator iter;
+	vector<list<string>*>::iterator iterPrevious;
+	
 	// this is not binary lookup. 
 	// must ensure binary lookup find the first element. 
-	for (iter = valueList->begin(); iter != valueList->end(); iter++) {
-		if (getValueAt((*iter), index).compare(value) == 0) {
-			return iter;
+	int min = 0;
+	int max = valueList->size();
+	int curr = (max + min) / 2;
+	
+
+	string variableType = parent->getVariableType(variableName);
+	int compareResult ; 
+	while (max > min) {
+		 iter = valueList->begin() + curr;
+		
+		compareResult = compare(getValueAt((*iter), index), value, variableType);
+		if (compareResult == 0) {
+
+			if (iter == valueList->begin())
+				return iter;
+
+			compareResult = compare(getValueAt((*iter), index), value, variableType);
+			iterPrevious = iter;
+			iterPrevious--;
+			while (true) {
+				compareResult = compare(getValueAt((*iterPrevious), index), value, variableType);
+				if (compareResult != 0)
+					return iter;
+				else {
+					if (iterPrevious == valueList->begin())
+						return iterPrevious;
+					iter = iterPrevious;
+					iterPrevious--;
+				}
+			}
+		} else if (compareResult > 0) {
+		   max = curr - 1;
+		} else {
+		   min = curr + 1; 
 		}
+		 curr = (max+ min) /2; 
+
 	}
-	return iter;
+
+	return valueList->end();
 }
 
 
@@ -705,13 +742,13 @@ void ListManager::mergeSort(vector<list<string>*> *valueList, int varIndex, int 
 
 	int middle = (start + end) / 2;
 
-	mergeSort(valueList, varIndex, start, middle, variableType);
+	mergeSort(valueList, varIndex, start, middle - 1, variableType);
 	mergeSort(valueList, varIndex, middle + 1, end, variableType);
 
 	merge(valueList, varIndex, start, middle, end, variableType);
 }
 
-void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int start, int middle,  int end, const string &variableType) {
+void ListManager::merge(vector<list<string>*> *valueList, const int &varIndex, const int &start, const int &middle,  const int &end, const string &variableType) {
 
 	int i = start; 
 	int j = middle + 1;
@@ -742,11 +779,10 @@ void ListManager::merge(vector<list<string>*> *valueList, int varIndex, int star
 	// putting the list into the main list
 	j = 0;
 	vector<list<string>*>::iterator iter;
-	for (i = start; i  <= end; i++) {		
-		iter = valueList->erase(valueList->begin() + i);
-		valueList->insert(iter, newList.at(j));		
-		j++;
-	}
+		 valueList->erase(valueList->begin() + start, valueList->begin() + end +1);
+	iter = valueList->begin() + start;
+		 valueList->insert(iter, newList.begin(), newList.end());		
+
 }
 
 const string &ListManager::getValueAt(list<string>* valueList, int index) {

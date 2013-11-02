@@ -47,12 +47,12 @@ public:
 	FastSearchString getValueListMap(string variableName);
 	FastSearchInteger getValueListIntegerMap(string variableName)  ;
 
-	// after the execution update the vector value. 
-	void updateVector(string variableName, vector<string> &vectorString);
-	void updateVectorInteger(string variableName, vector<int> &vectorInt);
+	//// after the execution update the vector value. 
+	//void updateVector(string variableName, vector<string> &vectorString);
+	//void updateVectorInteger(string variableName, vector<int> &vectorInt);
 
 	void updateRelationship(const string &variable1, const string &variable2, const vector<pair<string, string>> &relationship);
-	void updateRelationship(const string &variable, const vector<string> &relationship);
+	void updateRelationship(const string &variable, const FastSearchString &relationship);
 	
 	QueryManager(PKB *pkb);
 

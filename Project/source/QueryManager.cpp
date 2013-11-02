@@ -24,7 +24,7 @@ string QueryManager::getVariableType(const string &variableName) {
 
 }
 
-void QueryManager::updateRelationship(const string &variable, 	  const vector<string> &relationship) {		
+void QueryManager::updateRelationship(const string &variable, 	const FastSearchString &relationship) {		
 	listManager->updateList(variable, relationship);
 }
 
@@ -67,15 +67,7 @@ void QueryManager::addQueryClass(QueryClass* qc)  {
 	qt.addQueryClass(qc);
 }
 
-void QueryManager::updateVector(string variableName, vector<string> &vectorString) {
-	/*ASTParameterValue &astParamValue = getASTParameterValue(variableName);
-	astParamValue.setValueList(vectorString);*/
-}
 
-void QueryManager::updateVectorInteger(string variableName, vector<int> &vectorString) {
-	/*ASTParameterValue &astParamValue = getASTParameterValue(variableName);
-	astParamValue.setValueListInteger (vectorString);*/
-}
 
 vector<int> QueryManager::getAllList(ASTType asttype) {
 	return pkbLibrary->getAST()->getStatementNumbers(asttype);		
