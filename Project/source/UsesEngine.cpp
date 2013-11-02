@@ -86,11 +86,8 @@ void UsesEngine::handleProcedureVariable() {
 							break;
 						}
 					}
-				}
-
-				// if second is not updatable, we have done what we come for 
-				if (!astParam2->updateAble())  {
-					if (!astParam1->updateAble()) 
+				}else { // if the first one is not updateable, just need to care for second one 
+					if (!astParam2->updateAble()) 
 						return; // we have got what we come for. 
 
 					break;	

@@ -181,7 +181,9 @@ void QueryManager::resetEverything() {
 		iter->second.reset();
 	}	
 	expressionValueList.clear();
-	
+
+//	pkbLibrary->getAffects()->clearCache();
+
 	resultList.clear();
 	qt.clear();
 	listManager->clear();

@@ -170,13 +170,16 @@ void ListManager::recursivePrepare(vector<map<string, bool>> &resultGroupList, i
 		for (iterString = splitList.begin(); iterString != splitList.end(); iterString++) {
 			pair<int, int> p (index, curr); 
 			pos = positionList.find(p)->second;
-			newList.insert(newList.begin() + pos, *iterString);
+			if (newList.size() <= pos) 
+				newList.push_back(*iterString);
+			else
+				newList.insert(newList.begin() + pos, *iterString);
 			curr++;
 		}
 
 		if (index < resultGroupList.size() - 1) {
-			index++;
-			recursivePrepare(resultGroupList, index, 
+			
+			recursivePrepare(resultGroupList, index + 1, 
 				positionList, newList, resultList);
 			
 		} else {

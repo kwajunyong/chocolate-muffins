@@ -7,4 +7,5 @@ public:
 	NextStarEngine(QueryManager* qm, PKB *pkb);
 
 	  void run();
+	  bool sameVariable();
 };

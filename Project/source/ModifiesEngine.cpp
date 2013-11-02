@@ -80,17 +80,14 @@ void ModifiesEngine::handleProcedureVariable() {
 					relationship.push_back(pair<string, string>(*iterProcedureResult,*iter));
 				else if (astParam1->updateAble()) {
 					finalProcedureList[*iterProcedureResult] = true;
-					if (!astParam2->updateAble()) {
+					if (!astParam2->updateAble()) { // if the variable is not updatable, we have collected enough
 						if (finalProcedureList.size() == procedureList.size()) {
 							iter = second.end();
 							break;
 						}
 					}
-				}
-
-				// if second is not updatable, we have done what we come for 
-				if (!astParam2->updateAble())  {
-					if (!astParam1->updateAble()) 
+				} else { // if the first one is not updateable, just need to care for second one 
+					if (!astParam2->updateAble()) 
 						return; // we have got what we come for. 
 
 					break;	
