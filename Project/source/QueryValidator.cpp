@@ -877,7 +877,7 @@ bool QueryValidator::processQuery(string inputQuery){
 	return true;*/
 }
 
-int main(){
+int main1(){
 	Parser parser;
 	DesignExtractor extractor;
 	PKB* pkb;

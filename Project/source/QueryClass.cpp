@@ -18,7 +18,7 @@ void QueryClass::loadVariable(int paramIndex, FastSearchString &varList) {
 // DON'T HANDLE UNDERSCORE
 void QueryClass::loadVariable(int paramIndex, FastSearchInteger &varList) {
 
-	if (parameterList.at(paramIndex)->getParameterType() == VT_CONSTANTSTRING) 
+	if (parameterList.at(paramIndex)->getParameterType() == VT_CONSTANTINTEGER) 
 		varList[atoi(parameterList.at(paramIndex)->getVariableName().c_str())] = true;
 	else
 		varList = myQM->getValueListIntegerMap(parameterList.at(paramIndex)->getVariableName());
