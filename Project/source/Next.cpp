@@ -245,7 +245,7 @@ void Next::DFS(int stmtNum, int end)
 			if(v == end)
 			{
 				reachedEnd = true;
-				path.pop_back();
+				//path.pop_back(); // edited here
 				paths.push_back(path);
 				//path.clear();
 				break;
@@ -256,8 +256,19 @@ void Next::DFS(int stmtNum, int end)
 			{
 				visited.pop_back();
 				//added here
-				if(path.size() > 0)
-					path.pop_back();
+				if(path.size() > 0) // edited here
+				{
+					if(find(path.begin(), path.end(), v) != path.end())
+					{
+						while(path.back() != v)
+							path.pop_back();
+						path.pop_back();
+					}
+					else
+					{
+						path.pop_back();
+					}
+				}
 			}
 			else// here
 			{

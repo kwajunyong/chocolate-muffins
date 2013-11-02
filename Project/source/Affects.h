@@ -49,6 +49,7 @@ private:
 	map<int, vector<int>> affected;
 
 	vector<int> visited;
+	vector<int> seen;
 	vector<bool> results;
 	vector<int> temp;
 
@@ -60,6 +61,7 @@ private:
 	pair<int, int> fix;
 
 	bool compute(int assignment1, int assignment2);
+	bool getPaths(int start, int end, string var);
 
 	void computeAffects(int assignment);
 	void computeAffected(int assignment);

@@ -98,6 +98,18 @@ bool Affects::isAffects(int assignment1, int assignment2)
 		}
 	}
 	return false;
+
+	//int start = 0;
+	//seen.clear();
+	//if(next->next[assignment1].size() > 0)
+	//{
+	//	start = next->next[assignment1][0];
+	//}
+	//else
+	//{
+	//	start = assignment1;
+	//}
+	//return getPaths(start, assignment2, var);
 }
 
 bool Affects::isAffectsStar(int assignment1, int assignment2)
@@ -386,9 +398,81 @@ void Affects::computeAffected(int assignment)
 
 void Affects::clearCache()
 {
-	cache.clear();
-	cached.clear();
-	pairs.clear();
+	cache.assign(numOfStmt+1, temp);
+	cached.assign(numOfStmt+1, temp);
+	//pairs.clear();
+}
+
+bool Affects::getPaths(int stmtNum, int end, string var)
+{
+	bool ans = false;
+	//int v = next->next[stmtNum][0];
+	if(find(seen.begin(), seen.end(), stmtNum) == seen.end())
+	{
+		seen.push_back(stmtNum);
+
+		if(stmtNum == end)
+			return true;
+		if(ast->getStatementType(stmtNum) == ASSIGN || ast->getStatementType(stmtNum) == CALL)
+		{
+			if(modifies->isModifiesStmt(stmtNum, var))
+			{
+				return false;
+			}
+			else
+			{
+				int start = 0;
+				if(next->next[stmtNum].size() > 0)
+				{
+					start = next->next[stmtNum][0];
+				}
+				else
+				{
+					start = stmtNum;
+				}
+				ans = getPaths(start, end, var);
+			}
+		}
+		else if(ast->getStatementType(stmtNum) == WHILE)
+		{
+			//ans = getPaths(v, end, var);
+			if(next->next[stmtNum].size() > 1)
+			{
+				int x = next->next[stmtNum][1];
+				int y = next->next[stmtNum][0];
+				if(end > x)
+				{
+					ans = getPaths(x, end, var);
+					if(!ans)
+						ans = getPaths(y, end, var);
+				}
+				else
+				{
+					ans = getPaths(y , end, var);
+					if(!ans)
+						ans = getPaths(x, end, var);
+				}
+			}
+			else
+			{
+				int x = next->next[stmtNum][0];
+				ans = getPaths(x, end, var);
+			}
+		}
+		else if(ast->getStatementType(stmtNum) == IF)
+		{
+			int x = next->next[stmtNum][0];
+			int y = next->next[stmtNum][1];
+
+			ans = getPaths(x, end, var);
+			if(ans)
+				return true;
+			ans = getPaths(y , end, var);
+			if(ans)
+				return true;
+		}
+	}
+	return ans;
 }
 
 //int main()

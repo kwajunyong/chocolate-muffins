@@ -14,6 +14,9 @@ public:
 	Next(void);
 	~Next(void);
 
+	map<int, vector<int>> next;
+	map<int, vector<int>> previous;
+
 	bool addNext(int stmtNum1, int stmtNum2);
 	bool isNext(int stmtNum1, int stmtNum2, bool transitive);
 
@@ -23,8 +26,11 @@ public:
 	vector<vector<int>> getPaths(int start, int end);
 
 private:
-	map<int, vector<int>> next;
-	map<int, vector<int>> previous;
+	//map<int, vector<int>> next;
+	//map<int, vector<int>> previous;
+
+	//vector<vector<int>> next;
+	//vector<vector<int>> previous;
 
 	/*vector<int> visited;
 	vector<int> path;
