@@ -51,6 +51,17 @@ std::string ProcTable::getProcedure(int stmtNum)
 	throw std::out_of_range("Statement number out of bound");
 }
 
+std::pair<int, int> ProcTable::getRange(std::string procedure)
+{
+	int procIndex = getIndex(procedure);
+
+	if (procIndex < 0) {
+		return std::make_pair<int, int>(0, 0);
+	}
+
+	return _stmtRanges[procIndex];
+}
+
 std::vector<std::string> ProcTable::getAllNames()
 {
 	return _procNames;

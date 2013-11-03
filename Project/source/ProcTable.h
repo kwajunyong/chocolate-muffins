@@ -16,6 +16,8 @@ public:
 	std::string getName(int index);
 
 	std::string getProcedure(int stmtNum);
+	std::pair<int, int> getRange(std::string procedure);
+
 	std::vector<std::string> getAllNames();
 	int getSize();
 
