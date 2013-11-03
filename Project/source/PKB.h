@@ -16,6 +16,9 @@
 #include "Affects.h"
 //#include "Stats.h"
 
+#include <direct.h>
+#include <fstream>
+
 class PKB
 {
 public:
@@ -64,6 +67,8 @@ public:
 
 	//Stats* getStats();
 	//void setStats(Stats* stats);
+
+	void extract();
 
 private:
 	AST* _ast;

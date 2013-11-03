@@ -172,3 +172,184 @@ void PKB::setNumOfStmt(int numOfStmt)
 //{
 //	_stats = stats;
 //}
+
+void PKB::extract()
+{
+	int i = 0;
+	int j = 0;
+	std::pair<int, int> range;
+	std::vector<int> intResults;
+	std::vector<std::string> strResults;
+	std::vector<ASTNode*> nodeResults;
+
+	mkdir("PKB");
+	std::ofstream ast("PKB/AST.txt", std::ofstream::out | ios::trunc);
+	std::ofstream astStmtNum("PKB/ASTStmtNum.txt", std::ofstream::out | ios::trunc);
+	std::ofstream astContainer("PKB/ASTContainers.txt", std::ofstream::out | ios::trunc);
+	std::ofstream follows("PKB/Follows.txt", std::ofstream::out | ios::trunc);
+	std::ofstream parent("PKB/Parent.txt", std::ofstream::out | ios::trunc);
+	std::ofstream modifies("PKB/Modifies.txt", std::ofstream::out | ios::trunc);
+	std::ofstream uses("PKB/Uses.txt", std::ofstream::out | ios::trunc);
+	std::ofstream calls("PKB/Calls.txt", std::ofstream::out | ios::trunc);
+	std::ofstream callsStmt("PKB/CallsStmt.txt", std::ofstream::out | ios::trunc);
+	std::ofstream next("PKB/Next.txt", std::ofstream::out | ios::trunc);
+	std::ofstream varTable("PKB/VarTable.txt", std::ofstream::out | ios::trunc);
+	std::ofstream procTable("PKB/ProcTable.txt", std::ofstream::out | ios::trunc);
+	std::ofstream constTable("PKB/ConstTable.txt", std::ofstream::out | ios::trunc);
+	
+	strResults = _varTable->getAllNames();
+
+	for (j = 0; j < strResults.size(); j++) {
+		varTable << strResults[j] << ", ";
+	}
+
+	intResults = _constTable->getAllValues();
+
+	for (j = 0; j < intResults.size(); j++) {
+		constTable << intResults[j] << ", ";
+	}
+
+	strResults = _traverser->traverse(_ast->getRootNode());
+
+	for (j = 0; j < strResults.size(); j++) {
+		ast << strResults[j] << endl;
+	}
+
+	intResults = _ast->getStatementNumbers(ASSIGN);
+
+	astStmtNum << "ASSIGN" << endl;
+
+	for (j = 0; j < intResults.size(); j++) {
+		astStmtNum << intResults[j] << ", ";
+	}
+
+	astStmtNum << endl << endl;
+
+	intResults = _ast->getStatementNumbers(WHILE);
+
+	astStmtNum << "WHILE" << endl;
+
+	for (j = 0; j < intResults.size(); j++) {
+		astStmtNum << intResults[j] << ", ";
+	}
+
+	astStmtNum << endl << endl;
+
+	intResults = _ast->getStatementNumbers(IF);
+
+	astStmtNum << "IF" << endl;
+
+	for (j = 0; j < intResults.size(); j++) {
+		astStmtNum << intResults[j] << ", ";
+	}
+
+	astStmtNum << endl << endl;
+
+	intResults = _ast->getStatementNumbers(CALL);
+
+	astStmtNum << "CALL" << endl;
+
+	for (j = 0; j < intResults.size(); j++) {
+		astStmtNum << intResults[j] << ", ";
+	}
+
+	astStmtNum << endl << endl;
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _follows->getFollowedBy(i, false);
+
+		for (j = 0; j < intResults.size(); j++) {
+			follows << "Follows(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _parent->getChild(i, false);
+
+		for (j = 0; j < intResults.size(); j++) {
+			parent << "Parent(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		strResults = _modifies->getModifiedVar(i);
+
+		for (j = 0; j < strResults.size(); j++) {
+			modifies << "Modifies(" << i << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		strResults = _uses->getUsedVar(i);
+
+		for (j = 0; j < strResults.size(); j++) {
+			uses << "Uses(" << i << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _next->getNext(i, false);
+
+		for (j = 0; j < intResults.size(); j++) {
+			next << "Next(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	std::vector<std::string> variable = _varTable->getAllNames();
+
+	for (i = 0; i < variable.size(); i++) {
+		intResults = _ast->getStatementNumbers(WHILE, variable[i]);
+
+		for (j = 0; j < intResults.size(); j++) {
+			astContainer << "WHILE " << variable[i] << " " << intResults[j] << endl;
+		}
+	}
+
+	for (i = 0; i < variable.size(); i++) {
+		intResults = _ast->getStatementNumbers(IF, variable[i]);
+
+		for (j = 0; j < intResults.size(); j++) {
+			astContainer << "IF " << variable[i] << " " << intResults[j] << endl;
+		}
+	}
+
+	std::vector<std::string> procedure = _procTable->getAllNames();
+
+	for (i = 0; i < procedure.size(); i++) {
+		range = _procTable->getRange(procedure[i]);
+
+		procTable << procedure[i] << " " << range.first << "-" << range.second << endl;
+	}
+
+	for (i = 0; i < procedure.size(); i++) {
+		strResults = _modifies->getModifiedVar(procedure[i]);
+
+		for (j = 0; j < strResults.size(); j++) {
+			modifies << "Modifies(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 0; i < procedure.size(); i++) {
+		strResults = _uses->getUsedVar(procedure[i]);
+
+		for (j = 0; j < strResults.size(); j++) {
+			uses << "Uses(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 0; i < procedure.size(); i++) {
+		strResults = _calls->getCalls(procedure[i], false);
+
+		for (j = 0; j < strResults.size(); j++) {
+			calls << "Calls(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 0; i < procedure.size(); i++) {
+		intResults = _calls->getCallsStmt(procedure[i]);
+
+		for (j = 0; j < intResults.size(); j++) {
+			callsStmt << "Calls(" << intResults[j] << ", " << procedure[i] << ")" << endl;
+		}
+	}
+}
