@@ -4,6 +4,8 @@ using namespace std;
 
 Affects::Affects(AST* ast, Modifies* modifies, Uses* uses, Next* next, ProcTable* procTable, int stmtNum)
 {
+	time = 0;
+	times = 0;
 	this->ast = ast;
 	this->modifies = modifies;
 	this->uses = uses;
@@ -31,10 +33,11 @@ bool Affects::isAffects(int assignment1, int assignment2)
 	}
 
 	// Check if assignment1 and assignment2 has a control flow path, Next*(assignment1, assignment2). If not true, return false
-	if(!next->isNext(assignment1, assignment2, true))
-	{
-		return false;
-	}
+	if(assignment1 == assignment2)
+		if(!next->isNext(assignment1, assignment2, true))
+		{
+			return false;
+		}
 
 	vector<string> variables;
 	string var;
@@ -109,6 +112,10 @@ bool Affects::isAffects(int assignment1, int assignment2)
 	{
 		start = assignment1;
 	}
+	// stopped here
+	/*if(start == assignment2)
+		if(!next->isNext(start, assignment2, true))
+			return false;*/
 	return getPaths(start, assignment2, var);
 }
 
@@ -176,7 +183,8 @@ vector<int> Affects::getAffected(int assignment)
 
 vector<int> Affects::getAffectsStar(int assignment)
 {
-	visited.clear();
+	//visited.clear();
+	visited.assign(numOfStmt+1, false);
 	results.assign(numOfStmt+1, false);
 	//pairs.clear();
 	computeAffects(assignment);
@@ -203,14 +211,19 @@ void Affects::computeAffects(int assignment)
 	vector<int> answers;
 	vector<int> temp;
 	bool allCached = true;
+	map<int, bool> mapAns;
 
 	if(!cache[assignment].empty() && cache[assignment][0] != -1)
 	{
 		answers = cache[assignment];
-		
+		for(int i = 0; i < answers.size(); i++)
+		{
+			mapAns[answers[i]] = true;
+		}
+
 		if(find(visited.begin(), visited.end(), assignment) == visited.end())
 			visited.push_back(assignment);
-		
+
 			for(int i = 0; i < answers.size(); i++)
 			{
 				results[answers[i]] = true;
@@ -218,7 +231,13 @@ void Affects::computeAffects(int assignment)
 	}
 	else
 	{
+		vector<int> holder;
+
 		answers = getAffects(assignment);
+		for(int i = 0; i < answers.size(); i++)
+		{
+			mapAns[answers[i]] = true;
+		}
 
 		// if leaf node
 		if(answers.size() == 0)
@@ -236,6 +255,7 @@ void Affects::computeAffects(int assignment)
 				results[answers[i]] = true;
 				computeAffects(answers[i]);
 			}
+
 			// return from recursion
 			for(int i = 0; i < answers.size(); i++)
 			{
@@ -257,9 +277,13 @@ void Affects::computeAffects(int assignment)
 						}
 						for(int j = 0; j < temp.size(); j++)
 						{
-							if(find(answers.begin(), answers.end(), temp[j]) == answers.end())
+							//times++;
+							//if(find(answers.begin(), answers.end(), temp[j]) == answers.end())
+							if(!mapAns[temp[j]])
 							{
+								mapAns[temp[j]] = true;
 								answers.push_back(temp[j]);
+								//holder.push_back(temp[j]);
 							}
 						}
 					}
@@ -270,6 +294,12 @@ void Affects::computeAffects(int assignment)
 					break;
 				}
 			}
+			/*for(int k = 0; k < holder.size(); k++)
+			{
+				times++;
+				answers.push_back(holder[k]);
+			}*/
+
 			if(allCached)
 			{
 				if(answers.size() != 0)
@@ -412,7 +442,7 @@ bool Affects::getPaths(int stmtNum, int end, string var)
 		seen.push_back(stmtNum);
 
 		if(stmtNum == end)
-			return true;
+				return true;
 		if(ast->getStatementType(stmtNum) == ASSIGN || ast->getStatementType(stmtNum) == CALL)
 		{
 			if(modifies->isModifiesStmt(stmtNum, var))
