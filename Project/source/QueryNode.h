@@ -5,10 +5,16 @@ class QueryNode {
 public:
 	QueryNode(QueryClass*);
 	void calculateScore();
-	void addLeftArm(QueryClass*);
-	void addRightArm(QueryClass*);
+	void addLeftArm(QueryNode*);
+	void addRightArm(QueryNode*);
+
+	string &getVariable1Name();
+	string &getVariable2Name();
+
 private:
 	QueryClass *mainClass;
-	vector<QueryClass*> leftArm;
-	vector<QueryClass*> rightArm;
+	vector<QueryNode*> leftArm;
+	vector<QueryNode*> rightArm;
+	string var1;
+	string var2;
 };
