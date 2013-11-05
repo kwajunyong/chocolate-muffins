@@ -1,7 +1,7 @@
 #include "ParentStarEngine.h"
 #include "QueryManager.h"
 
-ParentStarEngine::ParentStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_PARENTS_S, qm, pkb){
+ParentStarEngine::ParentStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_PARENTSTAR, qm, pkb){
 
 
 }

@@ -2,7 +2,7 @@
 #include "QueryManager.h"
 #include "CommonUtility.h"
 
-CallStarEngine::CallStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_CALLS, qm, pkb){
+CallStarEngine::CallStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_CALLSSTAR, qm, pkb){
 
 
 }

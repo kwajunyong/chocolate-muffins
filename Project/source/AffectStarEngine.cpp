@@ -1,7 +1,7 @@
 #include "AffectStarEngine.h"
 #include "QueryManager.h"
 
-AffectStarEngine::AffectStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_AFFECT, qm, pkb){
+AffectStarEngine::AffectStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_AFFECTSTAR, qm, pkb){
 
 
 }

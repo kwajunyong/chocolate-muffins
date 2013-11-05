@@ -5,7 +5,7 @@
 //pkbManager->getCalls()->getCallsStmt("hahah");
 // give line get proc
 //pkbManager->getAST()->getCalledProcedure(2);
-BinaryRelationEngine::BinaryRelationEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+BinaryRelationEngine::BinaryRelationEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_BINARYRELATION, qm, pkb){
 
 
 }

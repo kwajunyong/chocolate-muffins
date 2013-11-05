@@ -1,6 +1,6 @@
 #include "WhilePattern.h"
 #include "QueryManager.h"
-WhilePattern::WhilePattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+WhilePattern::WhilePattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_WHILEPATTERN, qm, pkb){
 
 
 }

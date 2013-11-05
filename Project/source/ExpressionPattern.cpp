@@ -1,6 +1,6 @@
 #include "ExpressionPattern.h"
 #include "QueryManager.h"
-ExpressionPattern::ExpressionPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+ExpressionPattern::ExpressionPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_EXPRESSIONPATTERN, qm, pkb){
 
 
 }

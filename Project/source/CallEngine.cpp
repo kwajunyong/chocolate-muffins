@@ -2,7 +2,7 @@
 #include "QueryManager.h"
 #include "CommonUtility.h"
 
-CallEngine::CallEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_USES, qm, pkb){
+CallEngine::CallEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_CALLS, qm, pkb){
 
 
 }

@@ -2,7 +2,7 @@
 #include "QueryManager.h"
 #include "CommonUtility.h"
 
-FollowsStarEngine::FollowsStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_FOLLOWS_S, qm, pkb){
+FollowsStarEngine::FollowsStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_FOLLOWSSTAR, qm, pkb){
 
 
 }

@@ -1,7 +1,7 @@
 #include "NextStarEngine.h"
 #include "QueryManager.h"
 
-NextStarEngine::NextStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+NextStarEngine::NextStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_NEXTSTAR, qm, pkb){
 
 
 }

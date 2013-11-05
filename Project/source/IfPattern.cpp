@@ -1,6 +1,6 @@
 #include "IfPattern.h"
 #include "QueryManager.h"
-IfPattern::IfPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_MODIFIES, qm, pkb){
+IfPattern::IfPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_IFPATTERN, qm, pkb){
 
 
 }

@@ -174,7 +174,7 @@ void QueryManager::resetEverything() {
 	}	
 	expressionValueList.clear();
 
-//	pkbLibrary->getAffects()->clearCache();
+	pkbLibrary->getAffects()->clearCache();
 
 	resultList.clear();
 	qt.clear();

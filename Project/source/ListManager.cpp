@@ -762,7 +762,7 @@ void ListManager::merge(vector<list<string>*> *valueList, const int &varIndex, c
 	while (i <= middle || j <= end) {			
 
 
-		if ((compare(iValue, jValue, variableType) <= 0 && i <= middle) || j > end) {
+		if (i <= middle && (compare(iValue, jValue, variableType) <= 0 ) || j > end) {
 			newList.push_back(valueList->at(i));
 			i++;
 			if (i <= middle) 
