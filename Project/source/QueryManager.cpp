@@ -29,6 +29,9 @@ void QueryManager::updateRelationship(const string &variable, 	const FastSearchS
 }
 
 void QueryManager::execute() { // multithreading 
+	
+	// remember this
+	qt.solidify();
 
 	while (!qt.isEmpty()) {
 		QueryClass *qc = qt.pop();
@@ -38,7 +41,6 @@ void QueryManager::execute() { // multithreading
 			failed=true;
 			return;
 		}
-		delete qc;
 
 	}
 }
