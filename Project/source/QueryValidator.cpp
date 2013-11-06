@@ -343,6 +343,8 @@ bool QueryValidator::processDeclarationStmt(string declarationStmt){
 }
 
 string QueryValidator::getRawVariableType(string variableName){
+	cout << "raw variable type: " << variableName << endl;
+
 	for (vector< pair<string, string> >::size_type counter = 0; counter < varList.size(); counter++){
 		if (variableName == varList[counter].second){
 			return varList[counter].first;
@@ -354,8 +356,10 @@ string QueryValidator::getRawVariableType(string variableName){
 		return "_";
 	else if (is_number(variableName))
 		return "integer";
-	else
+	else if (variableName.compare(0, 1, "\"") == 0 && variableName.compare(variableName.length()-1, 1, "\"") == 0)
 		return "string";
+	else
+		return "invalid";
 }
 
 pair<vector<string>, vector<string>> QueryValidator::getAllowableParaType(string entityType){
@@ -455,6 +459,11 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 		firstParaRawType = getRawVariableType(firstPara);
 		secondParaRawType = getRawVariableType(secondPara);
 
+		if (firstParaRawType == "invalid" || secondParaRawType == "invalid"){
+			cout << "parameters not declared" << endl;
+			return false;
+		}
+
 		//remove double quote from string that user input
 		replaceSubstring(firstPara, "\"", "");
 		replaceSubstring(secondPara, "\"", "");
@@ -548,6 +557,12 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 		parameters = currentClause.substr(currentClause.find("(")+1, currentClause.length() - currentClause.find("(")-2);
 
 		patternType = getRawVariableType(variablePattern);
+
+		if (patternType == "invalid"){
+			cout << "parameters not declared" << endl;
+			return false;
+		}
+
 		splitResults = split(parameters, ',');
 
 		QueryClass *qc; //= new ExpressionPattern(queryManager, pkb);
@@ -720,6 +735,11 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 			firstParaType = getRawVariableType(entityParaPair.first);
 			secondParaType = getRawVariableType(entityParaPair.second);
 
+			if (firstParaType == "invalid" || secondParaType == "invalid"){
+				cout << "parameter not declared" << endl;
+				return false;
+			}
+
 			//cout << "processQueryClauses:: firstParaRawType -> " << firstParaType << endl;
 			//cout << "processQueryClauses:: secondParaRawType -> " << secondParaType << endl;
 
@@ -838,7 +858,7 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 }
 
 bool QueryValidator::processQuery(string inputQuery){
-	//cout << "Processing Query..." << endl;
+	cout << "===== Processing Query... =====" << endl;
 	tblQueryClauses.clear();
 	tblDesignEntities.clear();
 	tblQueryTypes.clear();
@@ -904,8 +924,9 @@ int main1(){
 	//input = "assign a;Select a pattern a(\"z\",_)";
 	//input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
 	//input = "Select BOOLEAN such that Calls*(\"eight\", \"Six\")";
-	input = "procedure p, q; Select <q, p> such that Calls(p, q)";
-	
+	//input = "procedure p, q; Select <q, p> such that Calls(p, q)";
+	input = "if ifstat; while w; assign a; Select <w, a> such that Parent*(ifstat, w) such that Parent*(w, a) such that Uses(a, v) such that Modifies(a, v) such that Next*(a, a) such that Calls*(\"eight\", \"Six\")";
+
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
 	//cout << "input: " << input << endl;
