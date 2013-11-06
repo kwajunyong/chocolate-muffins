@@ -1,5 +1,6 @@
 #include "NextStarEngine.h"
 #include "QueryManager.h"
+#include <fstream>
 
 NextStarEngine::NextStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_NEXTSTAR, qm, pkb){
 
@@ -110,6 +111,23 @@ void NextStarEngine::run() {
 
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+
+		if (astParam1->getVariableName().compare("n1") ==0 &&astParam2->getVariableName().compare("n2") == 0) {
+			vector<pair<string, string>>::iterator iter;
+			cout << endl;
+			ofstream myfile("C:\\Study\\CS3202\\n1n2.txt");
+
+			if (myfile.is_open())
+				cout <<"open";
+			for (iter = resultList.begin(); iter != resultList.end(); iter++) {
+
+				myfile << iter->first ;
+				myfile << "*";
+				myfile << iter->second;
+				myfile << endl;
+			}		
+			myfile.close();
+		}
 	} else if (astParam1->updateAble()) {
 		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
 	} else if (astParam2->updateAble()) {

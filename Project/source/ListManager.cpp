@@ -689,7 +689,7 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 
 	string variableType = parent->getVariableType(variableName);
 	int compareResult ; 
-	while (max > min) {
+	while (max >= min) {
 		 iter = valueList->begin() + curr;
 		
 		compareResult = compare(getValueAt((*iter), index), value, variableType);
@@ -742,7 +742,7 @@ void ListManager::mergeSort(vector<list<string>*> *valueList, int varIndex, int 
 
 	int middle = (start + end) / 2;
 
-	mergeSort(valueList, varIndex, start, middle - 1, variableType);
+	mergeSort(valueList, varIndex, start, middle , variableType);
 	mergeSort(valueList, varIndex, middle + 1, end, variableType);
 
 	merge(valueList, varIndex, start, middle, end, variableType);

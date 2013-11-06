@@ -86,6 +86,10 @@ void NextEngine::run() {
 
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+
+
+
+		
 	} else if (astParam1->updateAble()) {
 		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
 	} else if (astParam2->updateAble()) {
