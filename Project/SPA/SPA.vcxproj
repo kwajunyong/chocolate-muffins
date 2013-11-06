@@ -51,6 +51,8 @@
     <ClInclude Include="..\source\ProcTable.h" />
     <ClInclude Include="..\source\QueryClass.h" />
     <ClInclude Include="..\source\QueryManager.h" />
+    <ClInclude Include="..\source\QueryNode.h" />
+    <ClInclude Include="..\source\QueryScore.h" />
     <ClInclude Include="..\source\QueryTree.h" />
     <ClInclude Include="..\source\QueryValidator.h" />
     <ClInclude Include="..\source\Uses.h" />
@@ -96,6 +98,8 @@
     <ClCompile Include="..\source\ProcTable.cpp" />
     <ClCompile Include="..\source\QueryClass.cpp" />
     <ClCompile Include="..\source\QueryManager.cpp" />
+    <ClCompile Include="..\source\QueryNode.cpp" />
+    <ClCompile Include="..\source\QueryScore.cpp" />
     <ClCompile Include="..\source\QueryTree.cpp" />
     <ClCompile Include="..\source\QueryValidator.cpp" />
     <ClCompile Include="..\source\Uses.cpp" />

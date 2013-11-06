@@ -162,6 +162,12 @@
     <ClInclude Include="..\source\Affects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\QueryNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\QueryScore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ASTNode.cpp">
@@ -291,6 +297,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\Affects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\QueryScore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
