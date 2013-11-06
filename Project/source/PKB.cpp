@@ -187,12 +187,18 @@ void PKB::extract()
 	std::ofstream astStmtNum("PKB/ASTStmtNum.txt", std::ofstream::out | ios::trunc);
 	std::ofstream astContainer("PKB/ASTContainers.txt", std::ofstream::out | ios::trunc);
 	std::ofstream follows("PKB/Follows.txt", std::ofstream::out | ios::trunc);
+	std::ofstream followsStar("PKB/FollowsStar.txt", std::ofstream::out | ios::trunc);
 	std::ofstream parent("PKB/Parent.txt", std::ofstream::out | ios::trunc);
+	std::ofstream parentStar("PKB/ParentStar.txt", std::ofstream::out | ios::trunc);
 	std::ofstream modifies("PKB/Modifies.txt", std::ofstream::out | ios::trunc);
 	std::ofstream uses("PKB/Uses.txt", std::ofstream::out | ios::trunc);
 	std::ofstream calls("PKB/Calls.txt", std::ofstream::out | ios::trunc);
+	std::ofstream callsStar("PKB/CallsStar.txt", std::ofstream::out | ios::trunc);
 	std::ofstream callsStmt("PKB/CallsStmt.txt", std::ofstream::out | ios::trunc);
 	std::ofstream next("PKB/Next.txt", std::ofstream::out | ios::trunc);
+	std::ofstream nextStar("PKB/NextStar.txt", std::ofstream::out | ios::trunc);
+	std::ofstream affects("PKB/Affects.txt", std::ofstream::out | ios::trunc);
+	std::ofstream affectsStar("PKB/AffectsStar.txt", std::ofstream::out | ios::trunc);
 	std::ofstream varTable("PKB/VarTable.txt", std::ofstream::out | ios::trunc);
 	std::ofstream procTable("PKB/ProcTable.txt", std::ofstream::out | ios::trunc);
 	std::ofstream constTable("PKB/ConstTable.txt", std::ofstream::out | ios::trunc);
@@ -264,10 +270,26 @@ void PKB::extract()
 	}
 
 	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _follows->getFollowedBy(i, true);
+
+		for (j = 0; j < intResults.size(); j++) {
+			followsStar << "Follows*(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
 		intResults = _parent->getChild(i, false);
 
 		for (j = 0; j < intResults.size(); j++) {
 			parent << "Parent(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _parent->getChild(i, true);
+
+		for (j = 0; j < intResults.size(); j++) {
+			parentStar << "Parent*(" << i << ", " << intResults[j] << ")" << endl;
 		}
 	}
 
@@ -292,6 +314,30 @@ void PKB::extract()
 
 		for (j = 0; j < intResults.size(); j++) {
 			next << "Next(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _next->getNext(i, true);
+
+		for (j = 0; j < intResults.size(); j++) {
+			nextStar << "Next*(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _affects->getAffects(i);
+
+		for (j = 0; j < intResults.size(); j++) {
+			affects << "Affects(" << i << ", " << intResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 1; i <= _numOfStmt; i++) {
+		intResults = _affects->getAffectsStar(i);
+
+		for (j = 0; j < intResults.size(); j++) {
+			affectsStar << "Affects*(" << i << ", " << intResults[j] << ")" << endl;
 		}
 	}
 
@@ -342,6 +388,14 @@ void PKB::extract()
 
 		for (j = 0; j < strResults.size(); j++) {
 			calls << "Calls(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+		}
+	}
+
+	for (i = 0; i < procedure.size(); i++) {
+		strResults = _calls->getCalls(procedure[i], true);
+
+		for (j = 0; j < strResults.size(); j++) {
+			callsStar << "Calls*(" << procedure[i] << ", " << strResults[j] << ")" << endl;
 		}
 	}
 
