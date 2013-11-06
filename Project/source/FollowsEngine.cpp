@@ -34,7 +34,7 @@ void FollowsEngine::run() {
 	if (astParam2->getParameterType() == VT_UNDERSCORE) 
 		CommonUtility::convertToMap(myQM->getAllStatementList(), second);
 	else
-		loadVariable(0, second);
+		loadVariable(1, second);
 
 
 
@@ -99,7 +99,7 @@ void FollowsEngine::run() {
 				finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = 1;
 	}
 
-
+	}
 	if (keepRelationship) {
 		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
 	} else if (astParam1->updateAble()) {
@@ -109,6 +109,6 @@ void FollowsEngine::run() {
 	}
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
-}
+
 
 }

@@ -26,7 +26,7 @@ public:
 	bool hasResult();
 	void loadVariable(int paramIndex, FastSearchString &varList);
 	void loadVariable(int paramIndex, FastSearchInteger &varList);
-	void updateVariable(const vector<pair<string, string>> &relationship, const FastSearchString &finalListOne, const FastSearchString &finalTwo);
+	void updateVariable(vector<pair<string, string>> &relationship, const FastSearchString &finalListOne, const FastSearchString &finalTwo);
 	QUERYTYPE getQueryType();
 protected:
 	

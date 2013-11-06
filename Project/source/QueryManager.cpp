@@ -1,7 +1,7 @@
 #include "QueryManager.h"
 
 void QueryManager::updateRelationship(const string &variable1, const string &variable2, 
-	const vector<pair<string, string>> &relationship) {		
+	 vector<pair<string, string>> &relationship) {		
 
 		listManager->updateList(variable1, variable2, relationship);
 

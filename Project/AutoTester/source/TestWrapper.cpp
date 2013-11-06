@@ -25,7 +25,10 @@ void TestWrapper::parse(std::string filename) {
 		extractor.extract(pkb);
 		qm = new QueryManager(pkb);
 		qv = new QueryValidator(qm, pkb);
+		QueryScore::initialize();
 
+	//	QueryTree qt;
+//		qt.test();
 	} catch (ParseException pe) {
 		cout << pe.what();
 		getchar();
@@ -34,23 +37,25 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-
+	
 	static int a = 0;
-	int stopat = 35;
+	int stopat  =10;
 	if (qv->processQuery(query)) {
-		if (a ==stopat ) {
+		if (a >=stopat ) {
 			cout << "Four";
 		}
 		a++;
 		qm->execute();
 		results = qm->outputResult();
-		qm->resetEverything();
+			qm->resetEverything();
 
 	} else {
 		if (a >= stopat)
 			cout << "haha";
-			a++;
-		qv->processQuery(query);
+			a++;		
+			
+		qm->resetEverything();
+
 	}
 
 		

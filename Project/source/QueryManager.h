@@ -51,7 +51,7 @@ public:
 	//void updateVector(string variableName, vector<string> &vectorString);
 	//void updateVectorInteger(string variableName, vector<int> &vectorInt);
 
-	void updateRelationship(const string &variable1, const string &variable2, const vector<pair<string, string>> &relationship);
+	void updateRelationship(const string &variable1, const string &variable2,  vector<pair<string, string>> &relationship);
 	void updateRelationship(const string &variable, const FastSearchString &relationship);
 	
 	QueryManager(PKB *pkb);

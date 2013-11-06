@@ -33,7 +33,7 @@ public:
 	ListManager(QueryManager *qm);
 	
 	void updateList(string variableName, const FastSearchString &listValue);
-	void updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue);
+	void updateList(string variableName1, string variableName2, vector<pair<string, string>> &relationshipValue);
 
 	vector<int> getValueListInteger(string &variableName); 
 	vector<string> getValueListString(string &variableName); 
@@ -54,8 +54,14 @@ private:
 
    void sortVariable(string variable);
    void sortVariable(vector<list<string>*>* valueList, int varIndex, const string &variableName); // given a list sort which particular variable;
+   
+   void sortRelation(vector<pair<string, string>> &toSort, const bool &firstItem, const string &variableName); // given a list sort which particular variable;
+   void mergeRelationSort(vector<pair<string, string>> &valueList, const bool &firstItem, int start, int end, const string &variableType); 
+   void mergeRelation(vector<pair<string, string>> &valueList, const bool &firstItem, const int &start, const int &middle,  const int &end, const string &variableType);
+   vector<pair<string, string>>::iterator bRelationLookup(vector<pair<string, string>> &valueList, string value, bool first, const string &variableName);
 
    void mergeSort(vector<list<string>*>* valueList, int varIndex, int start, int end, const string &variableType); 
+   
    void merge(vector<list<string>*> *valueList, const int &varIndex, const int &start, const int &middle,  const int &end, const string &variableType);
 
    vector<vector<list<string>*>*> mainList;
@@ -68,7 +74,7 @@ private:
    void createANewList(string variableName, const FastSearchString &listValue);
    void createANewList(const string &variableName1, const string &variableName2, const vector<pair<string, string>> &relationshipValue);
    void appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
-	    string newvariableName, const vector<pair<string, string>> &relationshipValue, bool first);
+	    string newvariableName, vector<pair<string, string>> &relationshipValue, bool first);
 
    void shortenList(vector<list<string>*> * valueList, int index1, int index2, const vector<pair<string, string>> &relationshipValue,
 	    const string &variableOne);

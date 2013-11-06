@@ -10,6 +10,7 @@
 #include "..\..\source\QueryValidator.h"
 #include "..\..\source\PKB.h"
 #include "..\..\source\QueryManager.h"
+#include "..\..\source\QueryScore.h"
 
 
 // include your other headers here

@@ -69,7 +69,7 @@ bool QueryClass::hasResult() {
 	return !failed;
 }
 
-void QueryClass::updateVariable(const vector<pair<string, string>> &relationship, const FastSearchString &finalListOne, const FastSearchString &finalTwo){
+void QueryClass::updateVariable(vector<pair<string, string>> &relationship, const FastSearchString &finalListOne, const FastSearchString &finalTwo){
 	if (keepRelationship()) {
 		myQM->updateRelationship(parameterList.at(0)->getVariableName(), parameterList.at(1)->getVariableName(), relationship);
 	} else if (parameterList.at(0)->updateAble()) {

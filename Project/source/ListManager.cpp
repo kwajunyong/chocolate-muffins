@@ -34,7 +34,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 
 
 	int first, second; 
-	
+
 	// find the location to pick up the good
 	// load the position where it finds; 
 
@@ -42,7 +42,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	map<pair<int, int>, int> positionMap;
 	for (iterVariable = variableResultList.begin(); iterVariable != variableResultList.end(); iterVariable++) {
 		findVariable(*iterVariable, first, second);
-			
+
 		if (first == -1)  {			
 			leftOver.push_back(*iterVariable);
 			foundPos.push_back(-1);
@@ -65,7 +65,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	}
 
 	vector<int>::iterator iterPos;
-	
+
 	map<int, vector<int>>::iterator iterFound;
 	map<int, int> recordMap;
 	map<int, int>::iterator iterRecordMap;
@@ -105,14 +105,14 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 		map<string, bool> newMap;
 		resultGroupList.push_back(newMap);
 		tempMap = &resultGroupList.back();
-		
+
 
 		// get from the variable
 
 		tempResultList = mainList.at(iterMap->first);
 		for (iterTempResultList = tempResultList->begin(); iterTempResultList != tempResultList->end(); iterTempResultList++) {
 			string temp;
-			
+
 			for (iterVarIndex = iterMap->second.begin(); iterVarIndex!= iterMap->second.end(); iterVarIndex++) {			
 				iterLastList = (*iterTempResultList)->begin();
 				advance(iterLastList, *iterVarIndex);
@@ -132,10 +132,10 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 
 	for (iterLeftOver = leftOver.begin(); iterLeftOver != leftOver.end(); iterLeftOver++) {
 		lastOfMap++;
-		
+
 		pair<int, int> p(lastOfMap, 0);
 		positionMap[p] = leftOverPos.at(distance(leftOver.begin(), iterLeftOver));
-		
+
 		if (parent->getVariableType(*iterLeftOver).compare("string") == 0)  {
 			resultGroupList.push_back( parent->getValueListMap(*iterLeftOver));
 		} else {
@@ -150,50 +150,50 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	vector<string> initialString;
 
 	recursivePrepare(resultGroupList, 0, positionMap, initialString, payloadList);
-	
+
 
 }
 
 void ListManager::recursivePrepare(vector<map<string, bool>> &resultGroupList, int index, 
-		map<pair<int, int>, int> &positionList, vector<string> stringList, list<string> &resultList) {
-	map<string, bool> &tempList = resultGroupList.at(index);
-	map<string, bool>::iterator iterMap;
-	vector<string>::iterator iterString;
-	int curr = 0;
-	int pos = 0; 
-	for (iterMap = tempList.begin(); iterMap != tempList.end(); iterMap++) {
-		// getPosition; 
-		vector<string> splitList;
-		CommonUtility::split(iterMap->first, ' ', splitList);
-		curr = 0;
-		vector<string> newList = stringList;
-		for (iterString = splitList.begin(); iterString != splitList.end(); iterString++) {
-			pair<int, int> p (index, curr); 
-			pos = positionList.find(p)->second;
-			if (newList.size() <= pos) 
-				newList.push_back(*iterString);
-			else
-				newList.insert(newList.begin() + pos, *iterString);
-			curr++;
-		}
-
-		if (index < resultGroupList.size() - 1) {
-			
-			recursivePrepare(resultGroupList, index + 1, 
-				positionList, newList, resultList);
-			
-		} else {
-			string temp;
-			for (iterString = newList.begin(); iterString != newList.end(); iterString++)  {
-				temp.append(*iterString);
-				temp.push_back(' ');
+	map<pair<int, int>, int> &positionList, vector<string> stringList, list<string> &resultList) {
+		map<string, bool> &tempList = resultGroupList.at(index);
+		map<string, bool>::iterator iterMap;
+		vector<string>::iterator iterString;
+		int curr = 0;
+		int pos = 0; 
+		for (iterMap = tempList.begin(); iterMap != tempList.end(); iterMap++) {
+			// getPosition; 
+			vector<string> splitList;
+			CommonUtility::split(iterMap->first, ' ', splitList);
+			curr = 0;
+			vector<string> newList = stringList;
+			for (iterString = splitList.begin(); iterString != splitList.end(); iterString++) {
+				pair<int, int> p (index, curr); 
+				pos = positionList.find(p)->second;
+				if (newList.size() <= pos) 
+					newList.push_back(*iterString);
+				else
+					newList.insert(newList.begin() + pos, *iterString);
+				curr++;
 			}
 
-			if (temp.size() >0) 
-				temp.pop_back();
-			resultList.push_back(temp);				
+			if (index < resultGroupList.size() - 1) {
+
+				recursivePrepare(resultGroupList, index + 1, 
+					positionList, newList, resultList);
+
+			} else {
+				string temp;
+				for (iterString = newList.begin(); iterString != newList.end(); iterString++)  {
+					temp.append(*iterString);
+					temp.push_back(' ');
+				}
+
+				if (temp.size() >0) 
+					temp.pop_back();
+				resultList.push_back(temp);				
+			}
 		}
-	}
 }
 
 
@@ -273,7 +273,7 @@ int ListManager::compare(const string &value1, const string &value2, const strin
 	if (variableType.compare("string") == 0) 
 		return value1.compare(value2);
 	else {
-		
+
 		int intValue1 = atoi(value1.c_str());
 		int intValue2 = atoi(value2.c_str());
 		if (intValue1 == intValue2)
@@ -285,7 +285,7 @@ int ListManager::compare(const string &value1, const string &value2, const strin
 	}
 
 }
-void ListManager::updateList(string variableName1, string variableName2, const vector<pair<string, string>> &relationshipValue) {
+void ListManager::updateList(string variableName1, string variableName2,  vector<pair<string, string>> &relationshipValue) {
 	int varOneFirst, varOneSecond;
 	int varTwoFirst, varTwoSecond;
 
@@ -295,12 +295,12 @@ void ListManager::updateList(string variableName1, string variableName2, const v
 	if (varOneFirst == -1 && varTwoFirst == -1) // both not found
 		createANewList(variableName1, variableName2, relationshipValue);
 	else if (varOneFirst == -1) { // varTwo is not empty
-		sortVariable(mainList.at(varTwoFirst), varTwoSecond, variableName2); // disaster waiting to happen because i will forget to sort. 
+		sortRelation(relationshipValue, false, variableName2); // disaster waiting to happen because i will forget to sort. 
 		appendVariable(mainList.at(varTwoFirst), variableList.at(varTwoFirst), 
 			varTwoSecond, variableName1, relationshipValue, false);
 
 	} else if (varTwoFirst == -1) {// varOne is not empty
-		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
+		sortRelation(relationshipValue, true, variableName1); // disaster waiting to happen because i will forget to sort. 
 		appendVariable(mainList.at(varOneFirst), variableList.at(varOneFirst), 
 			varOneSecond, variableName2, relationshipValue, true);
 
@@ -453,7 +453,7 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 
 						if (secondValue.compare(second)  == 0) 								
 							newList.push_back((*iterFound));
-						
+
 
 						iterFound++;
 						if (iterFound == valueList->end()) 
@@ -468,7 +468,7 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 		}
 		valueList->clear();
 		valueList->insert(valueList->begin(), newList.begin(), newList.end());
-//		copy(newList.begin(), newList.end(), valueList->begin());
+		//		copy(newList.begin(), newList.end(), valueList->begin());
 }
 
 
@@ -477,42 +477,44 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 // ASSUME SORTED.
 
 void ListManager::appendVariable(vector<list<string>*> * valueList, vector<string> &variable,  int index, 
-	string newvariableName, const vector<pair<string, string>>  &relationshipValue, bool first) {
+	string newvariableName,  vector<pair<string, string>>  &relationshipValue, bool first) {
 
 		vector<list<string>*> newTupleList;// temporary list;
-		vector<list<string>*>::iterator iterFound;
+		vector<pair<string, string>>::iterator iterFound;
 		list<string>* newList;
 
-		vector<pair<string, string>>::const_iterator iterListValue;
+		vector<list<string>*>::const_iterator iterListValue;
 
-		string looker;
-		string valuer;
 
 		string value;
 
+
 		string variableName = variable.at(index);
-		for (iterListValue = relationshipValue.begin(); iterListValue != relationshipValue.end(); iterListValue++) {
+		for (iterListValue = valueList->begin(); iterListValue != valueList->end(); iterListValue++) {
 
-			if (first) {
-				looker = (*iterListValue).first;
-				valuer = (*iterListValue).second;
-			} else {
-				looker = (*iterListValue).second;
-				valuer = (*iterListValue).first;
-			}
-			iterFound = bLookup(valueList, looker, index, variableName);
+			const string &looker = getValueAt(*iterListValue, index);
 
-			if (iterFound != valueList->end()) {
+			iterFound = bRelationLookup(relationshipValue, looker, first, variableName);
+
+			if (iterFound != relationshipValue.end()) {
 				do {
-					newList = new list<string>(**iterFound);
-					newList->push_back(valuer);
+					newList = new list<string>(**iterListValue);
+
+					if (first) 
+						newList->push_back(iterFound->second);						
+					else
+						newList->push_back(iterFound->first);
+
 					newTupleList.push_back(newList);
 
 					iterFound++;
-					if (iterFound == valueList->end()) 
+					if (iterFound == relationshipValue.end()) 
 						break;
 
-					value = getValueAt((*iterFound), index);
+					if (first)
+						value = iterFound->first;
+					else
+						value = iterFound->second;
 
 					if (value.compare(looker) != 0)
 						break;
@@ -667,7 +669,7 @@ void ListManager::deleteList(vector<list<string>*>* valueList, const FastSearchS
 				iter =valueList->erase(iter);							
 			} else 
 				iter++;
-			
+
 		}
 
 
@@ -679,26 +681,24 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 
 	vector<list<string>*>::iterator iter;
 	vector<list<string>*>::iterator iterPrevious;
+
 	
-	// this is not binary lookup. 
-	// must ensure binary lookup find the first element. 
 	int min = 0;
-	int max = valueList->size();
+	int max = valueList->size() -1;
 	int curr = (max + min) / 2;
-	
+
 
 	string variableType = parent->getVariableType(variableName);
 	int compareResult ; 
 	while (max >= min) {
-		 iter = valueList->begin() + curr;
-		
+		iter = valueList->begin() + curr;
+
 		compareResult = compare(getValueAt((*iter), index), value, variableType);
 		if (compareResult == 0) {
 
 			if (iter == valueList->begin())
 				return iter;
 
-			compareResult = compare(getValueAt((*iter), index), value, variableType);
 			iterPrevious = iter;
 			iterPrevious--;
 			while (true) {
@@ -713,11 +713,11 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 				}
 			}
 		} else if (compareResult > 0) {
-		   max = curr - 1;
+			max = curr - 1;
 		} else {
-		   min = curr + 1; 
+			min = curr + 1; 
 		}
-		 curr = (max+ min) /2; 
+		curr = (max+ min) /2; 
 
 	}
 
@@ -734,6 +734,133 @@ void ListManager::sortVariable( vector<list<string>*> *valueList, int varIndex, 
 	mergeSort(valueList, varIndex, 0, valueList->size() - 1, variableType);
 
 }
+
+void ListManager::sortRelation(vector<pair<string, string>> &toSort, const bool &firstItem, const string &variableName) {
+
+
+	string variableType = parent->getVariableType(variableName);
+	mergeRelationSort(toSort, firstItem, 0, toSort.size() - 1, variableType);
+
+}
+void ListManager::mergeRelationSort(vector<pair<string, string>> &valueList, const bool &firstItem, int start, int end, const string &variableType) {
+
+
+	if (start >= end)
+		return;
+
+	int middle = (start + end) / 2;
+
+	mergeRelationSort(valueList, firstItem, start, middle , variableType);
+	mergeRelationSort(valueList, firstItem, middle + 1, end, variableType);
+
+	mergeRelation(valueList, firstItem, start, middle, end, variableType);
+}
+
+void ListManager::mergeRelation(vector<pair<string, string>> &valueList, const bool &firstItem, const int &start, const int &middle,  const int &end, const string &variableType) {
+	int i = start; 
+	int j = middle + 1;
+	string iValue;
+	string jValue;
+	vector<pair<string, string>> newList;// temporary list;
+
+	if (firstItem) {
+		iValue = valueList.at(i).first;
+		jValue = valueList.at(j).first;
+	} else {
+		iValue = valueList.at(i).second;
+		jValue = valueList.at(j).second;
+	}
+
+	while (i <= middle || j <= end) {			
+
+
+		if (i <= middle && (compare(iValue, jValue, variableType) <= 0 ) || j > end) {
+			newList.push_back(valueList.at(i));
+			i++;
+			if (i <= middle) 
+				if (firstItem)
+					iValue = valueList.at(i).first;
+				else
+					iValue = valueList.at(i).second;
+
+		} else if (j <= end) {
+			newList.push_back(valueList.at(j));
+			j++;
+			if (j <= end)
+				if (firstItem)
+					jValue = valueList.at(j).first;
+				else
+					jValue = valueList.at(j).second;
+		}		
+
+	} // finish while 
+
+	// putting the list into the main list
+	vector<pair<string, string>>::iterator iter;
+	valueList.erase(valueList.begin() + start, valueList.begin() + end +1);
+	iter = valueList.begin() + start;
+	valueList.insert(iter, newList.begin(), newList.end());		
+
+}
+
+
+vector<pair<string, string>>::iterator ListManager::bRelationLookup(vector<pair<string, string>> &valueList, string value, bool first, const string &variableName) {
+
+	vector<pair<string, string>>::iterator iter;
+	vector<pair<string, string>>::iterator iterPrevious;
+
+	// this is not binary lookup. 
+	// must ensure binary lookup find the first element. 
+	int min = 0;
+	int max = valueList.size() -1;
+	int curr = (max + min) / 2;
+
+
+	string variableType = parent->getVariableType(variableName);
+	int compareResult ; 
+	while (max >= min) {
+		iter = valueList.begin() + curr;
+
+		if (first)
+			compareResult = compare(iter->first, value, variableType);
+		else
+			compareResult = compare(iter->second, value, variableType);
+
+		if (compareResult == 0) {
+
+			if (iter == valueList.begin())
+				return iter;
+
+
+
+			iterPrevious = iter;
+			iterPrevious--;
+			while (true) {
+				if (first)
+					compareResult = compare(iterPrevious->first, value, variableType);
+				else
+					compareResult = compare(iterPrevious->second, value, variableType);
+				if (compareResult != 0)
+					return iter;
+				else {
+					if (iterPrevious == valueList.begin())
+						return iterPrevious;
+					iter = iterPrevious;
+					iterPrevious--;
+				}
+			}
+		} else if (compareResult > 0) {
+			max = curr - 1;
+		} else {
+			min = curr + 1; 
+		}
+		curr = (max+ min) /2; 
+
+	}
+
+	return valueList.end();
+}
+
 
 void ListManager::mergeSort(vector<list<string>*> *valueList, int varIndex, int start, int end, const string &variableType) {
 
@@ -777,11 +904,10 @@ void ListManager::merge(vector<list<string>*> *valueList, const int &varIndex, c
 	} // finish while 
 
 	// putting the list into the main list
-	j = 0;
 	vector<list<string>*>::iterator iter;
-		 valueList->erase(valueList->begin() + start, valueList->begin() + end +1);
+	valueList->erase(valueList->begin() + start, valueList->begin() + end +1);
 	iter = valueList->begin() + start;
-		 valueList->insert(iter, newList.begin(), newList.end());		
+	valueList->insert(iter, newList.begin(), newList.end());		
 
 }
 
