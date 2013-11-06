@@ -4,12 +4,13 @@
 class QueryNode {
 public:
 	QueryNode(QueryClass*);
-	void calculateScore();
+	double calculateScore();
 	void addLeftArm(QueryNode*);
 	void addRightArm(QueryNode*);
 
 	string &getVariable1Name();
 	string &getVariable2Name();
+	QueryClass* getMainClass();
 
 private:
 	QueryClass *mainClass;

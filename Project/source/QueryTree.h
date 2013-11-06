@@ -21,11 +21,16 @@ public:
 	// once solidified, the querytree disallow any kind of query class addition
 	// and before any solidictioant
 	void solidify();
-
+	//void test(); 
+	void switchToTraditionalMode(bool value);
 private:
-	//vector<QueryClass*> queryList; // temporary
+	vector<QueryNode*> queryNodeList; // for traditional mode
+	vector<QueryNode*>::iterator iterQueryNode; // for traditional mode
 	
-	
+	map<double, QueryNode*> rankingList;
+	map<double, QueryNode*>::reverse_iterator iterRankingList;
+
 	// store variable and its respective query node 
 	VariableDict variableDictionary;
+	bool TraditionalMode; 
 };

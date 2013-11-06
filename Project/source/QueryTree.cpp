@@ -1,11 +1,56 @@
 #include "QueryTree.h"
+// for testing purpose
+/*
+#include "BinaryRelationEngine.h";
+#include "CallEngine.h";
+#include "AffectEngine.h";
+#include "NextEngine.h";
+
+#include "AffectStarEngine.h";
+
+*/
 
 QueryTree::QueryTree() {
+	TraditionalMode = false ;
 }
+/*
+void QueryTree::test(){
+	QueryTree qt;
+	BinaryRelationEngine *qc1 = new BinaryRelationEngine(NULL, NULL);
+	qc1->addParam("assign1", VT_ASSIGNMENT);
+	qc1->addParam("1", VT_CONSTANTINTEGER);
+
+	qt.addQueryClass(qc1);
+
+	QueryClass *qc2 = new CallEngine(NULL, NULL);
+	qc2->addParam("assign1", VT_ASSIGNMENT);
+	qc2->addParam("assign2", VT_ASSIGNMENT);
+	qt.addQueryClass(qc2);
+
+
+	QueryClass *aff1 = new AffectEngine(NULL, NULL);
+	aff1->addParam("1", VT_CONSTANTINTEGER);
+	aff1->addParam("2", VT_CONSTANTINTEGER);
+	
+	qt.addQueryClass(aff1);
+
+	QueryClass *aff2 = new AffectStarEngine(NULL, NULL);
+	aff2->addParam("1", VT_CONSTANTINTEGER);
+	aff2->addParam("assign2", VT_ASSIGNMENT);
+	
+	qt.addQueryClass(aff2);
+
+	QueryClass *aff3 = new NextEngine(NULL, NULL);
+	aff3->addParam("assign2", VT_ASSIGNMENT);
+	aff3->addParam("ifs", VT_IF);
+	
+	qt.addQueryClass(aff3);
+
+	qt.solidify();
+
+}*/
 
 void QueryTree::addQueryClass(QueryClass *qc) {
-	// Mode 1
-	//queryList.push_back(qc);
 
 	// Mode 2
 	QueryNode *qn = new QueryNode(qc);
@@ -19,7 +64,8 @@ void QueryTree::addQueryClass(QueryClass *qc) {
 	// 2. Add those found QueryNode List into its own arm
 	// 3. Do the reverse : Iterate thru the query node list and add the new one to them as well. 
 
-	// the query node now supports 2 arm, not overengineered since no features can be added further. But can be extended fairly easy. 
+	// the query node now supports 2 arm, not overengineered since no features can be added further. 
+	//But can be extended fairly easy. 
 	bool rightArm = false;
 	for (iterParam = paramList.begin(); iterParam != paramList.end(); iterParam++) {
 		if ((*iterParam)->updateAble()) {
@@ -48,42 +94,80 @@ void QueryTree::addQueryClass(QueryClass *qc) {
 
 			} else {  // if the variable don't exists then create new one 
 				QueryNodeList newQueryNodeList;
+				newQueryNodeList.push_back(qn);
 				variableDictionary[(*iterParam)->getVariableName()] = newQueryNodeList;
 
 			}			
 		} // updateable
 		rightArm = true;
 	}
-
+	// Mode 1
+	queryNodeList.push_back(qn);
 	
 
-
+}
+void QueryTree::switchToTraditionalMode(bool value) {
+	TraditionalMode = value;
 }
 
 QueryClass *QueryTree::pop() { // pop one now, will pop more than one if they are the same generation. 
-/*	QueryClass *qc = queryList[0];
+	if (TraditionalMode) {
+		
+		QueryClass * temp = (*iterQueryNode)->getMainClass();	
+		iterQueryNode++;
+		return temp;
+	}
+	
+
+	// mode 1
+	/*QueryClass *qc = queryList[0];
 
 	queryList.erase(queryList.begin());
 	
-	return qc;
-	*/
-	return NULL;
+	return qc;*/
+	
+	// mode 2
+	QueryClass* temp = iterRankingList->second->getMainClass();
+
+	iterRankingList++;
+	return temp;
 
 }
 
 bool QueryTree::isEmpty() {
-	//return queryList.empty();
-	return false;
+	return iterRankingList == rankingList.rend();
+	
+}
+
+void QueryTree::solidify() {
+	
+	vector<QueryNode*>::iterator iter;
+
+	for (iter = queryNodeList.begin(); iter != queryNodeList.end(); iter++) {
+		double score = (*iter)->calculateScore();
+		
+		// make sure no conflict score
+		while (rankingList.find(score) != rankingList.end()) 
+		   score += .001;
+
+		rankingList[score] = (*iter);
+
+	}
+iterQueryNode = queryNodeList.begin();
+	iterRankingList = rankingList.rbegin();
 }
 
 void QueryTree::clear() {
 
-	vector<QueryClass*>::iterator iter;
+	vector<QueryNode*>::iterator iter;
 
-	//for (iter = queryList.begin(); iter != queryList.end(); iter++) {
-	  //  delete (*iter);
+	for (iter = queryNodeList.begin(); iter != queryNodeList.end(); iter++) {
+		delete (*iter)->getMainClass();
+		delete (*iter);
+	}
+	
+	queryNodeList.clear();
+	rankingList.clear();
+	variableDictionary.clear();
 
-	//}
-
-	//queryList.clear();
 }

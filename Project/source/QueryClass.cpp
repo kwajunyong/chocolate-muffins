@@ -78,3 +78,7 @@ void QueryClass::updateVariable(const vector<pair<string, string>> &relationship
 		myQM->updateRelationship(parameterList.at(1)->getVariableName(), finalTwo);
 	}
 }
+
+QUERYTYPE QueryClass::getQueryType() {
+	return myQueryType;
+}
