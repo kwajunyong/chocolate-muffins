@@ -33,8 +33,7 @@ public:
 
 	vector<int> getAffectsStar(int assignment);
 	vector<int> getAffectedStar(int assignment);
-	int time;
-	int times;
+
 	void clearCache();
 
 private:
