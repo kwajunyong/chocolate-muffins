@@ -343,7 +343,8 @@ bool QueryValidator::processDeclarationStmt(string declarationStmt){
 }
 
 string QueryValidator::getRawVariableType(string variableName){
-	cout << "raw variable type: " << variableName << endl;
+	//cout << "raw variable type: " << variableName << endl;
+	//cout << "is integer: " << is_number(variableName) << endl;
 
 	for (vector< pair<string, string> >::size_type counter = 0; counter < varList.size(); counter++){
 		if (variableName == varList[counter].second){
@@ -456,17 +457,18 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 		entityType = clausesList[counter].first;
 		firstPara = clausesList[counter].second.first;
 		secondPara = clausesList[counter].second.second;
-		firstParaRawType = getRawVariableType(firstPara);
-		secondParaRawType = getRawVariableType(secondPara);
+		
 
-		if (firstParaRawType == "invalid" || secondParaRawType == "invalid"){
-			cout << "parameters not declared" << endl;
+		/*if (firstParaRawType == "invalid" || secondParaRawType == "invalid"){
+			cout << "addToQueryManager: parameters not declared" << endl;
+			cout << "firstParaRawType: " << firstParaRawType << " VS " << firstPara << endl;
+			cout << "secondParaRawType: " << secondParaRawType << " VS " << secondPara << endl;
 			return false;
-		}
+		}*/
 
 		//remove double quote from string that user input
-		replaceSubstring(firstPara, "\"", "");
-		replaceSubstring(secondPara, "\"", "");
+		//replaceSubstring(firstPara, "\"", "");
+		//replaceSubstring(secondPara, "\"", "");
 
 
 		if (strcmpi(entityType.c_str(), "queryAssignment") == 0){
@@ -479,9 +481,16 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
-				BRE -> addParam(header, getVariableType(getRawVariableType(header)), extension);
+				string headerRawType = getRawVariableType(header);
+				if (headerRawType == "invalid"){
+					cout << "first para header not declared" << endl;
+					return false;
+				}
+				BRE -> addParam(header, getVariableType(headerRawType), extension);
 			}else{
 				//cout << "without . : " << firstPara << " - " << firstParaRawType << endl;
+				firstParaRawType = getRawVariableType(firstPara);
+				replaceSubstring(firstPara, "\"", "");
 				BRE -> addParam(firstPara, getVariableType(firstParaRawType));
 			}
 
@@ -490,9 +499,16 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 				//cout << splitResult[0] << ": " << splitResult[1] << endl;
 				string header = splitResult[0];
 				string extension = splitResult[1];
-				BRE -> addParam(header, getVariableType(getRawVariableType(header)), extension);
+				string headerRawType = getRawVariableType(header);
+				if (headerRawType == "invalid"){
+					cout << "second para header not declared" << endl;
+					return false;
+				}
+				BRE -> addParam(header, getVariableType(headerRawType), extension);
 			}else{
 				//cout << "without . : " << secondPara << " - " << secondParaRawType << endl;
+				secondParaRawType = getRawVariableType(secondPara);
+				replaceSubstring(secondPara, "\"", "");
 				BRE -> addParam(secondPara, getVariableType(secondParaRawType));
 			}
 
@@ -534,6 +550,10 @@ bool QueryValidator::addToQueryManager(vector<pair<string, pair<string, string>>
 			cout << "first para official type: " << getVariableType(getRawVariableType(firstPara)) << endl;
 			cout << "second para official type: " << getVariableType(getRawVariableType(secondPara)) << endl;*/
 
+			firstParaRawType = getRawVariableType(firstPara);
+			secondParaRawType = getRawVariableType(secondPara);
+			replaceSubstring(firstPara, "\"", "");
+			replaceSubstring(secondPara, "\"", "");
 			qc -> addParam(firstPara, getVariableType(firstParaRawType));
 			qc -> addParam(secondPara, getVariableType(secondParaRawType));
 
@@ -559,7 +579,7 @@ bool QueryValidator::processPatternClauses(vector<string> patternClauses){
 		patternType = getRawVariableType(variablePattern);
 
 		if (patternType == "invalid"){
-			cout << "parameters not declared" << endl;
+			cout << "processPatternClauses: parameters not declared" << endl;
 			return false;
 		}
 
@@ -718,7 +738,7 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 			splitResults = split(parameters, ',');
 			//entityParaPair = make_pair(split(parameters, ',')[0], split(parameters, ',')[1]);
 			if (splitResults.size() != 2){
-				cout << "incorrect number of parameters" << endl;
+				cout << "processQueryClauses: incorrect number of parameters" << endl;
 				return false;
 			}
 
@@ -736,7 +756,7 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 			secondParaType = getRawVariableType(entityParaPair.second);
 
 			if (firstParaType == "invalid" || secondParaType == "invalid"){
-				cout << "parameter not declared" << endl;
+				cout << "processQueryClauses: parameter not declared" << endl;
 				return false;
 			}
 
@@ -774,21 +794,21 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 
 	string returnResult = tokens[1];
 
-	cout << "processSelectStmt:: " << selectStmt << endl;
-	cout << "processSelectStmt:: before return results -> " << returnResult << endl;
+	//cout << "processSelectStmt:: " << selectStmt << endl;
+	//cout << "processSelectStmt:: before return results -> " << returnResult << endl;
 
 	replaceSubstring(returnResult, "<", "");
 	replaceSubstring(returnResult, ">", "");
-	cout << "processSelectStmt:: after return results -> " << returnResult << endl;
+	//cout << "processSelectStmt:: after return results -> " << returnResult << endl;
 	vector<string> returnResults = split(returnResult, ',');
 	
 	for (vector<string>::size_type counter = 0; counter < returnResults.size(); counter++){
-		cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
+		//cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
 		queryManager -> addResultExpression(returnResults[counter]);
 	}
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){
-		cout << "current token: " << tokens[counter] << endl;
+		//cout << "current token: " << tokens[counter] << endl;
 
 		if (strcmpi(tokens[counter].c_str(), "such") == 0){
 			if (connectClauseDetected){
@@ -903,8 +923,8 @@ int main1(){
 	PKB* pkb;
 
 	try {
-		pkb = parser.parse("ComboTest2.txt");
-		//pkb = parser.parse("Test.txt");
+		//pkb = parser.parse("ComboTest2.txt");
+		pkb = parser.parse("Test.txt");
 		extractor.extract(pkb);
 	} catch (ParseException pe) {
 		cout << pe.what();
@@ -925,7 +945,8 @@ int main1(){
 	//input = "stmt s, s1; prog_line n; Select s such that Parent(s, s1) with s1.stmt# = n with n = 3";
 	//input = "Select BOOLEAN such that Calls*(\"eight\", \"Six\")";
 	//input = "procedure p, q; Select <q, p> such that Calls(p, q)";
-	input = "if ifstat; while w; assign a; Select <w, a> such that Parent*(ifstat, w) such that Parent*(w, a) such that Uses(a, v) such that Modifies(a, v) such that Next*(a, a) such that Calls*(\"eight\", \"Six\")";
+	//input = "if ifstat; while w; assign a; Select <w, a> such that Parent*(ifstat, w) such that Parent*(w, a) such that Uses(a, v) such that Modifies(a, v) such that Next*(a, a) such that Calls*(\"eight\", \"Six\")";
+	input = "assign a, a1; Select BOOLEAN such that Affects*(a, a1) with a.stmt# = 63 and a1.stmt# = 66";
 
 	cout << qv.processQuery(input) << endl;
 	getline(cin, input);
