@@ -18,12 +18,11 @@ void IfPattern::run() {
 	ASTParameter *astParam2 = parameterList.at(1);
 
 	bool matched = false;
-	vector<int> first = myQM->getValueListInteger(astParam1->getVariableName());
 
-	map<int, int> firstList; // allow fast searching
-	map<int, int>::iterator iterFound;
+	FastSearchInteger firstList = myQM->getValueListIntegerMap(astParam1->getVariableName());
+	FastSearchInteger::iterator iterFound;
 
-	CommonUtility::convertToMap(first, firstList);
+
 
 	FastSearchString result;
 	int number;
@@ -40,12 +39,10 @@ void IfPattern::run() {
 				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
 
 			if (matched) 
-
-				result[CommonUtility::NumberToString(number)];			
+				result[CommonUtility::NumberToString(number)] =true;			
 			
 		}
 	}
-
 
 	failed = result.size() == 0;
 

@@ -38,88 +38,69 @@ void BinaryRelationEngine::handleCall(vector<string> &first, vector<string> &sec
 
 			for (iter = first.begin(); iter != first.end(); iter++) {
 
-				string procedure = pkbManager->getAST()->getCalledProcedure(atoi(iter->c_str()));
-				vector<int> stmtList = pkbManager->getCalls()->getCallsStmt(procedure);
+				string procedure = pkbManager->getAST()->getCalledProcedure(atoi(iter->c_str())); // called what procedure
+				vector<int> stmtList = pkbManager->getCalls()->getCallsStmt(procedure); // get call statement list of that procedure
 				vector<int>::iterator iterStmtList;
 
 				for (iterStmtList = stmtList.begin(); iterStmtList != stmtList.end(); iterStmtList++) {
-					iterSecond = secondMap.find(*iterStmtList);
+					iterSecond = secondMap.find(*iterStmtList); // check if it's exists
 					if (iterSecond != secondMap.end()) { 
 						relationship.push_back(pair<string, string>(*iter, CommonUtility::NumberToString(iterSecond->first)));
 					}
 				}												
 			}
 
-		} else {
+		} else {// first one VT CALL second not VT_CALL
 
-			FastSearchInteger::iterator iterSecond;
 			vector<string>::iterator iter;
-			vector<string>::iterator iterSecond2;
+			FastSearchString::iterator iterFound;
+			FastSearchString secondMap;
+			CommonUtility::convertToMap(second, secondMap);
+
 			bool exist;
 			for (iter = first.begin(); iter != first.end(); iter++) {
 
 				string procedure = pkbManager->getAST()->getCalledProcedure(atoi(iter->c_str()));
-				vector<int> stmtList = pkbManager->getCalls()->getCallsStmt(procedure);
-				vector<int>::iterator iterStmtList;
-
-				for (iterStmtList = stmtList.begin(); iterStmtList != stmtList.end(); iterStmtList++) {
-					exist = false;
-					for (iterSecond2 = second.begin(); iterSecond2 != second.end(); iterSecond2++) {
-						if (*iterStmtList ==  atoi(iterSecond2->c_str())) {
-							exist =true;
-							if (keepRelation) {
-								relationship.push_back(pair<string, string>(*iter, CommonUtility::NumberToString(iterSecond->first)));
-							}else  if (!astParam2->updateAble()) {								
-								break;
-							}
-						}
-					}
+				exist = false;
+				iterFound = secondMap.find(procedure) ;
+				if (iterFound != secondMap.end()){
+					exist = true;
+					if (keepRelation) 
+						relationship.push_back(pair<string, string>(*iter, iterFound->first));
 
 				}
+
 
 				if (exist & !keepRelation) 
 					result1[*iter] = true;
 			}
 		}
-	} else if (astParam2->getParameterType() == VT_CALL) {
+	} else if (astParam2->getParameterType() == VT_CALL) { // second VT_CALL
+			vector<string>::iterator iter;
+			FastSearchString::iterator iterFound;
+			FastSearchString firstMap;
+			CommonUtility::convertToMap(first, firstMap);
 
-		FastSearchInteger::iterator iterSecond;
-		vector<string>::iterator iter;
-		vector<string>::iterator iterSecond2;
-		bool exist;
-		for (iter = second.begin(); iter != second.end(); iter++) {
+			bool exist;
+			for (iter = second.begin(); iter != second.end(); iter++) {
 
-			string procedure = pkbManager->getAST()->getCalledProcedure(atoi(iter->c_str()));
-			vector<int> stmtList = pkbManager->getCalls()->getCallsStmt(procedure);
-			vector<int>::iterator iterStmtList;
-
-			for (iterStmtList = stmtList.begin(); iterStmtList != stmtList.end(); iterStmtList++) {
+				string procedure = pkbManager->getAST()->getCalledProcedure(atoi(iter->c_str()));
 				exist = false;
-				for (iterSecond2 = first.begin(); iterSecond2 != first.end(); iterSecond2++) {
-					if (*iterStmtList ==  atoi(iterSecond2->c_str())) {
-						exist =true;
-						if (keepRelation) {
-							relationship.push_back(pair<string, string>(CommonUtility::NumberToString(iterSecond->first), *iter));
-						}else  if (!astParam1->updateAble()) {								
-							break;
-						}
-					}
+				iterFound = firstMap.find(procedure) ;
+				if (iterFound != firstMap.end()){
+					exist = true;
+					if (keepRelation) 
+						relationship.push_back(pair<string, string>(iterFound->first, *iter));
+
 				}
 
+
+				if (exist & !keepRelation) 
+					result2[*iter] = true;
 			}
-
-			if (exist & !keepRelation) 
-				result2[*iter] = true;
-		}
 	}
-	if (keepRelation) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), result1);
 
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), result2);
-	}
+	updateVariable(relationship, result1, result2, keepRelation);
 
 	failed = (result1.size() == 0 && result2.size() == 0 && relationship.size() == 0);
 
@@ -160,44 +141,64 @@ void BinaryRelationEngine::run() {
 	}
 
 
-	map<string, bool> secondList;
-	map<string, bool> firstList;
+	FastSearchString secondList;
+	FastSearchString firstList;
 
-	vector<string>::iterator iterFirst, iterSecond;
+
+
+
 	vector<pair<string, string>> relationship;
 
 	bool keepRelation = keepRelationship();
 	bool exist;
 
-	for (iterFirst = first.begin(); iterFirst != first.end(); iterFirst++){
-		exist = false;
-		for (iterSecond = second.begin(); iterSecond != second.end(); iterSecond++) {
+	if (first.size() < second.size()) {
+		vector<string>::iterator iterFirst;
 
-			if (iterFirst->compare(*iterSecond) == 0 )   {
-				if (keepRelation) 
-					relationship.push_back(VectorRelation(*iterFirst, *iterSecond));					
+		FastSearchString secondFast;
+		CommonUtility::convertToMap(second, secondFast);
+
+		for (iterFirst = first.begin(); iterFirst != first.end(); iterFirst++){
+			exist = false;
+			if (secondFast.find(*iterFirst) != secondFast.end() ) {
 				exist = true;
-				if (!keepRelation && astParam2->updateAble()) 
-					secondList[*iterSecond] = true;
-				else {
-					break;
-				}
+
+				if (keepRelation) 
+					relationship.push_back(VectorRelation(*iterFirst, *iterFirst));		// they are the same. make no mistake here
+				else if (astParam2->updateAble()) 
+					secondList[*iterFirst] = true;
+				else if (!astParam1->updateAble()) 
+					return; // we have got what we come for. 
 			}
+
+			if (exist && !keepRelation && astParam1->updateAble()) 
+				firstList[*iterFirst] = true;
 		}
+	} else {
+		vector<string>::iterator iterSecond;
 
-		if (exist && !keepRelation && astParam1->updateAble()) 
-			firstList[*iterFirst] = true;
+		FastSearchString firstFast;
+		CommonUtility::convertToMap(first, firstFast);
 
+		for (iterSecond = second.begin(); iterSecond != second.end(); iterSecond++){
+			exist = false;
+			if (firstFast.find(*iterSecond) != firstFast.end() ) {
+				exist = true;
+
+				if (keepRelation) 
+					relationship.push_back(VectorRelation(*iterSecond, *iterSecond));		// they are the same. make no mistake here
+				else if (astParam1->updateAble()) 
+					firstList[*iterSecond] = true;
+				else if (!astParam1->updateAble()) 
+					return; // we have got what we come for. 
+			}
+
+			if (exist && !keepRelation && astParam2->updateAble()) 
+				secondList[*iterSecond] = true;
+		}
 	}
 
-	if (keepRelation) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), firstList);
-
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), secondList);
-	}
+	updateVariable( relationship, firstList, secondList, keepRelation);
 
 	failed = (firstList.size() == 0 && secondList.size() == 0 && relationship.size() == 0);
 

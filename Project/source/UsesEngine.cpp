@@ -24,7 +24,7 @@ void UsesEngine::run() {
 
 
 
-	if ((astParam1->getParameterType() == VT_CONSTANTSTRING && astParam1->getVariableName().compare("_") != 0) || astParam1->getParameterType() == VT_PROCEDURE) {
+	if (astParam1->getParameterType() == VT_CONSTANTSTRING  || astParam1->getParameterType() == VT_PROCEDURE) {
 		handleProcedureVariable();
 	} else 
 		handleStatementListVariable();
@@ -42,74 +42,93 @@ void UsesEngine::handleProcedureVariable() {
 	ASTParameter *astParam2 = parameterList.at(1);	
 
 	FastSearchString procedureList;
-	vector<string> second;
+	FastSearchString second;
 
-	if (astParam2->getParameterType() == VT_CONSTANTSTRING) 	
-		second.push_back(astParam2->getVariableName());
-	else if (astParam2->getParameterType() == VT_UNDERSCORE) 
-		second = myQM->getAllVariable();	
+	if (astParam2->getParameterType() == VT_UNDERSCORE) 
+		CommonUtility::convertToMap(myQM->getAllVariable(), second);
 	else 
-		second = myQM->getValueList(astParam2->getVariableName());
+		loadVariable(1, second);
 
-
-	if (astParam1->getParameterType() == VT_PROCEDURE) {
-		procedureList = myQM->getValueListMap(astParam1->getVariableName());
-	} else if (astParam1->getParameterType() == VT_CONSTANTSTRING) {
-		procedureList[astParam1->getVariableName()] = true;
+	if (astParam1->getParameterType() == VT_UNDERSCORE) 
+		procedureList = myQM->getAllProcedureList();
+	else {
+		loadVariable(0, procedureList);
 	}
 
 
 	FastSearchString finalProcedureList;
 	FastSearchString finalVariableList; 
 
-	vector<string>::const_iterator iter;
-	vector<string>::const_iterator iterProcedureResult;
+	FastSearchString::const_iterator iter;
 
 	bool exist = false;
 
 
-	for (iter = second.begin();  iter != second.end(); iter++) {
-		vector<string> &procedureListResult = pkbManager->getUses()->getUsesProc (*iter);
+	if (second.size() < procedureList.size()) {
 
-		exist = false;
-		for (iterProcedureResult = procedureListResult.begin(); iterProcedureResult  != procedureListResult.end(); iterProcedureResult++) {
-			if (procedureList.find(*iterProcedureResult) != procedureList.end()) {  // found
-				exist = true;
+		vector<string>::const_iterator iterProcedureResult;
 
-				if (keepRelationship)
-					relationship.push_back(pair<string, string>(*iterProcedureResult,*iter));
-				else if (astParam1->updateAble()) {
-					finalProcedureList[*iterProcedureResult] = true;
-					if (!astParam2->updateAble()) {
-						if (finalProcedureList.size() == procedureList.size()) {
-							iter = second.end();
-							break;
-						}
+		for (iter = second.begin();  iter != second.end(); iter++) {
+			vector<string> &procedureListResult = pkbManager->getUses()->getUsesProc(iter->first);
+
+			exist = false;
+			for (iterProcedureResult = procedureListResult.begin(); iterProcedureResult  != procedureListResult.end(); iterProcedureResult++) {
+				if (procedureList.find(*iterProcedureResult) != procedureList.end()) {  // found
+					exist = true;
+
+					if (keepRelationship)
+						relationship.push_back(pair<string, string>(*iterProcedureResult, iter->first));
+					else if (astParam1->updateAble()) {
+						finalProcedureList[*iterProcedureResult] = true;
+					} else { // if the first one is not updateable, just need to care for second one 
+						if (!astParam2->updateAble()) 
+							return; // we have got what we come for. 
+
+						break;	
+
 					}
-				}else { // if the first one is not updateable, just need to care for second one 
-					if (!astParam2->updateAble()) 
-						return; // we have got what we come for. 
 
-					break;	
-
-				}
-
+				}			
 			}
+			if (exist && !keepRelationship && astParam2->updateAble()) 
+				finalVariableList[iter->first] = true;
 
 		}
-		if (exist && !keepRelationship && astParam2->updateAble()) 
-			finalVariableList[*iter] = true;
+	} else {
+		vector<string>::iterator iterVarResult;
+
+		for (iter = procedureList.begin();  iter != procedureList.end(); iter++) {
+			vector<string> &varListResult = pkbManager->getUses()->getUsedVar(iter->first);
+
+			exist = false;
+			for (iterVarResult = varListResult.begin(); iterVarResult  != varListResult.end(); iterVarResult++) {
+				if (second.find(*iterVarResult) != second.end()) {  // found
+					exist = true;
+
+					if (keepRelationship)
+						relationship.push_back(pair<string, string>(iter->first, *iterVarResult));
+					else if (astParam2->updateAble()) {
+						finalVariableList[*iterVarResult] = true;
+
+					} else { // if the first one is not updateable, just need to care for second one 
+						if (!astParam1->updateAble()) 
+							return; // we have got what we come for. 
+
+						// if param2 is not updatable, super unlikely after the optimization
+						break;	
+
+					}
+
+				}			
+			}
+			if (exist && !keepRelationship && astParam1->updateAble()) 
+				finalProcedureList[iter->first] = true;
+
+		}
 	}
 
 
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
-	}else 	if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalProcedureList);
-
-	} else 	if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalVariableList);		
-	}
+	updateVariable(relationship, finalProcedureList, finalVariableList, keepRelationship);
 
 	// both constant already handled above
 	failed = (finalProcedureList.size() == 0 && finalVariableList.size() == 0&& relationship.size() == 0);
@@ -127,7 +146,7 @@ void UsesEngine::handleStatementListVariable() {
 	FastSearchString variableList;
 	if (astParam2->getParameterType() == VT_CONSTANTSTRING) 	
 		variableList[astParam2->getVariableName()] = true;
-	else if (astParam2->getParameterType() == VT_UNDERSCORE) 
+	else if (astParam2->getParameterType() == VT_UNDERSCORE ) 
 		CommonUtility::convertToMap(myQM->getAllVariable(), variableList);
 	else 
 		variableList= myQM->getValueListMap (astParam2->getVariableName());
@@ -137,7 +156,7 @@ void UsesEngine::handleStatementListVariable() {
 
 	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) 
 		statementList[atoi(astParam1->getVariableName().c_str())] = true;
-	else if (astParam1->getParameterType() == VT_UNDERSCORE || astParam1->getVariableName().compare("_") == 0) { // HACK
+	else if (astParam1->getParameterType() == VT_UNDERSCORE) { // temporary hack. REMOVE away after youli fixes his error
 		CommonUtility::convertToMap(myQM->getAllStatementList(), statementList);
 	} else
 		statementList = myQM->getValueListIntegerMap (astParam1->getVariableName());
@@ -157,7 +176,7 @@ void UsesEngine::handleStatementListVariable() {
 		//using variable check against statementlist
 
 		for (iter = variableList .begin();  iter != variableList.end(); iter++) { // for every statement find the modified value
-			vector<int> statementListResult = pkbManager->getUses()->getUsesStmt (iter->first);				
+			vector<int> statementListResult = pkbManager->getUses()->getUsesStmt(iter->first);				
 
 			exist = false		;
 			for (iterStatementList= statementListResult.begin(); iterStatementList != statementListResult.end(); iterStatementList++) { // for each variable returned check against the variable list
@@ -177,11 +196,11 @@ void UsesEngine::handleStatementListVariable() {
 					}
 				}
 			}
+
+
+			if (exist && !keepRelationship && astParam2->updateAble()) 
+				finalVariableList[iter->first] = true;
 		}
-
-		if (exist && !keepRelationship && astParam2->updateAble()) 
-			finalVariableList[iter->first] = true;
-
 	} else  {
 		FastSearchInteger::const_iterator iter;	
 		vector<string>::const_iterator iterVariableResult;
@@ -205,41 +224,19 @@ void UsesEngine::handleStatementListVariable() {
 					}
 				}
 			}
+
 			if (exist && !keepRelationship && astParam1->updateAble()) 
 				finalStatementList[CommonUtility::NumberToString(iter->first)] = true;
 		}
-
-
-
 	}
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), relationship);
 
-	}else 	if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalStatementList);
+	updateVariable(relationship, finalStatementList, finalVariableList, keepRelationship);
 
-	} else 	if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalVariableList);		
-	}
 
 	// both constant already handled above
 	failed = (finalStatementList.size() == 0 && finalVariableList.size() == 0 && relationship.size() == 0);
 
+
+
 }
-
-
-
-// check which side is smaller. if you have a small list on the left side
-// compare the left side with the bigger right side. 
-// cos the right side if checking with AST, might incur a lot of run time. 
-
-/*
-// will use map instead of vector in the late release 
-// if procedureList more than variable list 
-// then use procedure to match against variable
-// and vice versa. 
-
-
-}*/
-
 

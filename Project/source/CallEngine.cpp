@@ -111,13 +111,7 @@ void CallEngine::run() {
 	}
 
 
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
+	updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

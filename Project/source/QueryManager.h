@@ -47,28 +47,13 @@ public:
 	FastSearchString getValueListMap(string variableName);
 	FastSearchInteger getValueListIntegerMap(string variableName)  ;
 
-	//// after the execution update the vector value. 
-	//void updateVector(string variableName, vector<string> &vectorString);
-	//void updateVectorInteger(string variableName, vector<int> &vectorInt);
-
 	void updateRelationship(const string &variable1, const string &variable2,  vector<pair<string, string>> &relationship);
 	void updateRelationship(const string &variable, const FastSearchString &relationship);
 	
+	FastSearchString getAllProcedureList(); 
 	QueryManager(PKB *pkb);
 
-	
-	/*QueryManager() {};
-	// locking mechanism 
-	// locking mechanism uses trusted mechanism, everyone can lock and unlock expression. 
-	// if expression is not locked, it can be updated
-	string lockExpression(string variableName){}; // future expansion, need to check out the expression to update its variable list 
-	 // return a key for use when updating an expression. 
-	void updateVector(string variableName, vector<string> &vectorString, string key) {};
-	void updateVectorInteger(string variableName, vector<int> &vectorInt, string key) {};
-	bool unlockExpression(string variableName){}; // future expansion, need to unlock so that other engine can lock it. 
-	// for Youli, this is OS's trick (mutex).	
-	// ----------------------------
-	*/
+
 		
 private:
 	//void loadVariable(string variableName) ;

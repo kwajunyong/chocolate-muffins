@@ -7,7 +7,7 @@ ParentStarEngine::ParentStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_P
 }
 void ParentStarEngine::run() {
 
-	
+
 
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
@@ -27,21 +27,17 @@ void ParentStarEngine::run() {
 	}
 
 
-	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
-		first[atoi(astParam1->getVariableName().c_str())] = true;
-	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+	if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), first);
 	}else{
-		first = myQM->getValueListIntegerMap(astParam1->getVariableName());
+		loadVariable(0, first);
 	}
 
 
-	if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
-		second[atoi(astParam2->getVariableName().c_str())] = true;
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	if (astParam2->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), second);
 	}	else {
-		second = myQM->getValueListIntegerMap(astParam2->getVariableName());
+		loadVariable(1, second );
 	}
 
 
@@ -86,13 +82,8 @@ void ParentStarEngine::run() {
 	}
 
 
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
+	updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
+
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

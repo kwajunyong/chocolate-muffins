@@ -27,21 +27,17 @@ void ParentEngine::run() {
 
 
 
-	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
-		first[atoi(astParam1->getVariableName().c_str())] = true;
-	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+	if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), first);
 	}else{
-		first = myQM->getValueListIntegerMap(astParam1->getVariableName());
+		loadVariable(0, first);
 	}
 
 
-	if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
-		second[atoi(astParam2->getVariableName().c_str())] = true;
-	} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+	if (astParam2->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), second);
 	}	else {
-		second = myQM->getValueListIntegerMap(astParam2->getVariableName());
+		loadVariable(1, second );
 	}
 
 
@@ -77,7 +73,7 @@ void ParentEngine::run() {
 						return; // both are not updatable. 
 					} else  // only final list is updatable, found a match, good. 
 						break;
-					
+
 				}
 			}
 			if (exist && !keepRelationship && astParam1->updateAble()) 
@@ -85,7 +81,7 @@ void ParentEngine::run() {
 
 
 		}
-	}else {
+	} else {
 
 		for (iter = second.begin();  iter != second.end(); iter++) { // for every statement find the modified value
 
@@ -115,14 +111,7 @@ void ParentEngine::run() {
 		}
 	}
 
-
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
+	updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

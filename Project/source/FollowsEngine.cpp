@@ -67,7 +67,7 @@ void FollowsEngine::run() {
 						finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
 					else if (!astParam1->updateAble()) 
 						return; // both are not updatable. 
-					
+
 
 
 				}
@@ -75,7 +75,7 @@ void FollowsEngine::run() {
 			if (exist && !keepRelationship && astParam1->updateAble()) 
 				finalListOne[CommonUtility::NumberToString(iter->first)] = 1;
 
-			
+
 		}
 	} else {
 		for (iterSecond = second.begin();  iterSecond != second.end(); iterSecond++) { // for every statement find the modified value
@@ -97,16 +97,11 @@ void FollowsEngine::run() {
 			}
 			if (exist && !keepRelationship && astParam2->updateAble()) 
 				finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = 1;
-	}
+		}
 
 	}
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
+		updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
+
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

@@ -54,85 +54,90 @@ void NextStarEngine::run() {
 	vector<pair<string, string>> resultList;
 
 
-	if (astParam1->getParameterType() == VT_CONSTANTINTEGER) {
-		first[atoi(astParam1->getVariableName().c_str())] = true;
-	} else if (astParam1->getParameterType() == VT_UNDERSCORE) {
+	if (astParam1->getParameterType() == VT_UNDERSCORE) {
 		CommonUtility::convertToMap(myQM->getAllStatementList(), first);
 	}else{
-		first = myQM->getValueListIntegerMap(astParam1->getVariableName());
+		loadVariable(0, first);
 	}
+
 	// BOTH SAME VARIABLE ============================================================================
 	if (sameVariable()) {
 		for (iter = first.begin();  iter != first.end(); iter++) { 
 			if (pkbManager->getNext()->isNext(iter->first, iter->first, true)) 
-					finalListOne[CommonUtility::NumberToString(iter->first)] = true;
+				finalListOne[CommonUtility::NumberToString(iter->first)] = true;
 
 		}
 		keepRelationship = false; // prevent unwanted update
 	} else { // BOTH SAME VARIABLE END==================================================================
 
 
-		if (astParam2->getParameterType() == VT_CONSTANTINTEGER) {
-			second[atoi(astParam2->getVariableName().c_str())] = true;
-		} else if (astParam2->getParameterType() == VT_UNDERSCORE) {
+		if (astParam2->getParameterType() == VT_UNDERSCORE) 
 			CommonUtility::convertToMap(myQM->getAllStatementList(), second);
-		}	else {
-			second = myQM->getValueListIntegerMap(astParam2->getVariableName());
-		}
+		else 
+			loadVariable(1, second);
 
 
 
-		for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-			vector<int> &childList = pkbManager->getNext()->getNext(iter->first, true);
-			exist = false;
+		if (first.size() < second.size()) {
 
-			for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
-				iterSecond = second.find(*iterParentList);
+			for (iter = first.begin();  iter != first.end(); iter++) { // for every statement find the modified value
 
-				if (iterSecond != second.end()) {
-					exist = true;
+				vector<int> &childList = pkbManager->getNext()->getNext(iter->first, true);
+				exist = false;
 
-					if (keepRelationship)
-						resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
-					else if (astParam2->updateAble()) 
-						finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
-					else if (!astParam1->updateAble()) {
-						return; // both are not updatable. 
-					}								
+				for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+					iterSecond = second.find(*iterParentList);
+
+					if (iterSecond != second.end()) {
+						exist = true;
+
+						if (keepRelationship)
+							resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
+						else if (astParam2->updateAble()) 
+							finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
+						else if (!astParam1->updateAble()) {
+							return; // both are not updatable. 
+						}								
+					}
 				}
+				if (exist && !keepRelationship && astParam1->updateAble()) 
+					finalListOne[CommonUtility::NumberToString(iter->first)] = true;
+
+
 			}
-			if (exist && !keepRelationship && astParam1->updateAble()) 
-				finalListOne[CommonUtility::NumberToString(iter->first)] = true;
+		} else  {
+			for (iterSecond = second.begin();  iterSecond != second.end(); iterSecond++) { // for every statement find the modified value
 
+				vector<int> &childList = pkbManager->getNext()->getPrevious(iterSecond->first, true);
+				exist = false;
 
+				for (iterParentList = childList.begin(); iterParentList  != childList.end(); iterParentList++) { // for each variable returned check against the variable list
+					iter = first.find(*iterParentList);
+
+					if (iter != first.end()) {
+						exist = true;
+
+						if (keepRelationship)
+							resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
+						else if (astParam1->updateAble()) 
+							finalListOne[CommonUtility::NumberToString(iter->first)] = true;
+						else if (!astParam1->updateAble()) {
+							return; // both are not updatable. 
+						}								
+					}
+				}
+
+				if (exist && !keepRelationship && astParam2->updateAble()) 
+					finalListTwo[CommonUtility::NumberToString(iterSecond->first)] = true;
+
+			}
 		}
-	}
 
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
+	}  // NOT SAME VARIABLE
 
-		if (astParam1->getVariableName().compare("n1") ==0 &&astParam2->getVariableName().compare("n2") == 0) {
-			vector<pair<string, string>>::iterator iter;
-			cout << endl;
-			ofstream myfile("C:\\Study\\CS3202\\n1n2.txt");
+	updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
 
-			if (myfile.is_open())
-				cout <<"open";
-			for (iter = resultList.begin(); iter != resultList.end(); iter++) {
-
-				myfile << iter->first ;
-				myfile << "*";
-				myfile << iter->second;
-				myfile << endl;
-			}		
-			myfile.close();
-		}
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

@@ -20,12 +20,11 @@ void ExpressionPattern::run() {
 	ASTParameter *astParam3 = parameterList.at(2);
 
 	bool matched = false;
-	vector<int> first = myQM->getValueListInteger(astParam1->getVariableName());
+	FastSearchInteger firstList = myQM->getValueListIntegerMap(astParam1->getVariableName());
+	FastSearchInteger::iterator iterFound;
 
-	map<int, int> firstList; // allow fast searching
-	map<int, int>::iterator iterFound;
 
-	CommonUtility::convertToMap(first, firstList);
+
 
 	FastSearchString result;
 	int number;

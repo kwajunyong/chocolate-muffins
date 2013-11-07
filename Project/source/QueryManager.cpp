@@ -87,6 +87,12 @@ vector<string> QueryManager::getValueList(string variableName)  {
 	
 }
 
+FastSearchString QueryManager::getAllProcedureList() {
+	FastSearchString proc;
+
+	CommonUtility::convertToMap(pkbLibrary->getProcTable()->getAllNames(), proc);
+	return proc;
+}
 
 vector<string> QueryManager::getAllVariable() {
 	return pkbLibrary->getVarTable()->getAllNames();

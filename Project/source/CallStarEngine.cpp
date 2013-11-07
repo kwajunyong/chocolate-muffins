@@ -7,7 +7,7 @@ CallStarEngine::CallStarEngine(QueryManager* qm, PKB *pkb) : QueryClass(QT_CALLS
 
 }
 void CallStarEngine::run() {
-	
+
 	// if it's procedure and variable combination
 	ASTParameter *astParam1 = parameterList.at(0);
 	ASTParameter *astParam2 = parameterList.at(1);	
@@ -100,9 +100,10 @@ void CallStarEngine::run() {
 						finalListOne[iterSecond->first] = true;
 					else if (!astParam2->updateAble()) 
 						return; // both are not updatable. 
-												
+
 				}
 			}
+
 			if (exist && !keepRelationship && astParam2->updateAble()) 
 				finalListTwo[iter->first] = true;
 
@@ -110,13 +111,7 @@ void CallStarEngine::run() {
 	}
 
 
-	if (keepRelationship) {
-		myQM->updateRelationship(astParam1->getVariableName(), astParam2->getVariableName(), resultList);
-	} else if (astParam1->updateAble()) {
-		myQM->updateRelationship(astParam1->getVariableName(), finalListOne);
-	} else if (astParam2->updateAble()) {
-		myQM->updateRelationship(astParam2->getVariableName(), finalListTwo);
-	}
+	updateVariable(resultList, finalListOne, finalListTwo, keepRelationship);
 
 	failed = (finalListOne.size() == 0 && finalListTwo.size() == 0 && resultList.size() == 0);
 

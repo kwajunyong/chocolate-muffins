@@ -18,32 +18,28 @@ void WhilePattern::run() {
 	ASTParameter *astParam2 = parameterList.at(1);
 
 	bool matched = false;
-	vector<int> first = myQM->getValueListInteger(astParam1->getVariableName());
 
-	map<int, int> firstList; // allow fast searching
-	map<int, int>::iterator iterFound;
+	FastSearchInteger firstList = myQM->getValueListIntegerMap(astParam1->getVariableName());
+	FastSearchInteger::iterator iterFound;
 
-	CommonUtility::convertToMap(first, firstList);
+
 
 	FastSearchString result;
 	int number;
 
 	for (int i=0; i<nodes.size(); i++) {
 		matched = false;
-
+		
+		number = nodes[i]->getStatementNumber();
 		iterFound = firstList.find(number );
 
 		if (iterFound != firstList.end()) {
-
-
 			node = nodes[i]->getChild();				// Get first child
 
 			if (astParam2->getParameterType() != VT_UNDERSCORE)
 				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
 
 			if (matched) {
-				number = nodes[i]->getStatementNumber();
-
 				result[CommonUtility::NumberToString(number)] = true;		
 			}
 		}
