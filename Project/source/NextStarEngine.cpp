@@ -122,7 +122,7 @@ void NextStarEngine::run() {
 							resultList.push_back(pair<string, string>(CommonUtility::NumberToString(iter->first), CommonUtility::NumberToString(iterSecond->first)));					
 						else if (astParam1->updateAble()) 
 							finalListOne[CommonUtility::NumberToString(iter->first)] = true;
-						else if (!astParam1->updateAble()) {
+						else if (!astParam2->updateAble()) {
 							return; // both are not updatable. 
 						}								
 					}
