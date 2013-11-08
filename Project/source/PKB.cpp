@@ -265,7 +265,7 @@ void PKB::extract()
 		intResults = _follows->getFollowedBy(i, false);
 
 		for (j = 0; j < intResults.size(); j++) {
-			follows << "Follows(" << i << ", " << intResults[j] << ")" << endl;
+			follows << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -273,7 +273,7 @@ void PKB::extract()
 		intResults = _follows->getFollowedBy(i, true);
 
 		for (j = 0; j < intResults.size(); j++) {
-			followsStar << "Follows*(" << i << ", " << intResults[j] << ")" << endl;
+			followsStar << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -281,7 +281,7 @@ void PKB::extract()
 		intResults = _parent->getChild(i, false);
 
 		for (j = 0; j < intResults.size(); j++) {
-			parent << "Parent(" << i << ", " << intResults[j] << ")" << endl;
+			parent << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -289,7 +289,7 @@ void PKB::extract()
 		intResults = _parent->getChild(i, true);
 
 		for (j = 0; j < intResults.size(); j++) {
-			parentStar << "Parent*(" << i << ", " << intResults[j] << ")" << endl;
+			parentStar << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -297,7 +297,7 @@ void PKB::extract()
 		strResults = _modifies->getModifiedVar(i);
 
 		for (j = 0; j < strResults.size(); j++) {
-			modifies << "Modifies(" << i << ", " << strResults[j] << ")" << endl;
+			modifies << i << "," << strResults[j] << endl;
 		}
 	}
 
@@ -305,7 +305,7 @@ void PKB::extract()
 		strResults = _uses->getUsedVar(i);
 
 		for (j = 0; j < strResults.size(); j++) {
-			uses << "Uses(" << i << ", " << strResults[j] << ")" << endl;
+			uses << i << "," << strResults[j] << endl;
 		}
 	}
 
@@ -313,7 +313,7 @@ void PKB::extract()
 		intResults = _next->getNext(i, false);
 
 		for (j = 0; j < intResults.size(); j++) {
-			next << "Next(" << i << ", " << intResults[j] << ")" << endl;
+			next << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -321,7 +321,7 @@ void PKB::extract()
 		intResults = _next->getNext(i, true);
 
 		for (j = 0; j < intResults.size(); j++) {
-			nextStar << "Next*(" << i << ", " << intResults[j] << ")" << endl;
+			nextStar << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -329,7 +329,7 @@ void PKB::extract()
 		intResults = _affects->getAffects(i);
 
 		for (j = 0; j < intResults.size(); j++) {
-			affects << "Affects(" << i << ", " << intResults[j] << ")" << endl;
+			affects << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -337,7 +337,7 @@ void PKB::extract()
 		intResults = _affects->getAffectsStar(i);
 
 		for (j = 0; j < intResults.size(); j++) {
-			affectsStar << "Affects*(" << i << ", " << intResults[j] << ")" << endl;
+			affectsStar << i << "," << intResults[j] << endl;
 		}
 	}
 
@@ -364,14 +364,14 @@ void PKB::extract()
 	for (i = 0; i < procedure.size(); i++) {
 		range = _procTable->getRange(procedure[i]);
 
-		procTable << procedure[i] << " " << range.first << "-" << range.second << endl;
+		procTable << procedure[i] << endl;
 	}
 
 	for (i = 0; i < procedure.size(); i++) {
 		strResults = _modifies->getModifiedVar(procedure[i]);
 
 		for (j = 0; j < strResults.size(); j++) {
-			modifies << "Modifies(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+			modifies << procedure[i] << "," << strResults[j] << endl;
 		}
 	}
 
@@ -379,7 +379,7 @@ void PKB::extract()
 		strResults = _uses->getUsedVar(procedure[i]);
 
 		for (j = 0; j < strResults.size(); j++) {
-			uses << "Uses(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+			uses << procedure[i] << "," << strResults[j] << endl;
 		}
 	}
 
@@ -387,7 +387,7 @@ void PKB::extract()
 		strResults = _calls->getCalls(procedure[i], false);
 
 		for (j = 0; j < strResults.size(); j++) {
-			calls << "Calls(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+			calls << procedure[i] << "," << strResults[j] << endl;
 		}
 	}
 
@@ -395,7 +395,7 @@ void PKB::extract()
 		strResults = _calls->getCalls(procedure[i], true);
 
 		for (j = 0; j < strResults.size(); j++) {
-			callsStar << "Calls*(" << procedure[i] << ", " << strResults[j] << ")" << endl;
+			callsStar << procedure[i] << "," << strResults[j] << endl;
 		}
 	}
 
@@ -403,7 +403,7 @@ void PKB::extract()
 		intResults = _calls->getCallsStmt(procedure[i]);
 
 		for (j = 0; j < intResults.size(); j++) {
-			callsStmt << "Calls(" << intResults[j] << ", " << procedure[i] << ")" << endl;
+			callsStmt << intResults[j] << "," << procedure[i] << endl;
 		}
 	}
 }
