@@ -107,11 +107,29 @@ void TestDesignExtractorPKB::testModifies()
 {
 	Modifies expected = expectedModifies();
 
+	std::vector<int> intExpected;
+	std::vector<int> intActual;
+	std::vector<std::string> strExpected;
+	std::vector<std::string> strActual;
+
 	std::vector<std::string> variables = varTable->getAllNames();
 
 	for (size_t i = 0; i < variables.size(); i++) {
-		CPPUNIT_ASSERT(expected.getModifiesStmt(variables[i]) == modifies->getModifiesStmt(variables[i]));
-		CPPUNIT_ASSERT(expected.getModifiesProc(variables[i]) == modifies->getModifiesProc(variables[i]));
+		intExpected = expected.getModifiesStmt(variables[i]);
+		std::sort(intExpected.begin(), intExpected.end());
+
+		intActual = modifies->getModifiesStmt(variables[i]);
+		std::sort(intActual.begin(), intActual.end());
+
+		CPPUNIT_ASSERT(intExpected == intActual);
+
+		strExpected = expected.getModifiesProc(variables[i]);
+		std::sort(strExpected.begin(), strExpected.end());
+
+		strActual = modifies->getModifiesProc(variables[i]);
+		std::sort(strActual.begin(), strActual.end());
+
+		CPPUNIT_ASSERT(strExpected == strActual);
 	}
 }
 
@@ -119,11 +137,29 @@ void TestDesignExtractorPKB::testUses()
 {
 	Uses expected = expectedUses();
 
+	std::vector<int> intExpected;
+	std::vector<int> intActual;
+	std::vector<std::string> strExpected;
+	std::vector<std::string> strActual;
+
 	std::vector<std::string> variables = varTable->getAllNames();
 
 	for (size_t i = 0; i < variables.size(); i++) {
-		CPPUNIT_ASSERT(expected.getUsesStmt(variables[i]) == uses->getUsesStmt(variables[i]));
-		CPPUNIT_ASSERT(expected.getUsesProc(variables[i]) == uses->getUsesProc(variables[i]));
+		intExpected = expected.getUsesStmt(variables[i]);
+		std::sort(intExpected.begin(), intExpected.end());
+
+		intActual = uses->getUsesStmt(variables[i]);
+		std::sort(intActual.begin(), intActual.end());
+
+		CPPUNIT_ASSERT(intExpected == intActual);
+
+		strExpected = expected.getUsesProc(variables[i]);
+		std::sort(strExpected.begin(), strExpected.end());
+
+		strActual = uses->getUsesProc(variables[i]);
+		std::sort(strActual.begin(), strActual.end());
+
+		CPPUNIT_ASSERT(strExpected == strActual);
 	}
 }
 
@@ -266,7 +302,7 @@ Parent TestDesignExtractorPKB::expectedParent()
 
 Modifies TestDesignExtractorPKB::expectedModifies()
 {
-	Modifies expected(numOfStmt, varTable, procTable);
+	Modifies expected(numOfStmt);
 
 	expected.addModifiesStmt(1, "d");
 	expected.addModifiesStmt(2, "d");
@@ -339,7 +375,7 @@ Modifies TestDesignExtractorPKB::expectedModifies()
 	
 Uses TestDesignExtractorPKB::expectedUses()
 {
-	Uses expected(numOfStmt, varTable, procTable);
+	Uses expected(numOfStmt);
 
 	expected.addUsesStmt(1, "a");
 	expected.addUsesStmt(1, "b");

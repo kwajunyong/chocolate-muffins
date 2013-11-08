@@ -2,6 +2,8 @@
 
 #include <cppunit\extensions\HelperMacros.h>
 
+#include <algorithm>
+
 #include "Parser.h"
 #include "DesignExtractor.h"
 

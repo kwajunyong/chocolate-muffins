@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include "VarTable.h"
 #include "ProcTable.h"
@@ -8,7 +9,7 @@
 class Modifies
 {
 public:
-	Modifies(int _numOfStmt, VarTable* varTable, ProcTable* procTable);
+	Modifies(int numOfStmt);
 	~Modifies(void);
 
 	bool addModifiesStmt(int stmtNum, std::string variable);
@@ -25,13 +26,11 @@ public:
 private:
 	int _numOfStmt;
 
-	VarTable* _varTable;
-	ProcTable* _procTable;
+	std::vector<std::vector<std::string>> _stmtVar;
+	std::map<std::string, std::vector<std::string>> _procVar;
 
-	std::vector<std::vector<bool>> _varModifies;
-	std::vector<std::vector<bool>> _procModifies;
+	std::map<std::string, std::vector<int>> _varStmt;
+	std::map<std::string, std::vector<std::string>> _varProc;
 
 	bool stmtNumOutOfRange(int stmtNum);
-	bool varIndexOutOfRange(int varIndex);
-	bool procIndexOutOfRange(int procIndex);
 };

@@ -15,20 +15,16 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestModifies);
 void TestModifies::testAddModifiesStmt()
 {
 	CPPUNIT_ASSERT_EQUAL(true, modifies->addModifiesStmt(1, "a"));
+	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesStmt(1, "a"));
 
 	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesStmt(0, "a"));
 	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesStmt(5, "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesStmt(1, "e"));
 }
 
 void TestModifies::testAddModifiesProc()
 {
 	CPPUNIT_ASSERT_EQUAL(true, modifies->addModifiesProc("Alpha", "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Delta", "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Alpha", "e"));
+	CPPUNIT_ASSERT_EQUAL(false, modifies->addModifiesProc("Alpha", "a"));
 }
 
 void TestModifies::testIsModifiesStmt()
@@ -59,14 +55,19 @@ void TestModifies::testGetModifiedVar()
 	generateModifies();
 
 	std::vector<std::string> expected;
+	std::vector<std::string> actual;
 
 	std::string temp[] = {"a", "b", "c"};
-
+	
 	expected.assign(temp, temp + 2);
-	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Alpha"));
+	actual = modifies->getModifiedVar("Alpha");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 	
 	expected.assign(temp, temp + 3);
-	CPPUNIT_ASSERT(expected == modifies->getModifiedVar(1));
+	actual = modifies->getModifiedVar(1);
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == modifies->getModifiedVar("Charlie"));
@@ -81,10 +82,13 @@ void TestModifies::testGetModifiesStmt()
 	generateModifies();
 
 	std::vector<int> expected;
-
+	std::vector<int> actual;
+	
 	int temp[] = {1, 2, 3};
 	expected.assign(temp, temp + 3);
-	CPPUNIT_ASSERT(expected == modifies->getModifiesStmt("a"));
+	actual = modifies->getModifiesStmt("a");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == modifies->getModifiesStmt("d"));
@@ -96,42 +100,22 @@ void TestModifies::testGetModifiesProc()
 	generateModifies();
 
 	std::vector<std::string> expected;
+	std::vector<std::string> actual;
 
 	std::string temp[] = {"Alpha", "Bravo"};
 	expected.assign(temp, temp + 2);
-	CPPUNIT_ASSERT(expected == modifies->getModifiesProc("a"));
+	actual = modifies->getModifiesProc("a");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == modifies->getModifiesProc("d"));
 	CPPUNIT_ASSERT(expected == modifies->getModifiesProc("e"));
 }
 
-VarTable* TestModifies::buildVarTable()
-{
-	VarTable* varTable = new VarTable();
-
-	varTable->addVariable("a");
-	varTable->addVariable("b");
-	varTable->addVariable("c");
-	varTable->addVariable("d");
-
-	return varTable;
-}
-
-ProcTable* TestModifies::buildProcTable()
-{
-	ProcTable* procTable = new ProcTable();
-
-	procTable->addProcedure("Alpha", 1, 1);
-	procTable->addProcedure("Bravo", 2, 3);
-	procTable->addProcedure("Charlie", 4, 6);
-
-	return procTable;
-}
-
 Modifies* TestModifies::buildModifies()
 {
-	return new Modifies(4, buildVarTable(), buildProcTable());
+	return new Modifies(4);
 }
 
 void TestModifies::generateModifies()

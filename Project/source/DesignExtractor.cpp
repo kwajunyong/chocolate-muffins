@@ -19,8 +19,8 @@ void DesignExtractor::extract(PKB* pkb)
 	
 	_follows = new Follows();
 	_parent = new Parent();
-	_modifies = new Modifies(_numOfStmt, _varTable, _procTable);
-	_uses = new Uses(_numOfStmt, _varTable, _procTable);
+	_modifies = new Modifies(_numOfStmt);
+	_uses = new Uses(_numOfStmt);
 	_calls = new Calls();
 	_next = new Next();
 	//_stats = new Stats(_procTable, _numOfStmt);

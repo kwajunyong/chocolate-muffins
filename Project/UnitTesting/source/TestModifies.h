@@ -3,6 +3,7 @@
 #include <cppunit\extensions\HelperMacros.h>
 
 #include <vector>
+#include <algorithm>
 
 #include "Modifies.h"
 
@@ -41,8 +42,6 @@ public:
 private:
 	Modifies* modifies;
 
-	VarTable* buildVarTable();
-	ProcTable* buildProcTable();
 	Modifies* buildModifies();
 
 	void generateModifies();

@@ -1,13 +1,10 @@
 #include "Uses.h"
 
-Uses::Uses(int numOfStmt, VarTable* varTable, ProcTable* procTable)
+Uses::Uses(int numOfStmt)
 {
 	_numOfStmt = numOfStmt;
-	_varTable = varTable;
-	_procTable = procTable;
 
-	_varUses.assign(_numOfStmt, std::vector<bool>(_varTable->getSize(), false));
-	_procUses.assign(_procTable->getSize(), std::vector<bool>(_varTable->getSize(), false));
+	_stmtVar.assign(_numOfStmt, std::vector<std::string>());
 }
 
 Uses::~Uses(void)
@@ -18,154 +15,84 @@ bool Uses::addUsesStmt(int stmtNum, std::string variable)
 	if (stmtNumOutOfRange(stmtNum)) {
 		return false;
 	}
-	
-	int varIndex = _varTable->getIndex(variable);
-	
-	if (varIndexOutOfRange(varIndex)) {
+
+	if (isUsesStmt(stmtNum, variable)) {
 		return false;
 	}
 
-	_varUses[stmtNum-1][varIndex] = true;
-	
+	_stmtVar[stmtNum - 1].push_back(variable);
+	_varStmt[variable].push_back(stmtNum);
+
 	return true;
 }
 
 bool Uses::addUsesProc(std::string procedure, std::string variable)
 {
-	int procIndex = _procTable->getIndex(procedure);
-
-	if (procIndexOutOfRange(procIndex)) {
+	if (isUsesProc(procedure, variable)) {
 		return false;
 	}
 
-	int varIndex = _varTable->getIndex(variable);
+	_procVar[procedure].push_back(variable);
+	_varProc[variable].push_back(procedure);
 
-	if (varIndexOutOfRange(varIndex)) {
-		return false;
-	}
-
-	_procUses[procIndex][varIndex] = true;
-	
 	return true;
 }
 
 bool Uses::isUsesStmt(int stmtNum, std::string variable)
 {
-	if (stmtNum < 1 || stmtNum > _varUses.size()) {
+	if (stmtNumOutOfRange(stmtNum)) {
 		return false;
 	}
 
-	int varIndex = _varTable->getIndex(variable);
+	size_t size = _stmtVar[stmtNum - 1].size();
 
-	if (varIndexOutOfRange(varIndex)) {
-		return false;
+	for (size_t i = 0; i < size; i++) {
+		if (_stmtVar[stmtNum - 1][i] == variable) {
+			return true;
+		}
 	}
 
-	return _varUses[stmtNum - 1][varIndex];
+	return false;
 }
 
 bool Uses::isUsesProc(std::string procedure, std::string variable)
 {
-	int procIndex = _procTable->getIndex(procedure);
+	size_t size = _procVar[procedure].size();
 
-	if (procIndexOutOfRange(procIndex)) {
-		return false;
+	for (int i = 0; i < size; i++) {
+		if (_procVar[procedure][i] == variable) {
+			return true;
+		}
 	}
 
-	int varIndex = _varTable->getIndex(variable);
-
-	if (varIndexOutOfRange(varIndex)) {
-		return false;
-	}
-
-	return _procUses[procIndex][varIndex];
+	return false;
 }
 
 std::vector<std::string> Uses::getUsedVar(int stmtNum)
 {
-	std::vector<std::string> results;
-
 	if (stmtNumOutOfRange(stmtNum)) {
-		return results;
+		return std::vector<std::string>();
 	}
 
-	for (size_t i = 0; i < _varUses[stmtNum-1].size(); i++) {
-		if (_varUses[stmtNum - 1][i]) {
-			results.push_back(_varTable->getName(i));
-		}
-	}
-
-	return results;
+	return _stmtVar[stmtNum - 1];
 }
 
 std::vector<std::string> Uses::getUsedVar(std::string procedure)
 {
-	std::vector<std::string> results;
-
-	int procIndex = _procTable->getIndex(procedure);
-
-	if (procIndexOutOfRange(procIndex)) {
-		return results;
-	}
-
-	for (size_t i = 0; i < _procUses[procIndex].size(); i++) {
-		if (_procUses[procIndex][i]) {
-			results.push_back(_varTable->getName(i));
-		}
-	}
-
-	return results;
+	return _procVar[procedure];
 }
 
 std::vector<int> Uses::getUsesStmt(std::string variable)
 {
-	std::vector<int> results;
-
-	int varIndex = _varTable->getIndex(variable);
-	
-	if (varIndexOutOfRange(varIndex)) {
-		return results;
-	}
-
-	for (size_t i = 0; i < _varUses.size(); i++) {
-		if (_varUses[i][varIndex]) {
-			results.push_back(i + 1);
-		}
-	}
-
-	return results;
+	return _varStmt[variable];
 }
 
 std::vector<std::string> Uses::getUsesProc(std::string variable)
 {
-	std::vector<std::string> results;
-
-	int varIndex = _varTable->getIndex(variable);
-	
-	if (varIndexOutOfRange(varIndex)) {
-		return results;
-	}
-
-	for (size_t i = 0; i < _procUses.size(); i++) {
-		if (_procUses[i][varIndex]) {
-			results.push_back(_procTable->getName(i));
-		}
-	}
-
-	return results;
+	return _varProc[variable];
 }
 
 bool Uses::stmtNumOutOfRange(int stmtNum)
 {
 	return stmtNum < 1 || stmtNum > _numOfStmt;
-}
-
-bool Uses::varIndexOutOfRange(int varIndex)
-{
-	return varIndex == -1;
-}
-
-bool Uses::procIndexOutOfRange(int procIndex)
-{
-	return procIndex == -1;
 }

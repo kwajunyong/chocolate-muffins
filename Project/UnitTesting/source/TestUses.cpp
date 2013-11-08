@@ -15,20 +15,16 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestUses);
 void TestUses::testAddUsesStmt()
 {
 	CPPUNIT_ASSERT_EQUAL(true, uses->addUsesStmt(1, "a"));
+	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesStmt(1, "a"));
 
 	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesStmt(0, "a"));
 	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesStmt(5, "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesStmt(1, "e"));
 }
 
 void TestUses::testAddUsesProc()
 {
 	CPPUNIT_ASSERT_EQUAL(true, uses->addUsesProc("Alpha", "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Delta", "a"));
-
-	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Alpha", "e"));
+	CPPUNIT_ASSERT_EQUAL(false, uses->addUsesProc("Alpha", "a"));
 }
 
 void TestUses::testIsUsesStmt()
@@ -59,17 +55,22 @@ void TestUses::testGetUsedVar()
 	generateUses();
 
 	std::vector<std::string> expected;
+	std::vector<std::string> actual;
 
 	std::string temp[] = {"a", "b", "c"};
-
+	
 	expected.assign(temp, temp + 2);
-	CPPUNIT_ASSERT(expected == uses->getUsedVar("Alpha"));
-
+	actual = uses->getUsedVar("Alpha");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
+	
 	expected.assign(temp, temp + 3);
-	CPPUNIT_ASSERT(expected == uses->getUsedVar(1));
+	actual = uses->getUsedVar(1);
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
-	CPPUNIT_ASSERT(expected == uses->getUsedVar("Delta"));
+	CPPUNIT_ASSERT(expected == uses->getUsedVar("Charlie"));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar("Delta"));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(4));
 	CPPUNIT_ASSERT(expected == uses->getUsedVar(0));
@@ -81,10 +82,13 @@ void TestUses::testGetUsesStmt()
 	generateUses();
 
 	std::vector<int> expected;
-
+	std::vector<int> actual;
+	
 	int temp[] = {1, 2, 3};
 	expected.assign(temp, temp + 3);
-	CPPUNIT_ASSERT(expected == uses->getUsesStmt("a"));
+	actual = uses->getUsesStmt("a");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == uses->getUsesStmt("d"));
@@ -96,42 +100,22 @@ void TestUses::testGetUsesProc()
 	generateUses();
 
 	std::vector<std::string> expected;
+	std::vector<std::string> actual;
 
 	std::string temp[] = {"Alpha", "Bravo"};
 	expected.assign(temp, temp + 2);
-	CPPUNIT_ASSERT(expected == uses->getUsesProc("a"));
+	actual = uses->getUsesProc("a");
+	std::sort(actual.begin(), actual.end());
+	CPPUNIT_ASSERT(expected == actual);
 
 	expected.clear();
 	CPPUNIT_ASSERT(expected == uses->getUsesProc("d"));
 	CPPUNIT_ASSERT(expected == uses->getUsesProc("e"));
 }
 
-VarTable* TestUses::buildVarTable()
-{
-	VarTable* varTable = new VarTable();
-
-	varTable->addVariable("a");
-	varTable->addVariable("b");
-	varTable->addVariable("c");
-	varTable->addVariable("d");
-
-	return varTable;
-}
-
-ProcTable* TestUses::buildProcTable()
-{
-	ProcTable* procTable = new ProcTable();
-
-	procTable->addProcedure("Alpha", 1, 1);
-	procTable->addProcedure("Bravo", 2, 3);
-	procTable->addProcedure("Charlie", 4, 6);
-
-	return procTable;
-}
-
 Uses* TestUses::buildUses()
 {
-	return new Uses(4, buildVarTable(), buildProcTable());
+	return new Uses(4);
 }
 
 void TestUses::generateUses()

@@ -3,6 +3,7 @@
 #include <cppunit\extensions\HelperMacros.h>
 
 #include <vector>
+#include <algorithm>
 
 #include "Uses.h"
 
@@ -41,8 +42,6 @@ public:
 private:
 	Uses* uses;
 
-	VarTable* buildVarTable();
-	ProcTable* buildProcTable();
 	Uses* buildUses();
 
 	void generateUses();
