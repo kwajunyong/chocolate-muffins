@@ -34,6 +34,7 @@ public:
 
 	void resetEverything(); // reset all the expression to be null so that it can be reused again. might not be useful. 
 	
+	void setFail(bool value);
 	
 	const vector<int>& getAllStatementList() ;
 	vector<string> getAllVariable() ;

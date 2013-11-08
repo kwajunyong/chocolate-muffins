@@ -44,6 +44,14 @@ void QueryManager::execute() { // multithreading
 
 	}
 }
+
+	void QueryManager::setFail(bool value) {
+		failed = true;
+	}
+
+//void QueryManager::setFailed(bool value) {
+//	failed = true;
+//}
 QueryManager::QueryManager(PKB *pkb) {
 	pkbLibrary = pkb;
 	failed = false;
