@@ -6,6 +6,13 @@ IfPattern::IfPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_IFPATTERN, qm, 
 }
 void IfPattern::run() {
 
+		ASTParameter *astParam1 = parameterList.at(0);
+	ASTParameter *astParam2 = parameterList.at(1);
+
+	
+	if (astParam2->getParameterType() == VT_UNDERSCORE) // all under score skipped
+		return;
+
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
@@ -14,8 +21,6 @@ void IfPattern::run() {
 
 	ASTNode* node;
 
-	ASTParameter *astParam1 = parameterList.at(0);
-	ASTParameter *astParam2 = parameterList.at(1);
 
 	bool matched = false;
 
@@ -35,12 +40,12 @@ void IfPattern::run() {
 		if (iterFound != firstList.end()){
 			node = nodes[i]->getChild();				// Get first child
 
-			if (astParam2->getParameterType() != VT_UNDERSCORE)
-				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+
+			matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
 
 			if (matched) 
 				result[CommonUtility::NumberToString(number)] =true;			
-			
+
 		}
 	}
 

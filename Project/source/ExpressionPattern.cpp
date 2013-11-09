@@ -6,6 +6,13 @@ ExpressionPattern::ExpressionPattern(QueryManager* qm, PKB *pkb) : QueryClass(QT
 }
 void ExpressionPattern::run() {
 
+		ASTParameter *astParam1 = parameterList.at(0);
+	ASTParameter *astParam2 = parameterList.at(1);
+	ASTParameter *astParam3 = parameterList.at(2);
+	// meaning less query
+	if(astParam2->getParameterType() == VT_UNDERSCORE && astParam3->getParameterType() == VT_UNDERSCORE) 	
+		return ;
+
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
@@ -15,9 +22,6 @@ void ExpressionPattern::run() {
 
 	ASTNode* node;
 
-	ASTParameter *astParam1 = parameterList.at(0);
-	ASTParameter *astParam2 = parameterList.at(1);
-	ASTParameter *astParam3 = parameterList.at(2);
 
 	bool matched = false;
 	FastSearchInteger firstList = myQM->getValueListIntegerMap(astParam1->getVariableName());

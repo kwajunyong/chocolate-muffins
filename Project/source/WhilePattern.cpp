@@ -6,6 +6,12 @@ WhilePattern::WhilePattern(QueryManager* qm, PKB *pkb) : QueryClass(QT_WHILEPATT
 }
 void WhilePattern::run() {
 
+	ASTParameter *astParam1 = parameterList.at(0);
+	ASTParameter *astParam2 = parameterList.at(1);
+
+	if (astParam2->getParameterType() == VT_UNDERSCORE) // all under score skipped
+		return;
+
 	ASTExpressionBuilder* builder = pkbManager->getASTExpressionBuilder();
 	ASTMatcher* matcher = pkbManager->getASTMatcher();
 
@@ -14,8 +20,6 @@ void WhilePattern::run() {
 
 	ASTNode* node;
 
-	ASTParameter *astParam1 = parameterList.at(0);
-	ASTParameter *astParam2 = parameterList.at(1);
 
 	bool matched = false;
 
@@ -24,20 +28,20 @@ void WhilePattern::run() {
 
 
 
+
 	FastSearchString result;
 	int number;
 
 	for (int i=0; i<nodes.size(); i++) {
 		matched = false;
-		
+
 		number = nodes[i]->getStatementNumber();
 		iterFound = firstList.find(number );
 
 		if (iterFound != firstList.end()) {
 			node = nodes[i]->getChild();				// Get first child
 
-			if (astParam2->getParameterType() != VT_UNDERSCORE)
-				matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
+			matched = matcher->matchTree(node, builder->build(astParam2->getVariableName()));
 
 			if (matched) {
 				result[CommonUtility::NumberToString(number)] = true;		
