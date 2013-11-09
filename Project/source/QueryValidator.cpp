@@ -785,6 +785,14 @@ bool QueryValidator::processQueryClauses(vector<string> queryClauses){
 	//return true;
 }
 
+bool QueryValidator::getValidReturnResultType(string returnResultVariable){
+	string rawType = getRawVariableType(returnResultVariable);
+	for (vector<string>::size_type counter = 0; counter < tblDesignEntities.size(); counter++){
+			if (strcmpi(tblDesignEntities[counter].c_str(), rawType.c_str()) == 0)
+				return true;
+		}
+}
+
 bool QueryValidator::processSelectStmt(string selectStmt){
 	vector<string> tokens = split(selectStmt, ' ');
 	vector<string> queryList, patternList;
@@ -793,6 +801,9 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 	bool patternClauseDetected = false;
 
 	string returnResult = tokens[1];
+	string returnIndividualResult;
+	string returnResultRawType;
+	string returnResultExtension;
 
 	//cout << "processSelectStmt:: " << selectStmt << endl;
 	//cout << "processSelectStmt:: before return results -> " << returnResult << endl;
@@ -803,8 +814,34 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 	vector<string> returnResults = split(returnResult, ',');
 	
 	for (vector<string>::size_type counter = 0; counter < returnResults.size(); counter++){
-		//cout << "processSelectStmt:: return results #" << counter << " -> " << returnResults[counter] << endl;
-		queryManager -> addResultExpression(returnResults[counter]);
+		returnIndividualResult = returnResults[counter];
+		//cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;
+		
+		if (!getValidReturnResultType(returnIndividualResult)){
+			cout << "return result not allowed: " << returnIndividualResult << endl;
+			return false;
+		}
+
+		if (returnIndividualResult.find(".") != string::npos){
+			string tempReturnResult = split(returnIndividualResult, '.')[0];
+			returnResultRawType = getRawVariableType(tempReturnResult);
+			returnResultExtension = split(returnIndividualResult, '.')[1];
+
+			if (returnResultRawType == "invalid")
+				return false;
+
+			//cout << "return raw type: " << returnResultRawType << endl;
+			if (strcmpi(returnResultRawType.c_str(), "call") == 0 && strcmpi(returnResultExtension.c_str(), "procName") == 0){
+				//cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;
+				queryManager -> addResultExpression(returnIndividualResult);
+			}else{
+				//cout << "processSelectStmt:: return results #" << counter << " -> " << split(returnIndividualResult, '.')[0] << endl;
+				queryManager -> addResultExpression(split(returnIndividualResult, '.')[0]);
+			}
+		}else{
+			//cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;
+			queryManager -> addResultExpression(returnIndividualResult);
+		}
 	}
 
 	for (vector<string>::size_type counter = 2; counter < tokens.size(); counter++){

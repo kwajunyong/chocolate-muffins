@@ -63,6 +63,7 @@ private:
 	bool paraTypeAllowed(vector<string> allowedParameterTypes, string paraType);
 	VARIABLETYPE getVariableType(std::string unkVarType);
 	bool addToQueryManager(vector < pair<string, pair<string, string>>> clausesList);
+	bool getValidReturnResultType(string returnResultVariable);
 
 	//Variables
 	vector<string> tblQueryClauses, tblDesignEntities;
