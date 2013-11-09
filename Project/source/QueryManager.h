@@ -55,7 +55,7 @@ public:
 	QueryManager(PKB *pkb);
 
 
-		
+		void setDebug(bool val);
 private:
 	//void loadVariable(string variableName) ;
 	map<string, ASTParameterValue> expressionValueList;	
@@ -70,4 +70,5 @@ private:
 	string NumberToString(int pNumber);
 	ListManager * listManager;
 	vector<int> myAllList;
+	bool debug ;
 };

@@ -1,5 +1,8 @@
 #include "QueryManager.h"
 
+void QueryManager::setDebug(bool val) {
+	debug = val;
+}
 void QueryManager::updateRelationship(const string &variable1, const string &variable2, 
 	 vector<pair<string, string>> &relationship) {		
 
@@ -74,6 +77,8 @@ ASTParameterValue &QueryManager::getASTParameterValue(string variableName) {
 }; 
 
 void QueryManager::addQueryClass(QueryClass* qc)  {
+	
+	qc->setDebug(debug);
 	qt.addQueryClass(qc);
 }
 

@@ -28,9 +28,10 @@ public:
 	void loadVariable(int paramIndex, FastSearchInteger &varList);
 	void updateVariable(vector<pair<string, string>> &relationship, const FastSearchString &finalListOne, const FastSearchString &finalTwo, const bool &keepRelation);
 	QUERYTYPE getQueryType();
+	void setDebug(bool val);
 protected:
 	
-
+	bool debug; 
 	bool failed;
 
 	QueryManager* myQM; 

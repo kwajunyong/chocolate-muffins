@@ -26,9 +26,8 @@ void TestWrapper::parse(std::string filename) {
 		qm = new QueryManager(pkb);
 		qv = new QueryValidator(qm, pkb);
 		QueryScore::initialize();
-
-	//	QueryTree qt;
-//		qt.test();
+		qm->setDebug(true); // << TURN ON THE VARIABLE PRINTING MESSAG
+	
 	} catch (ParseException pe) {
 		cout << pe.what();
 		getchar();
@@ -39,7 +38,7 @@ void TestWrapper::parse(std::string filename) {
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 	
 	static int a = 0;
-	int stopat  =20;
+	int stopat  =18;
 	if (qv->processQuery(query)) {
 		if (a >=stopat ) {
 			cout << "Four";
