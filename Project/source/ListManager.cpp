@@ -305,7 +305,7 @@ void ListManager::updateList(string variableName1, string variableName2,  vector
 			varOneSecond, variableName2, relationshipValue, true);
 
 	} else  if (varOneFirst == varTwoFirst) { // they both exists in the same list
-		sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
+		//sortVariable(mainList.at(varOneFirst), varOneSecond, variableName1);
 
 		shortenList(mainList.at(varOneFirst), varOneSecond, varTwoSecond, relationshipValue, variableName1);
 
@@ -431,44 +431,63 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 	const vector<pair<string, string>> &relationshipValue, const string &variableOne) {
 
 		vector<list<string>*> newList;// temporary list;
-		vector<list<string>*>::iterator iterFound;
-		vector<pair<string, string>>::const_iterator iterListValue;
+		vector<list<string>*>::iterator iter;
+		vector<pair<string, string>>::const_iterator iterRelationValue;
 		string secondValue;
-		string first;
-		string second;
-		string value;
+		string firstValue;
+
+		FastSearchString newRelationship;
+
 		// for each relationship value 
-		for (iterListValue = relationshipValue.begin(); 
-			iterListValue != relationshipValue.end(); iterListValue++) {
-
-				first= (*iterListValue).first;
-				second = (*iterListValue).second;
-				// find the iterFound 
-				iterFound = bLookup(valueList, first, index1, variableOne);
-
-
-				if (iterFound != valueList->end()) {
-					do {
-						secondValue = getValueAt(*iterFound,index2);
-
-						if (secondValue.compare(second)  == 0) 								
-							newList.push_back((*iterFound));
-
-
-						iterFound++;
-						if (iterFound == valueList->end()) 
-							break;
-
-						value = getValueAt((*iterFound), index1);
-
-						if (value.compare(first) != 0)
-							break;
-					} while (true);
-				}
+		// convert to first + "()" + second;
+		string symbol = "()";
+		for (iterRelationValue = relationshipValue.begin(); 
+			iterRelationValue != relationshipValue.end(); iterRelationValue++) {
+				string key = iterRelationValue->first + symbol + iterRelationValue->second;
+				newRelationship[key] = true;
 		}
-		valueList->clear();
-		valueList->insert(valueList->begin(), newList.begin(), newList.end());
-		//		copy(newList.begin(), newList.end(), valueList->begin());
+
+		for (iter = valueList->begin(); iter != valueList->end(); ) {
+			firstValue = getValueAt(*iter, index1);
+			secondValue = getValueAt(*iter, index2);
+			string key = firstValue + symbol + secondValue;
+
+			if (newRelationship.find(key) == newRelationship.end()) { // check if the key is qualified				
+				delete (*iter);
+				iter =valueList->erase(iter);							
+			} else {
+				iter++;
+			}
+		}
+
+		//		first= (*iterListValue).first;
+		//		second = (*iterListValue).second;
+		//		// find the iterFound 
+		//		iterFound = bLookup(valueList, first, index1, variableOne);
+
+
+		//		if (iterFound != valueList->end()) {
+		//			do {
+		//				secondValue = getValueAt(*iterFound,index2);
+
+		//				if (secondValue.compare(second)  == 0) 								
+		//					newList.push_back((*iterFound));
+
+
+		//				iterFound++;
+		//				if (iterFound == valueList->end()) 
+		//					break;
+
+		//				value = getValueAt((*iterFound), index1);
+
+		//				if (value.compare(first) != 0)
+		//					break;
+		//			} while (true);
+		//		}
+		//}
+		//valueList->clear();
+		//valueList->insert(valueList->begin(), newList.begin(), newList.end());
+		////		copy(newList.begin(), newList.end(), valueList->begin());
 }
 
 
