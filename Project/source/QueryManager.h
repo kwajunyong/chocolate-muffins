@@ -2,9 +2,6 @@
 // Query Manager is manager that needs to keep track the variables 
 // under Procedure p1, p2; Assign as1, as2;
 
-//Every QueryClass engine will come here to retrieve the variable they need
-// maybe need to provide a lock and unlock in order to handle safe multithreading. 
-
 #include "QueryClass.h"
 #include "PKB.h"
 #include "EnumType.h"
@@ -54,8 +51,9 @@ public:
 	FastSearchString getAllProcedureList(); 
 	QueryManager(PKB *pkb);
 
+	string getProcNameUsingCall(int callIndex);
 
-		void setDebug(bool val);
+	void setDebug(bool val);
 private:
 	//void loadVariable(string variableName) ;
 	map<string, ASTParameterValue> expressionValueList;	

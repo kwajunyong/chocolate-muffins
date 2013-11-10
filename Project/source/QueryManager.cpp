@@ -1,4 +1,5 @@
 #include "QueryManager.h"
+#include "../AutoTester/source/AbstractWrapper.h"
 
 void QueryManager::setDebug(bool val) {
 	debug = val;
@@ -31,6 +32,9 @@ void QueryManager::updateRelationship(const string &variable, 	const FastSearchS
 	listManager->updateList(variable, relationship);
 }
 
+string QueryManager::getProcNameUsingCall(int callIndex) {
+	return pkbLibrary->getAST()->getCalledProcedure(callIndex);
+}
 void QueryManager::execute() { // multithreading 
 	
 	// remember this
@@ -40,11 +44,10 @@ void QueryManager::execute() { // multithreading
 		QueryClass *qc = qt.pop();
 		qc->run();
 
-		if (!qc->hasResult()) {
+		if ( !qc->hasResult()) {
 			failed=true;
 			return;
 		}
-
 	}
 }
 
@@ -59,6 +62,7 @@ QueryManager::QueryManager(PKB *pkb) {
 	pkbLibrary = pkb;
 	failed = false;
 	listManager = new ListManager(this);	
+	debug = false;
 }
 void QueryManager::addExpression(VARIABLETYPE variableType, string variableName) {
 	ASTParameter param(variableName, variableType);		
