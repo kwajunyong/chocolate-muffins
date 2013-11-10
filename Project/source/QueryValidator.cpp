@@ -827,16 +827,31 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 			returnResultRawType = getRawVariableType(tempReturnResult);
 			returnResultExtension = split(returnIndividualResult, '.')[1];
 
-			if (returnResultRawType == "invalid")
+			if (returnResultRawType == "invalid"){
+				cout << "return result not declared" << endl;
 				return false;
+			}
 
-			//cout << "return raw type: " << returnResultRawType << endl;
-			if (strcmpi(returnResultRawType.c_str(), "call") == 0 && strcmpi(returnResultExtension.c_str(), "procName") == 0){
-				//cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;
-				queryManager -> addResultExpression(returnIndividualResult);
+			if (strcmpi(returnResultRawType.c_str(), "variable") == 0 && strcmpi(returnResultExtension.c_str(), "varName") != 0){
+				cout << "variable not varName" << endl;
+				return false;
+			}else if (strcmpi(returnResultRawType.c_str(), "constant") == 0 && strcmpi(returnResultExtension.c_str(), "value") != 0){
+				cout << "constant not value" << endl;
+				return false;
+			}else if (strcmpi(returnResultRawType.c_str(), "prog_line") == 0 && strcmpi(returnResultExtension.c_str(), "prog_line#") != 0){
+				cout << "prog_line not prog_line#" << endl;
+				return false;
+			}else if (strcmpi(returnResultRawType.c_str(), "stmt") == 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
+				cout << "stmt not stmt#" << endl;
+				return false;
 			}else{
-				//cout << "processSelectStmt:: return results #" << counter << " -> " << split(returnIndividualResult, '.')[0] << endl;
-				queryManager -> addResultExpression(split(returnIndividualResult, '.')[0]);
+				if (strcmpi(returnResultRawType.c_str(), "call") == 0 && strcmpi(returnResultExtension.c_str(), "procName") == 0){
+					cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;
+					queryManager -> addResultExpression(returnIndividualResult);
+				}else{
+					cout << "processSelectStmt:: return results #" << counter << " -> " << split(returnIndividualResult, '.')[0] << endl;
+					queryManager -> addResultExpression(split(returnIndividualResult, '.')[0]);
+				}
 			}
 		}else{
 			//cout << "processSelectStmt:: return results #" << counter << " -> " << returnIndividualResult << endl;

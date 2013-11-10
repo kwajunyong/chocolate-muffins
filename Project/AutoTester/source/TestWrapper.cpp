@@ -26,7 +26,7 @@ void TestWrapper::parse(std::string filename) {
 		qm = new QueryManager(pkb);
 		qv = new QueryValidator(qm, pkb);
 		QueryScore::initialize();
-		qm->setDebug(true); // << TURN ON THE VARIABLE PRINTING MESSAG
+		qm->setDebug(false); // << TURN ON THE VARIABLE PRINTING MESSAG
 		//pkb ->	extract();
 	} catch (ParseException pe) {
 		cout << pe.what();
