@@ -24,16 +24,16 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	// positionMap is the map to map the resultGroupList to it's position
 	// 1,1 -> 1, 2-1 -> 2, 1-2 -> 3
 
-	
+
 	map<int, vector<int>> variableGroup;
 	map<int, vector<bool>> variableGroupProcName;
 
-	
+
 	vector<string>::iterator iterVar;
 
 	map<int, vector<int>>::iterator iterMap;
 	map<int, vector<bool>>::iterator iterMapProcName;
-	vector<string> leftOver;
+	//vector<string> leftOver;
 	vector<int> foundPos;
 
 
@@ -42,9 +42,9 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	// find the location to pick up the good
 	// load the position where it finds; 
 
-	vector<int> leftOverPos;
-	vector<bool> leftOverProcName;
-	
+	//vector<int> leftOverPos;
+	//vector<bool> leftOverProcName;
+
 	bool procName = false;
 	for (iterVar = variableResultList.begin(); iterVar != variableResultList.end(); iterVar++) {
 		procName = false;
@@ -57,33 +57,29 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 			procName = true;
 		} // found
 
-		
+
 		findVariable(var, first, second);
 
-		if (first == -1)  {			
-			// handle call procName for call 
+		if (first == -1)  {
+			// put all the variable inside the main list. // maintain invariant
+			if (parent->getVariableType(var).compare("string") == 0)  {
+				updateList(var, parent->getValueListMap(var));
+			} else {				
+				FastSearchString tempResultMap;
+				CommonUtility::convertIntMapToStringMap(parent->getValueListIntegerMap(var), tempResultMap);
+				updateList(var, tempResultMap);
+			}			
 
-			
-			leftOver.push_back(var);
-
-			foundPos.push_back(-1);
-			// store the position in tuple result list
-			leftOverPos.push_back(distance(variableResultList.begin(), iterVar));			 
-
-			// new addition - to handle procName
-			leftOverProcName.push_back(procName);
-
-			continue;
-		} else {
-			foundPos.push_back(first);
+			findVariable(var, first, second);			
 		}
+		foundPos.push_back(first);
 
 		iterMap = variableGroup.find(first);
 		if (iterMap != variableGroup.end()) {
 			iterMap->second.push_back(second);
 			iterMapProcName = variableGroupProcName.find(first);
 			iterMapProcName->second.push_back(procName);
-			
+
 		} else {
 
 			vector<int> newVector;
@@ -98,7 +94,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	}
 
 	vector<int>::iterator iterPos;
-	
+
 
 	map<pair<int, int>, int> positionMap; 
 	// position map 
@@ -117,20 +113,20 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	// NOTE ------------------------
 	// recordMap is the helping counter
 	for (iterPos = foundPos.begin(); iterPos != foundPos.end(); iterPos++) {
-		if (*iterPos != -1) {
-			iterFound = variableGroup.find(*iterPos);
-			foundPosition = distance(variableGroup.begin(), iterFound);
-			iterRecordMap = recordMap.find(foundPosition);
-			if (iterRecordMap == recordMap.end()) {
-				pair<int, int> p(foundPosition, 0);
-				positionMap[p] = distance(foundPos.begin(), iterPos);
-				recordMap[foundPosition] = 0;
-			} else {
-				iterRecordMap->second =iterRecordMap->second + 1;
-				pair<int, int> p(foundPosition, iterRecordMap->second);
-				positionMap[p] = distance(foundPos.begin(), iterPos);
-			}			
-		}
+
+		iterFound = variableGroup.find(*iterPos);
+		foundPosition = distance(variableGroup.begin(), iterFound);
+		iterRecordMap = recordMap.find(foundPosition);
+		if (iterRecordMap == recordMap.end()) {
+			pair<int, int> p(foundPosition, 0);
+			positionMap[p] = distance(foundPos.begin(), iterPos);
+			recordMap[foundPosition] = 0;
+		} else {
+			iterRecordMap->second =iterRecordMap->second + 1;
+			pair<int, int> p(foundPosition, iterRecordMap->second);
+			positionMap[p] = distance(foundPos.begin(), iterPos);
+		}			
+
 	}
 
 
@@ -144,7 +140,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 	vector<list<string>*>::iterator iterTempResultList;
 
 	list<string>::iterator iterLastList;
-	
+
 	int indexMapSecond;
 	for (iterMap = variableGroup.begin(); iterMap != variableGroup.end(); iterMap++) {
 		map<string, bool> newMap;
@@ -159,7 +155,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 			string temp;
 			indexMapSecond = 0;
 			for (iterVarIndex = iterMap->second.begin(); iterVarIndex!= iterMap->second.end(); iterVarIndex++) {
-				
+
 				iterLastList = (*iterTempResultList)->begin();
 				advance(iterLastList, *iterVarIndex); // go to that location based
 
@@ -168,7 +164,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 				} else {
 					temp.append(*iterLastList);
 				}
-				
+
 				temp.push_back(' ');
 				indexMapSecond++;
 			}
@@ -181,42 +177,42 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 		// for procName 
 	}
 
-	vector<string>::iterator iterLeftOver; 
-	map<string, bool> tempResultMap;
-	int lastOfMap = resultGroupList.size() - 1;
+	//vector<string>::iterator iterLeftOver; 
+	//map<string, bool> tempResultMap;
+	//int lastOfMap = resultGroupList.size() - 1;
 	// left over always standalone 
 
-	for (iterLeftOver = leftOver.begin(); iterLeftOver != leftOver.end(); iterLeftOver++) {
-		lastOfMap++;
+	//for (iterLeftOver = leftOver.begin(); iterLeftOver != leftOver.end(); iterLeftOver++) {
+	//	lastOfMap++;
 
-		pair<int, int> p(lastOfMap, 0);
-		int index = distance(leftOver.begin(), iterLeftOver);
-		positionMap[p] = leftOverPos.at(index);
+	//	pair<int, int> p(lastOfMap, 0);
+	//	int index = distance(leftOver.begin(), iterLeftOver);
+	//	positionMap[p] = leftOverPos.at(index);
 
-		// must be call
-		if (leftOverProcName.at(index)) { /// new Addition
-			FastSearchInteger callMap = parent->getValueListIntegerMap(*iterLeftOver);
-			FastSearchInteger::iterator iterCall; 
+	//	// must be call
+	//	if (leftOverProcName.at(index)) { /// new Addition
+	//		FastSearchInteger callMap = parent->getValueListIntegerMap(*iterLeftOver);
+	//		FastSearchInteger::iterator iterCall; 
 
-			FastSearchInteger callProc;
+	//		FastSearchInteger callProc;
 
-			FastSearchString allProcName;
-			for (iterCall = callMap.begin(); iterCall != callMap.end(); iterCall++) 
-				allProcName[parent->getProcNameUsingCall(iterCall->first)] = true;
-			
-			resultGroupList.push_back(allProcName);
+	//		FastSearchString allProcName;
+	//		for (iterCall = callMap.begin(); iterCall != callMap.end(); iterCall++) 
+	//			allProcName[parent->getProcNameUsingCall(iterCall->first)] = true;
+	//		
+	//		resultGroupList.push_back(allProcName);
 
-		} else { /// -------------------------------------------new Addition
-			
-			if (parent->getVariableType(*iterLeftOver).compare("string") == 0)  {
-				resultGroupList.push_back( parent->getValueListMap(*iterLeftOver));
-			} else {
-				tempResultMap.clear();
-				CommonUtility::convertIntMapToStringMap(parent->getValueListIntegerMap(*iterLeftOver), tempResultMap);
-				resultGroupList.push_back(tempResultMap);
-			}			
-		}
-	}
+	//	} else { /// -------------------------------------------new Addition
+	//		
+	//		if (parent->getVariableType(*iterLeftOver).compare("string") == 0)  {
+	//			resultGroupList.push_back( parent->getValueListMap(*iterLeftOver));
+	//		} else {
+	//			tempResultMap.clear();
+	//			CommonUtility::convertIntMapToStringMap(parent->getValueListIntegerMap(*iterLeftOver), tempResultMap);
+	//			resultGroupList.push_back(tempResultMap);
+	//		}			
+	//	}
+	//}
 
 
 	// package done
@@ -533,7 +529,7 @@ void ListManager::shortenList(vector<list<string>*> * valueList, int index1, int
 			}
 		}
 
-	
+
 }
 
 
@@ -747,7 +743,7 @@ vector<list<string>*>::iterator ListManager::bLookup(vector<list<string>*> *valu
 	vector<list<string>*>::iterator iter;
 	vector<list<string>*>::iterator iterPrevious;
 
-	
+
 	int min = 0;
 	int max = valueList->size() -1;
 	int curr = (max + min) / 2;
