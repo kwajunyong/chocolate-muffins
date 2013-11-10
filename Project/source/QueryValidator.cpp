@@ -105,7 +105,6 @@ void QueryValidator::initQueryTypeTable(){
 	firstParaType.push_back("stmt");
 	firstParaType.push_back("integer");
 	firstParaType.push_back("string");
-	firstParaType.push_back("_");
 	firstParaType.push_back("prog_line");
 
 	//secondParaType.push_back("integer");
@@ -844,10 +843,13 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 			}else if (strcmpi(returnResultRawType.c_str(), "stmt") == 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
 				cout << "stmt not stmt#" << endl;
 				return false;
-			}else if (strcmpi(returnResultRawType.c_str(), "procedure") == 0 && (strcmpi(returnResultExtension.c_str(), "procName") != 0 && strcmpi(returnResultExtension.c_str(), "stmtLst") != 0)){
+			}else if (strcmpi(returnResultRawType.c_str(), "procedure") == 0 && (strcmpi(returnResultExtension.c_str(), "procName") != 0)){
 				cout << "procedure not procName" << endl;
 				return false;
-			}else if ((strcmpi(returnResultRawType.c_str(), "while") == 0 || strcmpi(returnResultRawType.c_str(), "if") == 0) && strcmpi(returnResultExtension.c_str(), "stmtLst") != 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
+			}else if (strcmpi(returnResultRawType.c_str(), "call") == 0 && (strcmpi(returnResultExtension.c_str(), "procName") != 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0)){
+				cout << "procedure not procName" << endl;
+				return false;
+			}else if ((strcmpi(returnResultRawType.c_str(), "while") == 0 || strcmpi(returnResultRawType.c_str(), "if") == 0 || strcmpi(returnResultRawType.c_str(), "assign") == 0) && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
 				cout << "while/if/procedure not stmtLst" << endl;
 				return false;
 			}else{
