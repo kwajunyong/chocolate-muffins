@@ -36,26 +36,14 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-	
-	static int a = 0;
-	int stopat  =18;
+
 	if (qv->processQuery(query)) {
-		if (a >=stopat ) {
-			cout << "Four";
-		}
-		a++;
 		qm->execute();
-		
-
 	} else {
-		if (a >= stopat)
-			cout << "haha";
-			a++;		
 		qm->setFail(true);
-
 	}
 	results = qm->outputResult();
-		qm->resetEverything();
+	qm->resetEverything();
 
 		
 

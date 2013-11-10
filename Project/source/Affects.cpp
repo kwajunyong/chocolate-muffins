@@ -49,57 +49,6 @@ bool Affects::isAffects(int assignment1, int assignment2)
 		return false;
 	}
 
-	/*vector<vector<int>> paths = next->getPaths(assignment1, assignment2);
-	vector<bool> path;
-	path.assign(paths.size(), true);
-
-	if(paths.size() == 0 || paths[0].empty())
-	{
-		if(uses->isUsesStmt(assignment2, var))
-			return true;
-	}
-
-	for(int i = 0; i < paths.size(); i++)
-	{
-		for(int j = 0; j < paths[i].size(); j++)
-		{
-			int x = paths[i][j];
-			
-			if(ast->getStatementType(x) == ASSIGN)
-			{
-				if(modifies->isModifiesStmt(x, var))
-				{
-					if(x != assignment2)
-					{
-						path[i] = false;
-						if(paths.size() < 1)
-							i++;
-					}
-				}
-			}
-			else if(ast->getStatementType(x) == CALL)
-			{
-				if(modifies->isModifiesStmt(x, var))
-				{
-					path[i] = false;
-					if(paths.size() < 1)
-						i++;
-				}
-			}
-		}
-		if(path[i])
-		{
-			if(!paths[i].empty())
-			{
-				if(paths[i].back() != assignment2)
-					path[i] = false;
-				else
-					return true;
-			}
-		}
-	}
-	return false;*/
-
 	int start = 0;
 	seen.clear();
 	if(next->next[assignment1].size() > 0)
@@ -412,13 +361,11 @@ void Affects::clearCache()
 {
 	cache.assign(numOfStmt+1, temp);
 	cached.assign(numOfStmt+1, temp);
-	//pairs.clear();
 }
 
 bool Affects::getPaths(int stmtNum, int end, string var)
 {
 	bool ans = false;
-	//int v = next->next[stmtNum][0];
 	if(find(seen.begin(), seen.end(), stmtNum) == seen.end())
 	{
 		seen.push_back(stmtNum);
@@ -447,7 +394,6 @@ bool Affects::getPaths(int stmtNum, int end, string var)
 		}
 		else if(ast->getStatementType(stmtNum) == WHILE)
 		{
-			//ans = getPaths(v, end, var);
 			if(next->next[stmtNum].size() > 1)
 			{
 				int x = next->next[stmtNum][1];
@@ -503,206 +449,3 @@ bool Affects::exists()
 		}
 	}
 }
-
-//int main()
-//{
-//	Parser p;
-//	DesignExtractor d;
-//	PKB* pkb;
-//	/*AST* ast;
-//	Modifies* modifies;
-//	Uses* uses;
-//	Next* next;
-//	ProcTable* procTable;
-//	int numOfStmt = 0;*/
-//
-//	try
-//	{
-//		pkb = p.parse("CS3201Assignment1Source.txt");
-//		//pkb = p.parse("Test.txt");
-//		//pkb = p.parse("Integration.txt");
-//		d.extract(pkb);
-//	} catch (ParseException pe) {
-//		cout << pe.what();
-//		getchar();
-//		return 0;
-//	}
-//
-//	Affects a;
-//	a = pkb->getAffects();
-//
-//	// Start CS3201Assignment1Source.txt
-//	// Should return true
-//	/*if(a.isAffects(1, 2))
-//		cout << "Affects(1,2) = true" << endl;
-//	else
-//		cout << "Affects(1,2) = false" << endl;
-//
-//	if(a.isAffects(1, 3))
-//		cout << "Affects(1,3) = true" << endl;
-//	else
-//		cout << "Affects(1,3) = false" << endl;
-//
-//	if(a.isAffects(25, 26))
-//		cout << "Affects(25,26) = true" << endl;
-//	else
-//		cout << "Affects(25,26) = false" << endl;
-//
-//	if(a.isAffects(25, 27))
-//		cout << "Affects(25,27) = true" << endl;
-//	else
-//		cout << "Affects(25,27) = false" << endl;*/
-//
-//	// Should return false
-//	/*if(a.isAffects(1, 4))
-//		cout << "Affects(1,4) = true" << endl;
-//	else
-//		cout << "Affects(1,4) = false" << endl;
-//
-//	if(a.isAffects(2, 5))
-//		cout << "Affects(2,5) = true" << endl;
-//	else
-//		cout << "Affects(2,5) = false" << endl;
-//
-//	if(a.isAffects(2, 7))
-//		cout << "Affects(2,7) = true" << endl;
-//	else
-//		cout << "Affects(2,7) = false" << endl;
-//
-//	if(a.isAffects(3, 11))
-//		cout << "Affects(3,11) = true" << endl;
-//	else
-//		cout << "Affects(3,11) = false" << endl;*/
-//	//End of CS3201AssignmentSource1.txt
-//	
-//
-//
-//
-//	// Start of Test.txt 
-//	// Should return true
-//	/*if(a.isAffects(1, 4))
-//		cout << "Affects(1,4) = true" << endl;
-//	else
-//		cout << "Affects(1,4) = false" << endl;
-//
-//	if(a.isAffects(2, 6))
-//		cout << "Affects(2,6) = true" << endl;
-//	else
-//		cout << "Affects(2,6) = false" << endl;
-//
-//	if(a.isAffects(4, 8))
-//		cout << "Affects(4,8) = true" << endl;
-//	else
-//		cout << "Affects(4,8) = false" << endl;
-//
-//	if(a.isAffects(4, 10))
-//		cout << "Affects(4,10) = true" << endl;
-//	else
-//		cout << "Affects(4,10) = false" << endl;
-//
-//	if(a.isAffects(9, 10))
-//		cout << "Affects(9,10) = true" << endl;
-//	else
-//		cout << "Affects(9,10) = false" << endl;
-//
-//	if(a.isAffects(1, 10))
-//		cout << "Affects(1,10) = true" << endl;
-//	else
-//		cout << "Affects(1,10) = false" << endl;
-//
-//	if(a.isAffects(2, 10))
-//		cout << "Affects(2,10) = true" << endl;
-//	else
-//		cout << "Affects(2,10) = false" << endl;
-//
-//	if(a.isAffects(1, 12))
-//		cout << "Affects(1,12) = true" << endl;
-//	else
-//		cout << "Affects(1,12) = false" << endl;
-//
-//	if(a.isAffects(4, 4))
-//		cout << "Affects(4,4) = true" << endl;
-//	else
-//		cout << "Affects(4,4) = false" << endl;
-//
-//	if(a.isAffects(6, 6))
-//		cout << "Affects(6,6) = true" << endl;
-//	else
-//		cout << "Affects(6,6) = false" << endl;
-//
-//	if(a.isAffects(8, 10))
-//		cout << "Affects(8,10) = true" << endl;
-//	else
-//		cout << "Affects(8,10) = false" << endl;
-//
-//	if(a.isAffects(4, 12))
-//		cout << "Affects(4,12) = true" << endl;
-//	else
-//		cout << "Affects(4,12) = false" << endl;*/
-//
-//	// Should return False
-//	/*if(a.isAffects(9, 11))
-//		cout << "Affects(9,11) = true" << endl;
-//	else
-//		cout << "Affects(9,11) = false" << endl;*/
-//	/*End of Test.txt */
-//
-//	/*vector<int> querys = a.getAffects(22);
-//	vector<int> querys = a.getAffected(15);*/
-//
-//	/*for(int i = 0; i < querys.size(); i++)
-//	{
-//		cout << querys[i] << endl;
-//	}*/
-//
-//	/*Affects*
-//	 Start of CS3102Assignment1Query.txt
-//	 Should return true*/
-//	/*if(a.isAffectsStar(1, 2))
-//		cout << "Affects*(1,2) = true" << endl;
-//	else
-//		cout << "Affects*(1,2) = false" << endl;
-//
-//	if(a.isAffectsStar(1, 3))
-//		cout << "Affects*(1,3) = true" << endl;
-//	else
-//		cout << "Affects*(1,3) = false" << endl;
-//
-//	if(a.isAffectsStar(1, 5))
-//		cout << "Affects*(1,5) = true" << endl;
-//	else
-//		cout << "Affects*(1,5) = false" << endl;
-//
-//	if(a.isAffectsStar(11, 11))
-//		cout << "Affects*(11,11) = true" << endl;
-//	else
-//		cout << "Affects*(11,11) = false" << endl;
-//
-//	if(a.isAffectsStar(11, 13))
-//		cout << "Affects*(11,13) = true" << endl;
-//	else
-//		cout << "Affects*(11,13) = false" << endl;
-//
-//	if(a.isAffectsStar(21, 22))
-//		cout << "Affects*(21,22) = true" << endl;
-//	else
-//		cout << "Affects*(21,22) = false" << endl;*/
-//
-//	//Should return false
-//	/*if(a.isAffectsStar(1, 7))
-//		cout << "Affects*(1,7) = true" << endl;
-//	else
-//		cout << "Affects*(1,7) = false" << endl;*/
-//	 //End of CS3201AssignmentQuery.txt
-//
-//	/*vector<int> querys = a.getAffectsStar(22);
-//	vector<int> querys = a.getAffectedStar(28);
-//
-//	for(int i = 0; i < querys.size(); i++)
-//	{
-//		cout << querys[i] << endl;
-//	}*/
-//
-//	system("Pause");
-//	return 0;
-//}

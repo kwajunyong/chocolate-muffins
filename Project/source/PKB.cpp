@@ -22,7 +22,7 @@ PKB::PKB(void)
 	_affects = NULL;
 
 	_numOfStmt = 0;
-	//_stats = NULL;
+	_stats = NULL;
 }
 
 PKB::~PKB(void)

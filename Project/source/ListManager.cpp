@@ -177,42 +177,7 @@ void ListManager::prepareResultList(list<string> &payloadList, vector<string> &v
 		// for procName 
 	}
 
-	//vector<string>::iterator iterLeftOver; 
-	//map<string, bool> tempResultMap;
-	//int lastOfMap = resultGroupList.size() - 1;
-	// left over always standalone 
-
-	//for (iterLeftOver = leftOver.begin(); iterLeftOver != leftOver.end(); iterLeftOver++) {
-	//	lastOfMap++;
-
-	//	pair<int, int> p(lastOfMap, 0);
-	//	int index = distance(leftOver.begin(), iterLeftOver);
-	//	positionMap[p] = leftOverPos.at(index);
-
-	//	// must be call
-	//	if (leftOverProcName.at(index)) { /// new Addition
-	//		FastSearchInteger callMap = parent->getValueListIntegerMap(*iterLeftOver);
-	//		FastSearchInteger::iterator iterCall; 
-
-	//		FastSearchInteger callProc;
-
-	//		FastSearchString allProcName;
-	//		for (iterCall = callMap.begin(); iterCall != callMap.end(); iterCall++) 
-	//			allProcName[parent->getProcNameUsingCall(iterCall->first)] = true;
-	//		
-	//		resultGroupList.push_back(allProcName);
-
-	//	} else { /// -------------------------------------------new Addition
-	//		
-	//		if (parent->getVariableType(*iterLeftOver).compare("string") == 0)  {
-	//			resultGroupList.push_back( parent->getValueListMap(*iterLeftOver));
-	//		} else {
-	//			tempResultMap.clear();
-	//			CommonUtility::convertIntMapToStringMap(parent->getValueListIntegerMap(*iterLeftOver), tempResultMap);
-	//			resultGroupList.push_back(tempResultMap);
-	//		}			
-	//	}
-	//}
+	
 
 
 	// package done

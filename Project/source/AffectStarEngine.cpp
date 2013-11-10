@@ -16,10 +16,7 @@ void AffectStarEngine::run() {
 
 	// there is no need to check if both is underscore
 	if (astParam1->getParameterType() == VT_UNDERSCORE && astParam2->getParameterType() == VT_UNDERSCORE) {
-		/*if (pkbManager->getFollows()->IsThereFollow) 
-		failed = false;
-		else
-		failed true;*/
+	
 				failed = !pkbManager->getAffects()->exists();
 		return;
 	}

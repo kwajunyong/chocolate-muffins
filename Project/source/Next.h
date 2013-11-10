@@ -25,12 +25,7 @@ public:
 	vector<int> getPrevious(int stmtNum, bool transitive);
 
 private:
-	bool reachedEnd;
-
 	bool compute(int stmtNum1, int stmtNum2);
 	vector<int> computeNext(int stmtNum);
 	vector<int> computePrevious(int stmtNum);
-
-	void init();
-	void DFS(int start, int end);
 };

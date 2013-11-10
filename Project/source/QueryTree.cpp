@@ -1,54 +1,9 @@
 #include "QueryTree.h"
-// for testing purpose
-/*
-#include "BinaryRelationEngine.h";
-#include "CallEngine.h";
-#include "AffectEngine.h";
-#include "NextEngine.h";
 
-#include "AffectStarEngine.h";
-
-*/
 
 QueryTree::QueryTree() {
 	TraditionalMode = false ;
 }
-/*
-void QueryTree::test(){
-	QueryTree qt;
-	BinaryRelationEngine *qc1 = new BinaryRelationEngine(NULL, NULL);
-	qc1->addParam("assign1", VT_ASSIGNMENT);
-	qc1->addParam("1", VT_CONSTANTINTEGER);
-
-	qt.addQueryClass(qc1);
-
-	QueryClass *qc2 = new CallEngine(NULL, NULL);
-	qc2->addParam("assign1", VT_ASSIGNMENT);
-	qc2->addParam("assign2", VT_ASSIGNMENT);
-	qt.addQueryClass(qc2);
-
-
-	QueryClass *aff1 = new AffectEngine(NULL, NULL);
-	aff1->addParam("1", VT_CONSTANTINTEGER);
-	aff1->addParam("2", VT_CONSTANTINTEGER);
-	
-	qt.addQueryClass(aff1);
-
-	QueryClass *aff2 = new AffectStarEngine(NULL, NULL);
-	aff2->addParam("1", VT_CONSTANTINTEGER);
-	aff2->addParam("assign2", VT_ASSIGNMENT);
-	
-	qt.addQueryClass(aff2);
-
-	QueryClass *aff3 = new NextEngine(NULL, NULL);
-	aff3->addParam("assign2", VT_ASSIGNMENT);
-	aff3->addParam("ifs", VT_IF);
-	
-	qt.addQueryClass(aff3);
-
-	qt.solidify();
-
-}*/
 
 void QueryTree::addQueryClass(QueryClass *qc) {
 

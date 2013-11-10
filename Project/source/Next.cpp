@@ -7,10 +7,6 @@ Next::Next(void) {}
 Next::~Next(void) {}
 
 vector<int> visited;
-vector<int> path;
-vector<vector<int>> paths;
-bool same;
-bool startBigger;
 
 bool Next::addNext(int stmtNum1, int stmtNum2)
 {

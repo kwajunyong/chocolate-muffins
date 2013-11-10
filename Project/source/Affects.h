@@ -12,11 +12,6 @@
 #include <iostream>
 #include <algorithm>
 
-// testing
-//#include "Parser.h"
-//#include "DesignExtractor.h"
-//#include "PKB.h"
-
 using namespace std;
 
 class Affects
