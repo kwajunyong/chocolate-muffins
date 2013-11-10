@@ -55,6 +55,7 @@
     <ClInclude Include="..\source\QueryScore.h" />
     <ClInclude Include="..\source\QueryTree.h" />
     <ClInclude Include="..\source\QueryValidator.h" />
+    <ClInclude Include="..\source\Stats.h" />
     <ClInclude Include="..\source\Uses.h" />
     <ClInclude Include="..\source\UsesEngine.h" />
     <ClInclude Include="..\source\VarTable.h" />
@@ -102,6 +103,7 @@
     <ClCompile Include="..\source\QueryScore.cpp" />
     <ClCompile Include="..\source\QueryTree.cpp" />
     <ClCompile Include="..\source\QueryValidator.cpp" />
+    <ClCompile Include="..\source\Stats.cpp" />
     <ClCompile Include="..\source\Uses.cpp" />
     <ClCompile Include="..\source\UsesEngine.cpp" />
     <ClCompile Include="..\source\VarTable.cpp" />

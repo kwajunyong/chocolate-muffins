@@ -23,6 +23,9 @@ public:
 	std::vector<ASTNode*> getStatementNodes(ASTType type);
 	std::vector<int> getStatementNumbers(ASTType type);
 	std::vector<int> getStatementNumbers(ASTType type, std::string controlVariable);
+
+	std::vector<int> allStmtListFirstChildren();
+
 private:
 	ASTNode* _root;
 
@@ -33,6 +36,8 @@ private:
 	std::vector<int> _whileStmt;
 	std::vector<int> _ifStmt;
 	std::vector<int> _callStmt;
+
+	std::vector<int> _stmtListFirstChildren;
 
 	std::map<std::string, std::vector<int>> _varWhileMap;
 	std::map<std::string, std::vector<int>> _varIfMap;

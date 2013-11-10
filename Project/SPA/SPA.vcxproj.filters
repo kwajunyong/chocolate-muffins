@@ -54,9 +54,6 @@
     <ClInclude Include="..\source\Parent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Uses.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\DesignExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -166,6 +163,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\QueryScore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Uses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Stats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -303,6 +306,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\source\QueryScore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Stats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

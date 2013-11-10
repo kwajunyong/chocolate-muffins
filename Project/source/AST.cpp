@@ -46,6 +46,10 @@ bool AST::storeStatementNode(ASTNode* node)
 	_stmt.push_back(node->getStatementNumber());
 	_stmtNodes.push_back(node);
 	
+	if (node->getPrevious() == NULL && node->getParent() != NULL && node->getParent()->getType() == STATEMENT_LIST) {
+		_stmtListFirstChildren.push_back(node->getStatementNumber());
+	}
+
 	return true;
 }
 
@@ -139,6 +143,11 @@ void AST::search(ASTNode* node, std::vector<ASTNode*> &list, int stmtNum, ASTTyp
 		
 		node = node->getNext();
 	}
+}
+
+std::vector<int> AST::allStmtListFirstChildren()
+{
+	return _stmtListFirstChildren;
 }
 
 void AST::search(ASTNode* node, std::vector<int> &list, ASTType type)

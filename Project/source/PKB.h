@@ -14,7 +14,7 @@
 #include "Calls.h"
 #include "Next.h"
 #include "Affects.h"
-//#include "Stats.h"
+#include "Stats.h"
 
 #include <direct.h>
 #include <fstream>
@@ -65,8 +65,8 @@ public:
 	int getNumOfStmt();
 	void setNumOfStmt(int numOfStmt);
 
-	//Stats* getStats();
-	//void setStats(Stats* stats);
+	Stats* getStats();
+	void setStats(Stats* stats);
 
 	void extract();
 
@@ -93,5 +93,5 @@ private:
 
 	int _numOfStmt;
 
-	//Stats* _stats;
+	Stats* _stats;
 };

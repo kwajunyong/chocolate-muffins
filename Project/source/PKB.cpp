@@ -163,15 +163,15 @@ void PKB::setNumOfStmt(int numOfStmt)
 	_numOfStmt = numOfStmt;
 }
 
-//Stats* PKB::getStats()
-//{
-//	return _stats;
-//}
-//
-//void PKB::setStats(Stats* stats)
-//{
-//	_stats = stats;
-//}
+Stats* PKB::getStats()
+{
+	return _stats;
+}
+
+void PKB::setStats(Stats* stats)
+{
+	_stats = stats;
+}
 
 void PKB::extract()
 {

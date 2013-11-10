@@ -23,7 +23,7 @@ void DesignExtractor::extract(PKB* pkb)
 	_uses = new Uses(_numOfStmt);
 	_calls = new Calls();
 	_next = new Next();
-	//_stats = new Stats(_procTable, _numOfStmt);
+	_stats = new Stats(_procTable, _numOfStmt);
 	_affects = new Affects(_ast, _modifies, _uses, _next, _procTable, _numOfStmt);
 
 	std::vector<int> statements;
@@ -38,7 +38,7 @@ void DesignExtractor::extract(PKB* pkb)
 	pkb->setCalls(_calls);
 	pkb->setNext(_next);
 	pkb->setAffects(_affects);
-	//pkb->setStats(_stats);
+	pkb->setStats(_stats);
 
 	traverseCalls();
 	extractFromCallNodes();
@@ -61,7 +61,7 @@ void DesignExtractor::traverseAST(ASTNode* node, std::vector<int> statements, st
 		extractCalls(node, procedure);
 		extractNext(node);
 
-		//extractStats(node, statements, procedure);
+		extractStats(node, statements, procedure);
 
 		if (node->getChild() != NULL) {
 			traverseAST(node->getChild(), statements, procedure);
@@ -195,16 +195,16 @@ void DesignExtractor::extractNext(ASTNode* node)
 	}
 }
 
-//void DesignExtractor::extractStats(ASTNode* node, std::vector<int> statements, std::string procedure)
-//{
-//	if (isStatement(node)) {
-//		_stats->addNumOfStmt(procedure, node->getType());
-//
-//		for (size_t i=0; i<statements.size(); i++) {
-//			_stats->setLevel(statements[i], statements.size() - i);
-//		}
-//	}
-//}
+void DesignExtractor::extractStats(ASTNode* node, std::vector<int> statements, std::string procedure)
+{
+	if (isStatement(node)) {
+		_stats->addNumOfStmt(procedure, node->getType());
+
+		for (size_t i=0; i<statements.size(); i++) {
+			_stats->setLevel(statements[i], statements.size() - i);
+		}
+	}
+}
 
 std::vector<int> DesignExtractor::processIfNode(ASTNode* node)
 {
