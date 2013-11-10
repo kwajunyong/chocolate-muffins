@@ -4,7 +4,7 @@
 High score means desirable 
 */
 bool QueryScore::initialized = false;
-double QueryScore::armScore = 100;
+double QueryScore::armScore = 800; // 
 std::map <QUERYTYPE, std::vector<int>> QueryScore::scoreList;
 std::map <QUERYTYPE, double> QueryScore::multiplierArmList; 
 double QueryScore::getScore(QUERYTYPE type, int var) {
@@ -72,11 +72,11 @@ void QueryScore::initialize() {
 		// Next's variable
 		vector<int> nextScore;
 		// no variable 
-		nextScore.push_back(10000);
+		nextScore.push_back(20000);
 		// one variable 
-		nextScore.push_back(5000);
+		nextScore.push_back(8000);
 		// two variable 
-		nextScore.push_back(1000);
+		nextScore.push_back(2000);
 		scoreList[QT_NEXT] = nextScore;
 	}
 
@@ -124,9 +124,9 @@ void QueryScore::initialize() {
 		// modifies score's variable
 		vector<int> modifiesScore;
 		// no variable 
-		modifiesScore.push_back(15000);
+		modifiesScore.push_back(25000);
 		// one variable 
-		modifiesScore.push_back(7000);
+		modifiesScore.push_back(12000);
 		// two variable 
 		modifiesScore.push_back(3000);
 		scoreList[QT_MODIFIES] = modifiesScore;
@@ -138,9 +138,9 @@ void QueryScore::initialize() {
 		// uses score's variable
 		vector<int> usesScore;
 		// no variable 
-		usesScore.push_back(18000);
+		usesScore.push_back(28000);
 		// one variable 
-		usesScore.push_back(10000);
+		usesScore.push_back(14000);
 		// two variable 
 		usesScore.push_back(5000);
 		scoreList[QT_USES] = usesScore;
@@ -153,9 +153,9 @@ void QueryScore::initialize() {
 		// follow score's variable
 		vector<int> followsScore;
 		// no variable 
-		followsScore.push_back(17000);
+		followsScore.push_back(21000);
 		// one variable 
-		followsScore.push_back(9000);
+		followsScore.push_back(10000);
 		// two variable 
 		followsScore.push_back(4000);
 		scoreList[QT_FOLLOWS] = followsScore;
@@ -167,7 +167,7 @@ void QueryScore::initialize() {
 		// uses score's variable
 		vector<int> followsStarScore;
 		// no variable 
-		followsStarScore.push_back(30000);
+		followsStarScore.push_back(3000);
 		// one variable 
 		followsStarScore.push_back(2000);
 		// two variable 
@@ -184,9 +184,9 @@ void QueryScore::initialize() {
 		// no variable 
 		whilesScore.push_back(25000);
 		// one variable 
-		whilesScore.push_back(20000);
+		whilesScore.push_back(23000);
 		// two variable 
-		whilesScore.push_back(1000);
+		whilesScore.push_back(10000);
 		scoreList[QT_WHILEPATTERN] = whilesScore;
 	}
 
@@ -198,7 +198,7 @@ void QueryScore::initialize() {
 		// no variable 
 		ifScore.push_back(23000);
 		// one variable 
-		ifScore.push_back(18000);
+		ifScore.push_back(23000);
 		// two variable 
 		ifScore.push_back(10000);
 		scoreList[QT_IFPATTERN] = ifScore;
@@ -225,7 +225,7 @@ void QueryScore::initialize() {
 		// no variable 
 		binaryRelation.push_back(20000);
 		// one variable 
-		binaryRelation.push_back(25000);
+		binaryRelation.push_back(40000);
 		// two variable 
 		binaryRelation.push_back(50000);
 		scoreList[QT_BINARYRELATION] = binaryRelation;
@@ -254,7 +254,7 @@ void QueryScore::initialize() {
 		// no variable 
 		callStarScore.push_back(10000);
 		// one variable 
-		callStarScore.push_back(20000);
+		callStarScore.push_back(15000);
 		// two variable 
 		callStarScore.push_back(3000);
 		scoreList[QT_CALLSSTAR] = callStarScore;
@@ -262,7 +262,7 @@ void QueryScore::initialize() {
 
 
 
-	multiplierArmList[QT_NEXT] = 1.5; 
+	multiplierArmList[QT_NEXT] = 1; 
 	multiplierArmList[QT_NEXTSTAR] = .3; 
 	multiplierArmList[QT_AFFECT] = .1; 
 	multiplierArmList[QT_AFFECTSTAR] = .1; 
@@ -272,9 +272,9 @@ void QueryScore::initialize() {
 	multiplierArmList[QT_FOLLOWSSTAR] = .1;
 	multiplierArmList[QT_CALLS] = .6; 
 	multiplierArmList[QT_CALLSSTAR] = .2; 
-	multiplierArmList[QT_USES] = .7;
-	multiplierArmList[QT_MODIFIES] = .7;
-	multiplierArmList[QT_IFPATTERN] = .8;
+	multiplierArmList[QT_USES] = 2;
+	multiplierArmList[QT_MODIFIES] = 2;
+	multiplierArmList[QT_IFPATTERN] = 1;
 	multiplierArmList[QT_WHILEPATTERN] = 1.3;
 	multiplierArmList[QT_BINARYRELATION] = 1.2;
 	multiplierArmList[QT_EXPRESSIONPATTERN] = 1.5;
