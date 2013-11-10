@@ -487,6 +487,23 @@ bool Affects::getPaths(int stmtNum, int end, string var)
 	return ans;
 }
 
+bool Affects::exists()
+{
+	vector<int> temp;
+	for(int i = 1; i <= numOfStmt; i++)
+	{
+		temp = getAffects(i);
+		if(!temp.empty())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
 //int main()
 //{
 //	Parser p;

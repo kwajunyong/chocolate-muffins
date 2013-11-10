@@ -21,6 +21,7 @@ public:
 	vector<int> getChild(int stmtNum, bool transitive);
 	vector<int> getParent(int stmtNum, bool transitive);
 
+	bool exist();
 private:
 	map<int, vector<int>> childMap;
 	map<int, int> parentMap;

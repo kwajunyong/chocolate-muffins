@@ -16,6 +16,7 @@ public:
 
 	bool addCalls(string procedure1, string procedure2, int stmtNum);
 	bool isCalls(string procedure1, string procedure2, bool transitive);
+	bool exists();
 
 	vector<string> getCalls(string procedure, bool transitive);
 	vector<string> getCalled(string procedure, bool transitive);

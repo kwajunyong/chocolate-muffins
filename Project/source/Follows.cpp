@@ -63,6 +63,10 @@ vector<int> Follows::getFollows(int stmtNum, bool transitive)
 	return results;
 }
 
+bool Follows::exist() {
+	return followedByMap.size() > 0;
+}
+
 void Follows::transitiveSearch(map<int, int> &input, vector<int> &output, int key)
 {
 	int value = input[key];

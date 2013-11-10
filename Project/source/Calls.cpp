@@ -150,3 +150,15 @@ bool Calls::compute(string procedure1, string procedure2)
 	}
 	return check;
 }
+
+bool Calls::exists()
+{
+	if(calls.size() > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
