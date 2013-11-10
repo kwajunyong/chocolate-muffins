@@ -19,23 +19,12 @@ public:
 
 	bool addNext(int stmtNum1, int stmtNum2);
 	bool isNext(int stmtNum1, int stmtNum2, bool transitive);
+	bool exists();
 
 	vector<int> getNext(int stmtNum, bool transitive);
 	vector<int> getPrevious(int stmtNum, bool transitive);
 
-	vector<vector<int>> getPaths(int start, int end);
-
 private:
-	//map<int, vector<int>> next;
-	//map<int, vector<int>> previous;
-
-	//vector<vector<int>> next;
-	//vector<vector<int>> previous;
-
-	/*vector<int> visited;
-	vector<int> path;
-	vector<vector<int>> paths;*/
-
 	bool reachedEnd;
 
 	bool compute(int stmtNum1, int stmtNum2);

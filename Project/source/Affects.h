@@ -27,6 +27,7 @@ public:
 
 	bool isAffects(int assignment1, int assignment2);
 	bool isAffectsStar(int assignment1, int assignment2);
+	bool exists();
 
 	vector<int> getAffects(int assignment);
 	vector<int> getAffected(int assignment);
