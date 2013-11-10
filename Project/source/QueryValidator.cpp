@@ -844,8 +844,11 @@ bool QueryValidator::processSelectStmt(string selectStmt){
 			}else if (strcmpi(returnResultRawType.c_str(), "stmt") == 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
 				cout << "stmt not stmt#" << endl;
 				return false;
-			}else if ((strcmpi(returnResultRawType.c_str(), "while") == 0 || strcmpi(returnResultRawType.c_str(), "if") == 0 || strcmpi(returnResultRawType.c_str(), "procedure") == 0) && strcmpi(returnResultExtension.c_str(), "stmtLst") != 0){
-				cout << "stmt not stmt#" << endl;
+			}else if (strcmpi(returnResultRawType.c_str(), "procedure") == 0 && (strcmpi(returnResultExtension.c_str(), "procName") != 0 && strcmpi(returnResultExtension.c_str(), "stmtLst") != 0)){
+				cout << "procedure not procName" << endl;
+				return false;
+			}else if ((strcmpi(returnResultRawType.c_str(), "while") == 0 || strcmpi(returnResultRawType.c_str(), "if") == 0) && strcmpi(returnResultExtension.c_str(), "stmtLst") != 0 && strcmpi(returnResultExtension.c_str(), "stmt#") != 0){
+				cout << "while/if/procedure not stmtLst" << endl;
 				return false;
 			}else{
 				if (strcmpi(returnResultRawType.c_str(), "call") == 0 && strcmpi(returnResultExtension.c_str(), "procName") == 0){
