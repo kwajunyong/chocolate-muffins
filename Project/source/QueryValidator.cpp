@@ -435,7 +435,7 @@ VARIABLETYPE QueryValidator::getVariableType(std::string rawVariableType){
 	}else if (strcmpi(rawVariableType.c_str(), "stmt") == 0){
 		return VT_STATEMENTLIST;
 	}else if (strcmpi(rawVariableType.c_str(), "stmtLst") == 0){
-		return VT_STATEMENTLIST;
+		return VT_STATEMENTLIST_EXTRA;
 	}else if (strcmpi(rawVariableType.c_str(), "variable") == 0){
 		return VT_VARIABLELIST;
 	}else if (strcmpi(rawVariableType.c_str(), "call") == 0){
