@@ -254,7 +254,7 @@ void QueryScore::initialize() {
 		// no variable 
 		callStarScore.push_back(10000);
 		// one variable 
-		callStarScore.push_back(15000);
+		callStarScore.push_back(15000);	
 		// two variable 
 		callStarScore.push_back(3000);
 		scoreList[QT_CALLSSTAR] = callStarScore;

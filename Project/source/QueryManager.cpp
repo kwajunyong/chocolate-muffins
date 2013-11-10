@@ -12,7 +12,10 @@ void QueryManager::updateRelationship(const string &variable1, const string &var
 }
 
 string QueryManager::getVariableType(const string &variableName) {
-
+	
+	
+  
+  
 	ASTParameterValue &asp = getASTParameterValue(variableName);		  	
 	if (asp.getASTParameter().getParameterType() == VT_WHILE || 
 		asp.getASTParameter().getParameterType() == VT_ASSIGNMENT || 
@@ -20,7 +23,8 @@ string QueryManager::getVariableType(const string &variableName) {
 		asp.getASTParameter().getParameterType() == VT_STATEMENTLIST || 
 		asp.getASTParameter().getParameterType() == VT_CALL||
 		asp.getASTParameter().getParameterType() == VT_PROG_LINE ||
-		asp.getASTParameter().getParameterType() == VT_CONSTANT 
+		asp.getASTParameter().getParameterType() == VT_CONSTANT ||
+		asp.getASTParameter().getParameterType() == VT_STATEMENTLIST_EXTRA
 		)
 		return "integer";
 	else
@@ -44,7 +48,7 @@ void QueryManager::execute() { // multithreading
 		QueryClass *qc = qt.pop();
 		qc->run();
 
-		if ( !qc->hasResult()) {
+		if (AbstractWrapper::GlobalStop || !qc->hasResult()) {
 			failed=true;
 			return;
 		}
