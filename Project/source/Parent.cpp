@@ -57,6 +57,11 @@ vector<int> Parent::getParent(int stmtNum, bool transitive)
 	return results; 
 }
 
+bool Parent::exist()
+{
+	return parentMap.size() > 0;
+}
+
 void Parent::dfs(vector<int> &output, int key)
 {
 	vector<int> keys = childMap[key];

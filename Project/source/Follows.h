@@ -14,6 +14,8 @@ public:
 	std::vector<int> getFollowedBy(int stmtNum, bool transitive);
 	std::vector<int> getFollows(int stmtNum, bool transitive);
 
+	bool exist();
+
 private:
 	std::map<int, int> followedByMap;
 	std::map<int, int> followsMap;
