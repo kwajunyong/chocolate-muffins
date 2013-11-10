@@ -51,7 +51,6 @@ private:
 	void initDesignEntityTable();
 	void initQueryTypeTable();
 
-	//General Functions
 	bool replaceSubstring(string& inputString, const string& replaceTarget, const string& replaceValue);
 	bool is_number(const string& s);
 	bool processDeclarationStmt(string declarationStmt);
