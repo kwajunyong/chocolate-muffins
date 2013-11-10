@@ -20,6 +20,7 @@ void AffectEngine::run() {
 		failed = false;
 		else
 		failed true;*/
+		failed = !pkbManager->getAffects()->exists();
 
 		return;
 	}

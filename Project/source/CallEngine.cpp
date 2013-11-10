@@ -22,7 +22,7 @@ void CallEngine::run() {
 		failed = false;
 		else
 		failed true;*/
-
+		failed = !pkbManager->getCalls()->exists();
 		return;
 	}
 

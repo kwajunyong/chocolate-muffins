@@ -21,7 +21,7 @@ void NextEngine::run() {
 		failed = false;
 		else
 		failed true;*/
-
+		failed = !pkbManager->getNext()->exists();
 		return;
 	}
 

@@ -21,7 +21,7 @@ void FollowsEngine::run() {
 		failed = false;
 		else
 		failed true;*/
-
+		failed = !pkbManager->getFollows()->exist();
 		return;
 	}
 

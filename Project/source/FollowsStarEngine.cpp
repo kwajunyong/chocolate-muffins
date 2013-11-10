@@ -20,7 +20,7 @@ void FollowsStarEngine::run() {
 		failed = false;
 		else
 		failed true;*/
-
+		failed = !pkbManager->getFollows()->exist();
 		return;
 	}
 
